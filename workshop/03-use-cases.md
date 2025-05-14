@@ -47,6 +47,7 @@ Check this incredible resource out - learn from the community, and be sure to sh
 
 ### Completed!
 
-Congratulations, you have a good foundation in how to use Amazon Q CLI. We are now ready to proceed with the first part of building our application in [Part One](building-our-app-part-1.md)
+Congratulations, you have a good foundation in how to use Amazon Q CLI. 
 
+The next lab will show you how you can [use Amazon Q CLI to write code](/workshop/04-writing-code.md)
 
