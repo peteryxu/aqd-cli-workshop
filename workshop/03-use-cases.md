@@ -23,11 +23,30 @@ So these are just a few of the uses cases. Let me know if you are using it for s
 
 ### Use Cases for Profiles
 
-Profiles allow you to create 
+Profiles allow you to switch between sets of contexts that give you unique ways for Amazon Q Developer CLI to interact with you and your systems. Here are some example scenarios where you might find these useful:
 
+* **Language specific development** - Create separate profiles for Python, Java, JavaScript, etc., each with language-specific best practices and coding standards.
+* **Role Based Workflow** - Maintain different profiles for when you work as a developer, architect, or DevOps engineer. Switch contexts based on your current role or responsibility.
+* **Project separation** - Create distinct profiles for different client projects or internal initiatives. Keep project-specific requirements and documentation isolated.
+* **Environment-Specific Development** - Maintain profiles for development, staging, and production environments. Include environment-specific configuration and deployment guidelines.
+* **Technology Stack Separatation** - Separate profiles for frontend, backend, infrastructure, or data science work. Switch seamlessly between different technical domains.
 
+There are probably more use cases where you can use Profiles, so look beyond this list - its just a starting point.
 
 ### Use Cases for Context files
+
+Context files contain information like development rules, project details, or coding standards that Amazon Q uses to provide more relevant and tailored responses. Here are some example use cases where using them can provide significant benefits:
+
+* **Project documentation** - Add README files, architecture diagrams, and project specifications. This will help Amazon Q understand the project's structure and purpose.
+* **Coding standards** - Include style guides, formatting rules, and naming conventions. Ensures generated code follows your individual or organisational/team standards.
+* **Architecture Guidelines** - Add system design documents and architectural decisions. Guide Amazon Q CLI to provide solutions aligned with your architecture.
+* **Security Requirements** - Include security policies and compliance requirements. Ensure code suggestions follow security best practices.
+* **API Documentation** - Add API specs, Swagger docs, or service contracts. Help Amazon Q CLI to provide accurate integration code.
+* **Testing Requirements** - Include test strategies, coverage requirements, and QA procedures. Guide Amazon Q CLI to provide appropriate test code and strategies.
+* **Managing tasks** - Breaking down large complex software projects into a set of tasks, and then tracking these via markdown documents which Amazon Q CLI can manage.
+* **Capturing State** - For large projects when you start to reach the maximum of the context window, dumping the current state so that it can be re-used in susbsequent sessions will maintain understanding of what Amazon Q CLI has done before. 
+
+The list of how I am seeing people use context files continues to grow, and is an area where you should be exploring and experimenting.
 
 ---
 
