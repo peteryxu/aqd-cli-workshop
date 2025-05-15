@@ -43,12 +43,13 @@ To follow along this workshop, you are going to need:
 * A supported shell - bash, zsh, or fish
 * (optional) A code editing tool (Zed, VSCode, etc) - this will make it easier to work with files that are generated, but vim also works
 * (optional) A container runtime tool for your machine - Docker, Finch, Rancher, Podman are all ok
+* (optional) An AWS Account is required for one of tha labs - if you don't have one don't worry, you can still do all the other labs without one
 
 You will doing the following as part of this workshop:
 
 * Create a Builder ID account, which will allow you to use Amazon Q CLI for free
 * Learn how to install, configure, and understand the many features of Amazon Q CLI
-* Use Amazon Q CLI to build a new application from scratch
+* Use Amazon Q CLI to work through a number of use cases (writing code, automation, etc)
 
 ---
 
