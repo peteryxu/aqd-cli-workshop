@@ -227,6 +227,10 @@ Review the error in the logs. And the use that within the chat session. Use prom
 
 You can try your own variations, but the key to getting good output is to frame what you were doing, together with the error message. Sometimes you might need to include a lot of the additional information in the error, other time just the error is suffucient.
 
+**Task 06**
+
+Before we finish this lab, take some time to review your context usage. From the ">" prompt, enter "/usage" and review the output.
+
 ---
 
 **Summary**

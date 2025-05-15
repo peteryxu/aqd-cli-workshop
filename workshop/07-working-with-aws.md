@@ -11,7 +11,9 @@ In the first part of this lab we are going to start by
 - working with aws cli
 
 - billing
-- cost optimisation
+- cost optimisation use mcp server to get costs information about hosting this on aws
+
+
 
 
 

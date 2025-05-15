@@ -94,9 +94,9 @@ In this lab we are going to look at sysadmin and automation use cases, exploring
 
 ---
 
-## 6. Understanding and debugging
+## 6. Understanding Codebases
 
-In this lab we will explore how we can use Amazon Q CLI to help us when things go wrong, as well as help us understand applications or code we are working with.
+In this lab we will explore how we can use Amazon Q CLI to help us get up to speed quickly with codebases, and understand the applications or code we are working with.
 
 [Follow this link](workshop/06-understanding.md) dive into this lab.
 
