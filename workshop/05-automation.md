@@ -6,21 +6,19 @@
 
 In the first part of this lab we are going to start by
 
-**Creating our project workspace**
+write a docker file
+build a script to package up the app we built as a container image
 
-From a terminal, navigate to a new directory where we will start work (I am using a "projects" directory here as this is what I use, but feel free to switch this to whatever you use), and then type in the following. 
+use mcp server to get costs information about hosting this on aws
 
-```
-cd ~/projects
-mkdir aqcli-workshop
-cd aqcli-workshop
-```
+
+
 
 ---
 
 
 **Summary**
 
-In this first lab.
+In this lab.
 
 You can [proceed back to the README](/README.md) or try the next lab, [06-Understanding and Debugging](/workshop/06-understanding.md)

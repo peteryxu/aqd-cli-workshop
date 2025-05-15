@@ -16,11 +16,17 @@ mkdir aqcli-workshop
 cd aqcli-workshop
 ```
 
+build a simple todo application
+create profile and context files for standards
+create data model
+build app
+
+
 ---
 
 
 **Summary**
 
-In this first lab.
+In this lab.
 
 You can [proceed back to the README](/README.md) or try the next lab, [05-Automation](/workshop/05-automation.md)

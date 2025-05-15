@@ -6,21 +6,24 @@
 
 In the first part of this lab we are going to start by
 
-**Creating our project workspace**
+- check out amazon q cli project
+- ask some questions
+- draw some diagrams
 
-From a terminal, navigate to a new directory where we will start work (I am using a "projects" directory here as this is what I use, but feel free to switch this to whatever you use), and then type in the following. 
 
-```
-cd ~/projects
-mkdir aqcli-workshop
-cd aqcli-workshop
-```
+- check out project thats broken
+- get q cli to run it and then watch it fix the issues
+
+
+
+
 
 ---
 
 
 **Summary**
 
-In this first lab.
+In this lab.
 
-You have now finished all the labs, congratulations. Head back to the [README](/README.md) and review the additional reading material and complete the workshop survey.
+You can [proceed back to the README](/README.md) or try the next lab, [07-Working with AWS](/workshop/07-working-with-aws.md)
+

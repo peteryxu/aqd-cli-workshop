@@ -101,7 +101,17 @@ In this lab we will explore how we can use Amazon Q CLI to help us when things g
 
 ---
 
-## 7. Wrap up 
+## 7. Working with AWS
+
+In this lab we will explore how we can use Amazon Q CLI to help with your AWS environment, and this is the only lab where you will need to have an AWS account.
+
+[Follow this link](workshop/07-working-with-aws.md) dive into this lab.
+
+---
+
+
+
+## Wrap up 
 
 I hope during this hands on tutorial you have learned 
 
