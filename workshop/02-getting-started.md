@@ -172,7 +172,7 @@ If we exit Amazon Q CLI and go back, the trust settings reset back the the defau
 
 **Multi-line prompts**
 
-So far we have just tried a single line prompt in Amazon Q CLI chat, but you can enter multi line prompts in a number of ways. The first way is to press CTRL and J and you will be moved to a new line. Alternatively, you and add a backslash "\" to the end of your line, and when you hit enter, you will start a new line. This is what most people who spend time at the terminal will be familiar with.
+So far we have just tried a single line prompt in Amazon Q CLI chat, but you can enter multi line prompts in a number of ways. The first way is to press **CTRL and J** and you will be moved to a new line. Alternatively, you and add a backslash **"\\"** to the end of your line, and when you hit enter, you will start a new line. This is what most people who spend time at the terminal will be familiar with.
 
 **Task 06**
 
@@ -186,7 +186,7 @@ When creating Python code, use the following guidance
 - Implement Flask-SQLAlchemy for database operations
 ```
 
-Whilst using CTRL + J and \ works for adhoc multi-line prompts, you might find it easier enabling your favorite editor which we will look at next.
+Whilst using **CTRL + J** and **\** works for adhoc multi-line prompts, you might find it easier enabling your favorite editor which we will look at next.
 
 ---
 
