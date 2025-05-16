@@ -34,6 +34,8 @@ Beyond just providing you with helpers, when you have Amazon Q CLI installed it 
 
 ![demo of command auto suggestion](/images/q-cli-auto-suggestion.gif)
 
+(in the video above we can see how Amazon Q CLI helps us naviate the command options for git)
+
 There is no task for this feature as we will see this as we proceed with the tutorial.
 
 ---
@@ -47,6 +49,8 @@ We can now do this a different way, which will save you more time. We can transl
 You invoke this by typing “q ai” or “q translate” in the command line, followed by the action you want Q to convert into commands.
 
 ![demo of command line translation](/images/q-cli-cmd-translation.gif)
+
+(in the video above we can see how we can use Amazon Q CLI to translate a specific intent into commands which we can then run)
 
 ---
 
@@ -94,7 +98,7 @@ Type in the following:
 > what do you prefer, tabs or spaces
 ```
 
-It should generate some response. Amazon Q CLI can be used for a very broad range of use cases - you are not limited to using it for just AWS work. We will see this as we proceed along this tutorial.
+It should generate some response. Amazon Q CLI can be used for a very broad range of use cases (check out the [Use Cases](/workshop/03-use-cases.md) section to explore this) - you are not limited to using it for just AWS work. We will see this as we proceed along this tutorial.
 
 We can exit the Amazon Q CLI chat by either entering "/q" at the ">" prompt, or by pressing CTRL + C. Try exiting the chat now.
 
@@ -109,7 +113,7 @@ Open up Amazon Q CLI chat (by typing in "q" in the terminal)
 From the ">" prompt, enter the following:
 
 ```
-> show me without creating, an optimised Docker container to run a Python Flask application. Make sure it uses the latest version of Python
+> show me without creating, an optimised Docker file to run a Python Flask application. Make sure it uses the latest version of Python
 ```
 
 Review the output - does it look ok to you?
@@ -118,7 +122,9 @@ Review the output - does it look ok to you?
 
 **Task 05**
 
-The previous prompt added the phrase "without creating" deliberately. We wanted Amazon Q CLI just to show us something, however, it is capable of writing files too. Amazon Q CLI has a concept of **Tools**  that allow it to interact with the wider world. The various tools allow it to read, write, and execute commands. Before it can do that we need to give it permission.
+The previous prompt added the phrase "without creating" deliberately. We wanted Amazon Q CLI just to show us something.
+
+It is capable of doing much more than this though. Amazon Q CLI has a concept of **Tools** that allow it to interact with the wider world. The various tools allow it to read, write, and execute commands. Amazon Q CLI gives you control though, so before we get it to do those things, we need to give it permission.
 
 Open up a Amazon Q CLI chat session. From the ">" prompt, type the following:
 
@@ -146,14 +152,14 @@ Trusted tools can be run without confirmation
 * Default settings
 ```
 
-You will notice that we have two tools that are automatically trusted - fs_read and report_issue. fs_read allows Amazon Q CLI to read files from your computer, and report_issue allows to generate issues you run into when using Amazon Q CLI that will be logged in the GitHub project repo.
+You will notice that we have two tools that are automatically trusted - **fs_read** and **report_issue**. fs_read allows Amazon Q CLI to read files from your computer, and report_issue allows to generate issues you run into when using Amazon Q CLI that will be logged in the GitHub project repo.
 
 We can see writing and executing files are not trusted. What this means is that if we ask Amazon Q CLI to do something that wants to use these tools, it is going to prompt us for permission. Lets see this in action.
 
 Enter the following prompt:
 
 ```
-> create an optimised Docker container to run a Python Flask application. Make sure it uses the latest version of Python
+> create an optimised Docker file to run a Python Flask application. Make sure it uses the latest version of Python
 ```
 
 You should notice that it generates a similar output to before, but this time it now prompts you whether you want to trust the fs_write tool (which is used to write files). We can select "Y" to accept, "N" to reject, or "T" to always trust this tool so that we are not asked subsequently.

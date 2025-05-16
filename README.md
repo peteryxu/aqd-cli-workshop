@@ -12,7 +12,7 @@ This hands on tutorial is split into a number of different labs which you can ru
 
 **What is Amazon Q CLI?**
 
-How often to you use your terminal or shell? As a developer, I spend probably most of my time in the terminal when I am not writing code in my IDE. If you are not a developer, maybe you work as a sysadmin, or perhaps a devops engineer, you might spend all of your time in the terminal - writing scripts to automate stuff, running various tools to help with your job, and helping to fix things when they go wrong. The terminal is an essential part of our job, and so we need to make sure we are 'command line confident' as I like to say.
+How often **do** you use your terminal or shell? As a developer, I spend probably most of my time in the terminal when I am not writing code in my IDE. If you are not a developer, maybe you work as a sysadmin, or perhaps a devops engineer, you might spend all of your time in the terminal - writing scripts to automate stuff, running various tools to help with your job, and helping to fix things when they go wrong. The terminal is an essential part of our job, and so we need to make sure we are 'command line confident' as I like to say.
 
 To many folk though, using the command line can be daunting, for many reasons. For example, trying to remember which commands are available to do certain tasks, or perhaps trying to recall the different command line parameters that command line tools require (as they change all the time).
 
