@@ -61,7 +61,7 @@ This workshop will first of all get you up and running with Amazon Q CLI - insta
 
 ---
 
-## 2. Learning about and exploring Amazon Q Developer capabilities
+## 2. Learning and exploring Amazon Q CLI capabilities
 
 Once we have Amazon Q CLI installed, setup, and configured, we are ready to explore its capabilities. In this lab we are going to go over the features in detail and provide your first opportunity to get hands on.
 
