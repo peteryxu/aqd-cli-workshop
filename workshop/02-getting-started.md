@@ -110,7 +110,7 @@ Amazon Q CLI does more than just respond to your prompts, and has full agentic c
 
 Open up Amazon Q CLI chat (by typing in "q" in the terminal)
 
-From the ">" prompt, enter the following:
+From the **">"** prompt, enter the following:
 
 ```
 > show me without creating, an optimised Docker file to run a Python Flask application. Make sure it uses the latest version of Python
@@ -126,7 +126,7 @@ The previous prompt added the phrase "without creating" deliberately. We wanted 
 
 It is capable of doing much more than this though. Amazon Q CLI has a concept of **Tools** that allow it to interact with the wider world. The various tools allow it to read, write, and execute commands. Amazon Q CLI gives you control though, so before we get it to do those things, we need to give it permission.
 
-Open up a Amazon Q CLI chat session. From the ">" prompt, type the following:
+Open up a Amazon Q CLI chat session. From the **">"** prompt, type the following:
 
 ```
 /tools
@@ -152,7 +152,7 @@ Trusted tools can be run without confirmation
 * Default settings
 ```
 
-You will notice that we have two tools that are automatically trusted - **fs_read** and **report_issue**. fs_read allows Amazon Q CLI to read files from your computer, and report_issue allows to generate issues you run into when using Amazon Q CLI that will be logged in the GitHub project repo.
+You will notice that we have two tools that are automatically trusted - **fs_read** and **report_issue**. **fs_read** allows Amazon Q CLI to read files from your computer, and **report_issue** allows to generate issues you run into when using Amazon Q CLI that will be logged in the GitHub project repo.
 
 We can see writing and executing files are not trusted. What this means is that if we ask Amazon Q CLI to do something that wants to use these tools, it is going to prompt us for permission. Lets see this in action.
 
@@ -162,17 +162,17 @@ Enter the following prompt:
 > create an optimised Docker file to run a Python Flask application. Make sure it uses the latest version of Python
 ```
 
-You should notice that it generates a similar output to before, but this time it now prompts you whether you want to trust the fs_write tool (which is used to write files). We can select "Y" to accept, "N" to reject, or "T" to always trust this tool so that we are not asked subsequently.
+You should notice that it generates a similar output to before, but this time it now prompts you whether you want to trust the **fs_write** tool (which is used to write files). We can select **"y"** to accept this one time, **"n"** to reject, or **"t"** to always trust this tool so that we are not asked subsequently.
 
-Enter T and hit return. You should see it complete the creation of the file, and create additional files too. Exit Amazon Q CLI and review the files.
+Enter **"t"** and hit return. You should see it complete the creation of the file, and create additional files too. Exit Amazon Q CLI and review the files.
 
-If we exit Amazon Q CLI and go back, the trust settings are all reset. We will look more about Tools and Trust in a later lab.
+If we exit Amazon Q CLI and go back, the trust settings reset back the the default trust settings. We will look more about Tools and Trust in a later lab.
 
 ---
 
 **Multi-line prompts**
 
-So far we have just tried a single line prompt in Amazon Q CLI chat, but you can enter multiple lines a number of ways. The easiest is to press CTRL and J and you will be moved to a new line. Alternatively, you and add a backslash "\" to the end of your line, and when you hit enter, you will start a new line.
+So far we have just tried a single line prompt in Amazon Q CLI chat, but you can enter multi line prompts in a number of ways. The first way is to press CTRL and J and you will be moved to a new line. Alternatively, you and add a backslash "\" to the end of your line, and when you hit enter, you will start a new line. This is what most people who spend time at the terminal will be familiar with.
 
 **Task 06**
 
@@ -192,15 +192,15 @@ Whilst using CTRL + J and \ works for adhoc multi-line prompts, you might find i
 
 *Configuring your favorite text editor*
 
-When it comes to editors, its hard to beat vim. I know that others have a different (wrong in my view) perspective. The good news is that you can configure Amazon Q CLI to use your favourite editor in only a few steps.
+When it comes to editors, its hard to beat vim. I know that others have a different (wrong in my view) perspective :-). The good news is that whatever is your favourite editor, you can configure Amazon Q CLI to use it in only a few steps.
 
-First, you need a supported editor. You can [review the current options here](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-editor.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el) but other editors not on this list will probably work. We now need to create an environment variable called EDITOR, so from the current terminal I enter the following:
+First, you need create an environment variable called EDITOR. You can [see a list of some editor options here](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-editor.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el), but other editors not on this list will probably work. I want to use vim, so from the current terminal I enter the following:
 
 ```
-export EDITOR=vi
+export EDITOR=vim
 ```
 
-I launch Amazon Q CLI, and now I can use the "/editor" command and it will launch vim for me, and I can edit the prompt until I am happy. When I save and exit, it kicks of Amazon Q CLI.
+I launch Amazon Q CLI, and now I can use the **"/editor"** command and it will launch vim for me, and I can edit the prompt until I am happy. When I save and exit, it returns me back to Amazon Q CLI, and it starts to work.
 
 **Task 07**
 
@@ -210,17 +210,34 @@ Close your Amazon Q CLI session, and set your EDITOR environment variable to you
 * export EDITOR="code -w"
 * export EDITOR="nano"
 
-But feel free to try with your own, preferred editors. Once you have done that, open up Amazon Q CLI and run the "/editor" command. This should launch the editor you configured. Write a multi-line prompt, save and then exit. You should see Amazon Q CLI chat now processing your prompt.
+Feel free to try with your own preferred editor. 
+
+Once you have done that, open up Amazon Q CLI and run the **"/editor"** command. This should launch the editor you configured. Write a multi-line prompt, save and then exit. You should see Amazon Q CLI chat now processing your prompt.
 
 ---
 
 ### Working with Context
 
-As you work with tools like Amazon Q Developer CLI, it is important to understand how to configure context to provide more relevant and context-aware responses.
+Context is what Amazon Q CLI will use together with the prompt you provide, to help it understand what it needs to do. Being able to manage context when using Amazon Q CLI is critical to get good output. In this section we will look at this in more detail.
 
-Creating documents in markdown format is a good way to help steer the output. For example, I typically put together my own coding preferences in a markdown doc that provides additional context for Amazon Q CLI. It will review those resources and factor that into the output created.
+The first thing to understand is that context is not and infinite resource, and it has to be managed. The **"context window"** is a finite resource that Amazon Q CLI uses to help it generate output. The **"context window"** is measured in tokens, which are the unit of text processing that large language models use. Currently Amazon Q CLI has a maximum context window of 200K tokens. 
 
-When you start Amazon Q CLI, it will start with a fresh, clean context. It does search however for a number of resources, that it will load up into its context memory. It is important to understand how this works, and from the Amazon Q CLI chat session, we can look at this by typing in the "/context show" command.
+When you start Amazon Q CLI, it will automatically look for and add to the **"context window"** any content in markdown documents in the following directories:
+
+|Directory|File|Notes|
+|---------|----|-----|
+| Current directory | README.md | In the current directory where you launched Amazon Q CLI, look for a file called README.md|
+| Current directory | AmazonQ.md | In the current directory where you launched Amazon Q CLI, look for a file called AmazonQ.md|
+| Current directory/.amazonq/rules/ | *.md | In the current directory where you launched Amazon Q CLI, look for any markdown files in the .amazonq/rules directory|
+
+
+This means that if we create markdown files in these locations, Amazon Q CLI will pick these up and use them as context. This is good to know, but what if you want to add your additional files as context? Luckily for us we can do this easily using the **"/context add"** command, which we will see in a moment.
+
+>*Markdown documents as context*
+>
+> Creating documents in markdown format is a good way to provide context and help steer the output. For example, I typically put together my own coding preferences in a markdown doc for Amazon Q CLI to use. It will review those resources and factor that into the output it creates.
+
+When you start Amazon Q CLI, it will start with a fresh, clean context. It will look however for a number of resources to load up into its context memory. From the Amazon Q CLI chat session, we can look at this by typing in the **"/context show"** command.
 
 ```
 > /context show
@@ -236,13 +253,20 @@ When you start Amazon Q CLI, it will start with a fresh, clean context. It does 
 No files in the current directory matched the rules above.
 ```
 
-We can see here that it is looking at files that match ".amazonq/rules/**/*.md", "README.md", and "AmazonQ.md". If you have these in your project workspace, it will read these and add those as context.
+We can see here that it is looking at files that match **".amazonq/rules/**/*.md"**, **"README.md"**, and **"AmazonQ.md"**. If you have these in your project workspace, it will read these and add those as context.
+
+
+*Adding local vs global context*
+
+You can add files to both your local or global context. 
+
+Local context means the current profile you are working in. As you switch or change to different profiles, the context files you have configured will change. To do this you use the **"/context add {markdown file}"**.
 
 ---
 
 **Task 08**
 
-Open up an Amazon Q CLI chat session, and run the following command at the ">" prompt:
+Open up an Amazon Q CLI chat session, and run the following command at the **">"** prompt:
 
 ```
 > /context show
@@ -250,18 +274,18 @@ Open up an Amazon Q CLI chat session, and run the following command at the ">" p
 
 Does it look like the output above? When running some of the previous steps, it might have created a README.md file, and if so you should see this appear.
 
-When you run the "/context show" you also see something called "profile". Lets look at what that is next.
+When you run the **"/context show"** you also see something called "profile". Lets look at what that is next.
 
 ---
 
 **Profiles**
 
-Profiles allow you to switch between sets of contexts that give you unique ways for Amazon Q Developer CLI to interact with you and your systems. There is always a default profile, which contains a global context and workspace context:
+Profiles allow you to switch between sets of contexts, allowing you to create unique ways for Amazon Q CLI to behave and interact with your systems. When you start Amazon Q CLI, you start with a default profile. This contains a global context and workspace context:
 
 - Global context: Files that are applied to **all profiles**
 - Workspace context: Files specific to the current profile
 
-You can create new profiles using the "/profile create xxxx" where xxx is a name (for example, python-dev). When you add new profiles, they will have their own unique **workspace context**, allowing you to specify patterns of files that make that profile behave and interact in ways unique to your workflow and processes.
+You can create new profiles using the **"/profile create xxxx"** where xxx is a name (for example, python-dev). When you add new profiles, they will have their own unique **workspace context**, allowing you to specify patterns of files that make that profile behave and interact in ways unique to your workflow and processes.
 
 For example, you might create:
 
@@ -271,7 +295,7 @@ For example, you might create:
 
 **Task 09**
 
-From an Amazon Q CLI chat session, we will create two new profiles. One for Java Development, and another for Python. We might want to do this to reflect different preferences and rules we use that are unique to each language. From the ">" prompt, enter:
+From an Amazon Q CLI chat session, we will create two new profiles. One for Java Development, and another for Python. We might want to do this to reflect different preferences and rules we use that are unique to each language. From the **">"** prompt, enter:
 
 ```
 > /profile create python-dev
@@ -283,56 +307,38 @@ Review the output. It should just return that it has created a profile. Now repe
 > /profile create java-dev
 ```
 
-Review the context using "/context show" and pay attention to the profile details. Which profile are you currently using?
+Review the context using **"/context show"** and pay attention to the profile details. Which profile are you currently using?
 
 
-By having multiple profiles, you can quickly change the context that Amazon Q uses to provide responses without having to manually specify these files in each conversation. Ok so how do you switch to a different profile?
+By having multiple profiles, you can quickly change the context that Amazon Q uses to provide responses without having to manually specify these files in each conversation. 
+
+Ok so how do you switch to a different profile?
 
 ---
 
 **Task 10**
 
-We can change between new profiles we created, as well as the default profile by using the "/profile set" command within the Amazon Q CLI chat session. Lets try this out now. 
+We can change between profiles (inclduing the default profile) by using the **"/profile set"** command within the Amazon Q CLI chat session. Lets try this out now. 
 
 ```
 > /profile set python-dev
 ```
 
-Change to the Java and then back to the default profile and then run the /context show command.
+Change to the Java and then back to the default profile and then run the **"/context"** show command.
 
-When you exist Amazon Q CLI, the next time you use it you will be reset to the default profile. You can start Amazon Q CLI in a specific profile by starting it with the "--profile" argument.
+When you exit Amazon Q CLI, the next time you use it you will be reset to the default profile. You can start Amazon Q CLI in a specific profile by starting it with the **"--profile"** argument.
 
 ```
 q --profile python-dev
 ```
 
-Will start your Amazon Q CLI session using this profile.
+Which will start your Amazon Q CLI session using this profile.
 
 ---
 
-**Understanding Context**
+**Add Context to Profiles**
 
-Context is what Amazon Q CLI will use together with the prompt you provide, to help it understand what it needs to do. Being able to manage context when using Amazon Q CLI is critical to get good output. In this section we will look at this in more detail.
-
-The first thing to understand is that context is not and infinite resource, and it has to be managed. The "context window" is a finite resource that Amazon Q CLI uses to help it generate output. The "context window" is measured in tokens, which are the unit of text processing that large language models use. Currently Amazon Q CLI has a maximum context window of 200K tokens. 
-
-When you start Amazon Q CLI, it will automatically look for and add to the "context window" any content in markdown documents in the following directories:
-
-|Directory|File|Notes|
-|---------|----|-----|
-| Current directory | README.md | In the current directory where you launched Amazon Q CLI, look for a file called README.md|
-| Current directory | AmazonQ.md | In the current directory where you launched Amazon Q CLI, look for a file called AmazonQ.md|
-| Current directory/.amazonq/rules/ | *.md | In the current directory where you launched Amazon Q CLI, look for any markdown files in the .amazonq/rules directory|
-|---------|----|-----|
-
-What this means is that if we create markdown files in these locations, Amazon Q CLI will pick these up and use them as context. This is good to know, but what if you want to add your additional files as context? Luckily for us we can do this easily using the "/context add" command, which we will see in the next section. 
-
-*Adding local vs global context*
-
-You can add files to both your local or global context. 
-
-Local context means the current profile you are working in. As you switch or change to different profiles, the context files you have configured will change. To do this you use the "/context add {markdown file}.
-
+Profiles provide us with a granular way of managing important context files. Lets take a look at how we add those to specific Profiles.
 
 **Task 11**
 
