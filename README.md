@@ -14,12 +14,9 @@ This hands on tutorial is split into a number of different labs which you can ru
 
 How often to you use your terminal or shell? As a developer, I spend probably most of my time in the terminal when I am not writing code in my IDE. If you are not a developer, maybe you work as a sysadmin, or perhaps a devops engineer, you might spend all of your time in the terminal - writing scripts to automate stuff, running various tools to help with your job, and helping to fix things when they go wrong. The terminal is an essential part of our job, and so we need to make sure we are 'command line confident' as I like to say.
 
-To many folk though, using the command line can be daunting, for many reasons.
-
-Trying to remember which commands are available to do certain tasks. Trying to recall the different command line parameters that command line tools require (as they change all the time). When you run them, if they generate messages understanding how to troubleshoot or change to get the command running, especially when they have sometimes hard to understand error messages.
+To many folk though, using the command line can be daunting, for many reasons. For example, trying to remember which commands are available to do certain tasks, or perhaps trying to recall the different command line parameters that command line tools require (as they change all the time).
 
 If only we could get some help with this.
-
 
 [Amazon Q CLI](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el) is [an open source tool](https://github.com/aws/amazon-q-developer-cli) that you can install on your machine that brings IDE-style autocomplete and agentic capabilities to your terminal. It features:
 
@@ -30,7 +27,7 @@ If only we could get some help with this.
 
 ![splash page for Amazon Q CLI](/images/q-cli-splash.png)
 
-It is pretty awesome, and this workshop will help you get hands on with it so that you can learn the basics and then help you understand how you can apply this to your every day activities.
+It is pretty awesome, and in this workshop you will get hands on with it so that you can learn the basics,  and give you the confidence so you can apply what you have learned to your every day activities.
 
 ---
 
@@ -117,3 +114,16 @@ In this lab we will explore how we can use Amazon Q CLI to help with your AWS en
 I hope during this hands on tutorial you have learned 
 
 Before you go, if you found this tutorial useful/helpful, or have ideas how we can make it better, please please provide some feedback using [this link](https://pulse.aws/survey/1DM5TAZU) and as a thank you, I share some additional resources from some of my talks on Amazon Q Developer.
+
+
+
+
+
+
+
+
+
+
+
+
+[view changelog](/workshop/changelog.md)

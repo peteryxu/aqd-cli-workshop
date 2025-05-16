@@ -9,3 +9,8 @@
 - fix incorrect mcp.json settings
 - fix missing q update command
 - updated MCP section to include workspace vs global settings
+
+15th May 2025
+
+- Initial version of this workshop
+
