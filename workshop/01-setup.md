@@ -13,7 +13,7 @@ We are now ready for the first hands on part of this lab, installing and setting
 
 (If you already have a Builder ID, you can skip this step)
 
-[Creating a Builder ID](https://s12d.com/builder-id) is the first step in being able to use the Amazon Q Developer plugin. All you need is a valid email address to create a Builder ID. Head over to the [Builder ID page](https://s12d.com/builder-id) and click on the "Sign in with Builder ID". This will pop up a browser window where you can now create your Builder ID, using your email address. 
+[Creating a Builder ID](https://s12d.com/builder-id) is the first step in being able to use Amazon Q CLI. All you need is a valid email address to create a Builder ID. Head over to the [Builder ID page](https://s12d.com/builder-id) and click on the "Sign in with Builder ID". This will pop up a browser window where you can now create your Builder ID, using your email address. 
 
 You can follow these screenshows to see the flow. After accessing the Builder ID page, you will need to provide an email address (1) and then create an alias (Your Name) (2). You will be sent an email verification which you will need to enter (3), and the email should only take a few moments to arrive (but check your SPAM folder just in case)(4)
 
@@ -23,7 +23,7 @@ Once you have received that code, enter it to validate your account (5), which s
 
 ![completion of the builder id](/images/q-vscode-builderid-2.png)
 
-When you hear the term Builder ID when working with AWS services, this is the account they are referring to. It is separate from the AWS account, but is used by a number of services to provide access to those who want to try and AWS without the need for a full AWS account.
+When you hear the term Builder ID when working with AWS services, this is the account they are referring to. It is separate from the AWS account, but is used by a number of services to provide access to those who want to try and AWS without the need for a full AWS account. For example, you can use it to use the Amazon Q Developer IDE plugins for VSCode, Jetbrains, and Eclipse.
 
 
 > **Logging out of your Builder ID** Sometimes you might need to log out of your Builder ID, and in order to do this you should head over to your [Builder ID Profile page](https://profile.aws.amazon.com/#/profile/details?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el) and use the **Sign Out** button on the top left. Clicking on this will return you to the sign on page.
@@ -52,7 +52,7 @@ Amazon Q CLI runs in a terminal, configured and enabled via the shell. It suppor
 
 **Windows**
 
-To install Amazon Q CLI on Windows, you will need to use Windows Subsystem for Linux (wsl). I have put together an installation guide which you should follow - [Installing Amazon q CLI in wsl](https://dev.to/aws/the-essential-guide-to-installing-amazon-q-developer-cli-on-windows-lmh)
+To install Amazon Q CLI on Windows, you will need to use Windows Subsystem for Linux (wsl). I have put together an installation guide you can follow - [Installing Amazon q CLI in wsl](https://dev.to/aws/the-essential-guide-to-installing-amazon-q-developer-cli-on-windows-lmh)
 
 **MacOS**
 
@@ -75,9 +75,10 @@ There are many flavours of Linux, so you will need to determine which installati
 
 ---
 
-**Compiling from source**
-
-You can compile Amazon Q CLI from source if you want to build and run your own binaries. This is outside the scope of this workshop, but check out the "Supporting Resources" below for a blog post that walks you through the process.
+> **Compiling from source**
+> 
+> You can compile Amazon Q CLI from source if you want to build and run your own binaries. This is outside the scope of this workshop, but check out the "Supporting Resources" below for a blog post that walks you through the process.
+> 
 
 ---
 
@@ -116,6 +117,11 @@ Accept the pop ups that appear, and once you have completed those steps (it was 
 ```
 Logged in successfully
 ```
+
+You can watch this process in this short video.
+
+[![Logging into Amazon Q CLI with Builder ID](/images/q-cli-builder-id-login.png)(https://youtu.be/WuInQ2Urmow)]
+
 
 ---
 
@@ -175,9 +181,7 @@ Now that we have installed Amazon Q CLI we can dive deeper and look at how we ca
 
 **Directory structure**
 
-You can use Amazon Q CLI anywhere as it will be installed in your path and should be available anywhere. When you start Amazon Q CLI, it will look at a global directory that is "~/.aws/amazonq". In addition to this global directory, the directory you are in when you start Amazon Q CLI is the project workspace directory. Amazon Q CLI will use this directory (".amazonq")
-
-When using Amazon Q CLI, there are a few important directories you need to be aware of.
+You can use Amazon Q CLI anywhere as it will be installed in your path and should be available anywhere. When you start Amazon Q CLI, it will look at a global directory that is "~/.aws/amazonq". In addition to this global directory, the directory you are in when you start Amazon Q CLI is the project workspace directory. Amazon Q CLI will use this directory (".amazonq"). To summarise.
 
 * Global Amazon Q CLI directory - this is "~/.aws/amazonq" and is used by Amazon Q CLI to read in global configuration settings for context, profiles, and Model Context Protocol (MCP) settings - don't worry, we will look at what these are in a bit
 * Project Workspace directory - this is "./amazonq" and is used by Amazon Q CLI to read in project specific configuration files (for example context or MCP configuration)
