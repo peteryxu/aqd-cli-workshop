@@ -14,6 +14,7 @@ You can navigate using the up and down arrow keys for the various options, or yo
 
 ![demo of command line completion](/images/q-cli-command-line-completion.gif)
 
+---
 
 **Task-01**
 
@@ -25,6 +26,8 @@ Try a different command (try perhaps "docker", "java", or "dotnet").
 
 You can press ESC to exit the menu at any time, and you will then be able to continue writing in the command line.
 
+---
+
 ### Command Line Auto Suggestion
 
 Beyond just providing you with helpers, when you have Amazon Q CLI installed it will also begin to suggest commands based on the context of what you are doing.
@@ -32,6 +35,8 @@ Beyond just providing you with helpers, when you have Amazon Q CLI installed it 
 ![demo of command auto suggestion](/images/q-cli-auto-suggestion.gif)
 
 There is no task for this feature as we will see this as we proceed with the tutorial.
+
+---
 
 ### Command Line Translation
 
@@ -42,6 +47,8 @@ We can now do this a different way, which will save you more time. We can transl
 You invoke this by typing “q ai” or “q translate” in the command line, followed by the action you want Q to convert into commands.
 
 ![demo of command line translation](/images/q-cli-cmd-translation.gif)
+
+---
 
 **Task-02**
 
@@ -67,6 +74,8 @@ You can use the up and down arrows to select different options, hitting ENTER to
 
 Experiment with a few command line tools you are familiar with.
 
+---
+
 ### Interactive (Agentic) Chat
 
 So far we have used Amazon Q CLI as just a tool to help us run commands more effectively. You can use Amazon Q Developer CLI in chat mode, and engage in natural language conversations, ask questions, and receive responses from Amazon Q within your terminal environment.
@@ -89,6 +98,7 @@ It should generate some response. Amazon Q CLI can be used for a very broad rang
 
 We can exit the Amazon Q CLI chat by either entering "/q" at the ">" prompt, or by pressing CTRL + C. Try exiting the chat now.
 
+---
 
 **Task 04**
 
@@ -103,6 +113,8 @@ From the ">" prompt, enter the following:
 ```
 
 Review the output - does it look ok to you?
+
+---
 
 **Task 05**
 
@@ -150,7 +162,9 @@ Enter T and hit return. You should see it complete the creation of the file, and
 
 If we exit Amazon Q CLI and go back, the trust settings are all reset. We will look more about Tools and Trust in a later lab.
 
-*Multi-line prompts*
+---
+
+**Multi-line prompts**
 
 So far we have just tried a single line prompt in Amazon Q CLI chat, but you can enter multiple lines a number of ways. The easiest is to press CTRL and J and you will be moved to a new line. Alternatively, you and add a backslash "\" to the end of your line, and when you hit enter, you will start a new line.
 
@@ -167,6 +181,8 @@ When creating Python code, use the following guidance
 ```
 
 Whilst using CTRL + J and \ works for adhoc multi-line prompts, you might find it easier enabling your favorite editor which we will look at next.
+
+---
 
 *Configuring your favorite text editor*
 
@@ -189,6 +205,8 @@ Close your Amazon Q CLI session, and set your EDITOR environment variable to you
 * export EDITOR="nano"
 
 But feel free to try with your own, preferred editors. Once you have done that, open up Amazon Q CLI and run the "/editor" command. This should launch the editor you configured. Write a multi-line prompt, save and then exit. You should see Amazon Q CLI chat now processing your prompt.
+
+---
 
 ### Working with Context
 
@@ -214,6 +232,8 @@ No files in the current directory matched the rules above.
 
 We can see here that it is looking at files that match ".amazonq/rules/**/*.md", "README.md", and "AmazonQ.md". If you have these in your project workspace, it will read these and add those as context.
 
+---
+
 **Task 08**
 
 Open up an Amazon Q CLI chat session, and run the following command at the ">" prompt:
@@ -225,6 +245,8 @@ Open up an Amazon Q CLI chat session, and run the following command at the ">" p
 Does it look like the output above? When running some of the previous steps, it might have created a README.md file, and if so you should see this appear.
 
 When you run the "/context show" you also see something called "profile". Lets look at what that is next.
+
+---
 
 **Profiles**
 
@@ -260,6 +282,8 @@ Review the context using "/context show" and pay attention to the profile detail
 
 By having multiple profiles, you can quickly change the context that Amazon Q uses to provide responses without having to manually specify these files in each conversation. Ok so how do you switch to a different profile?
 
+---
+
 **Task 10**
 
 We can change between new profiles we created, as well as the default profile by using the "/profile set" command within the Amazon Q CLI chat session. Lets try this out now. 
@@ -278,7 +302,9 @@ q --profile python-dev
 
 Will start your Amazon Q CLI session using this profile.
 
-**Working with Context**
+---
+
+**Understanding Context**
 
 Context is what Amazon Q CLI will use together with the prompt you provide, to help it understand what it needs to do. Being able to manage context when using Amazon Q CLI is critical to get good output. In this section we will look at this in more detail.
 
@@ -300,6 +326,7 @@ What this means is that if we create markdown files in these locations, Amazon Q
 You can add files to both your local or global context. 
 
 Local context means the current profile you are working in. As you switch or change to different profiles, the context files you have configured will change. To do this you use the "/context add {markdown file}.
+
 
 **Task 11**
 
@@ -345,6 +372,8 @@ If you close your Amazon Q CLI session and launch it back in the same directory,
 
 You can add files to your global context, which will mean that every time you start an Amazon Q CLI session it will look for that resource. To do this you use the "/context add --global {markdown file}" which will then change the scope of the files you have added from local (your current profile), to global.
 
+---
+
 **Task 12**
 
 In your current directory I create a new file, called "coding-standards.md" (dont worry, you can leave this empty). Then add it to your global context usig the following command:
@@ -377,9 +406,13 @@ You might be wondering, ok I know how to add files to context but what if I made
 
 You can of course also edit the configuration files and restart Amazon Q CLI too.
 
+---
+
 **Managing Context**
 
 You might be wondering how many docs, or how big those docs can be when adding these to your context? Amazon Q CLI provides 200K tokens for your "context window". As you add more context in your Amazon Q CLI sessions, you will start to use up this. Managing your "context window" is therefore important and will ensure that you have consistent and good outcomes when using Amazon Q CLI. This lab will look at some of the options and strategies you can use.
+
+---
 
 *Context usage*
 
@@ -395,11 +428,6 @@ Current context window (260 of 200k tokens used)
 █ Q responses:   ~0 tokens (0.00%)
 █ Your prompts:  ~0 tokens (0.00%)
 
-
-💡 Pro Tips:
-Run /compact to replace the conversation history with its summary
-Run /clear to erase the entire chat history
-Run /context show to see tokens per context file
 ```
 
 You will notice that we can find out how much context we are using up for any files we have added by running the "/context show" command. In the following output I ran this command on a project where I have several files that are automatically added to the context (as they are in the rules directory of the project). You can see how this uses up tokens against the limit.
@@ -433,6 +461,7 @@ Open up an Amazon Q CLI session and run the "/usage" command.
 
 Review the output and take a few minutes to review this section.
 
+---
 
 *Compacting*
 
@@ -459,12 +488,6 @@ Current context window (50930 of 200k tokens used)
 █ Context files: ~10400 tokens (5.20%)
 █ Q responses:   ~16730 tokens (8.36%)
 █ Your prompts:  ~23800 tokens (11.90%)
-
-
-💡 Pro Tips:
-Run /compact to replace the conversation history with its summary
-Run /clear to erase the entire chat history
-Run /context show to see tokens per context file
 
 > /compact
 
@@ -532,6 +555,8 @@ Current context window (12060 of 200k tokens used)
 
 You can see that it has reduced the overall "context window" in this example.
 
+---
+
 *Clearing*
 
 There might be times when you want to reset your current context. For example, during an Amazon Q CLI session, you notice that the quality of the responses are not what you think they should be. Another scenario might be where in helping to troubleshoot an issue, you start to see circular responses.
@@ -547,6 +572,8 @@ Are you sure? This will erase the conversation history and context from hooks fo
 
 Conversation history cleared.
 ```
+
+---
 
 ### Advanced Topics
 
@@ -564,7 +591,9 @@ Open up Amazon Q CLI and run the following commands:
 
 Review the output - you should see your current directory listed out. Experiment with a few other commands.
 
-**Trust**
+---
+
+**Tools and Trust**
 
 In **Task 05** you looked at **Tools** and how Amazon Q CLI requires you to control how those tools work. We looked at trusting tools as part of the chat session, where you entered "t" to trust the tool for the duration of that chat session.
 
@@ -597,6 +626,8 @@ Review the output. Which tools are trusted and which are not?
 Use the "/tools trust {name}" command to enable the "use_aws" tool. Re-run the "/tools" command and review the status. 
 
 Now run "/tools trustall" and review the findings. Run "/tools reset" and then check again. You should find that the trust levels have been reset.
+
+---
 
 **Model Context Protocol (MCP)**
 
@@ -635,16 +666,23 @@ I have added some additional resources at the end of this lab if you want to div
 > 4. Transparency: Users can see what tools are available and what they do
 >
 
+---
+
 *Adding MCP Servers to Amazon Q CLI*
 
 Adding MCP Servers to Amazon Q CLI is super easy, and requires you to do two things:
 
-1. Create a "mcp.json" file in the "~/.aws/amaoznq" directory
+1. Create a "mcp.json" file
 2. Edit the "mcp.json" file to add any MCP Servers you want to add
 
 When you make those changes, the next time you restart Q, it will try and load up any MCP Servers you have configured.
 
-Lets take a look at creating our "mcp.json" file. Before we edit it, we need an MCP servers to configure. After looking at the [AWS MCP Server directory](https://awslabs.github.io/mcp/), the one that takes my fancy is the [AWS CDK MCP server](https://awslabs.github.io/mcp/servers/cdk-mcp-server/). When I click on this I get an overview of the features that this MCP Server offers, together with the available Tools. If I scroll a bit further I get the installation details.
+You can add MCP Servers at the global level (every time you start an Amazon Q CLI session), or at specific project workspaces (they will start just for those projects). The location of the "mcp.json" file determines this:
+
+* Global MCP Settings - "~/.aws/amazonq/mcp.json"
+* Workspace specific MCP Settings - ".amazonq/mcp.json"
+
+Lets take a look at creating our "mcp.json" file, and we will do it at the global level. Before we edit it, we need an MCP servers to configure. After looking at the [AWS MCP Server directory](https://awslabs.github.io/mcp/), the one that takes my fancy is the [AWS CDK MCP server](https://awslabs.github.io/mcp/servers/cdk-mcp-server/). When I click on this I get an overview of the features that this MCP Server offers, together with the available Tools. If I scroll a bit further I get the installation details.
 
 **Task 16**
 
@@ -657,33 +695,75 @@ Make sure you are at the "~/.aws/amazonq" directory in yout terminal (the ~ is y
 From this directory create a new file called "mcp.json". Edit that file to add the following:
 
 ```
-"promptz.dev/mcp": {
-  "command": "npx",
-  "args": [
-    "-y",
-    "@promptz/mcp"
-  ],
-  "env": {
-    "PROMPTZ_API_URL": "https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql",
-    "PROMPTZ_API_KEY": "da2-45yiufdo5rcflbas7rzd3twble"
-  },
-  "disabled": false,
-  "autoApprove": []
+{
+  "mcpServers": {
+    "promptz.dev/mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@promptz/mcp"
+      ],
+      "env": {
+        "PROMPTZ_API_URL": "https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql",
+        "PROMPTZ_API_KEY": "da2-45yiufdo5rcflbas7rzd3twble"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
 }
+
+
 ```
 
-Save this file.One thing to think about as you start exploring and integrating MCP Servers is that these are downloading and installing libraries or containerised images. As such, you will need to make sure that you have installed any dependencies. These are typically documented in the MCP Server details. 
+Save this file. 
+
+Introduced in 1.10 of Amazon Q CLI, you now have a new command "q mcp" that provides you with a bunch of tools to help you manage your MCP server settings. When we run "q mcp" we get the following.
+
+```
+Usage: qchat mcp [OPTIONS] <COMMAND>
+
+Commands:
+  add     Add or replace a configured server
+  remove  Remove a server from the MCP configuration
+  list    List configured servers
+  import  Import a server configuration from another file
+  status  Get the status of a configured server
+  help    Print this message or the help of the given subcommand(s)
+```
+
+We can check the status of the MCP Server we have just configured running the following command:
+
+```
+q mcp status --name promptz.dev/mcp
+```
+
+which should give you some output like:
+
+
+```
+─────────────
+Scope   : 🌍 global
+File    : /Users/ricsue/.aws/amazonq/mcp.json
+Command : npx
+Timeout : 120000 ms
+Env Vars: PROMPTZ_API_URL, PROMPTZ_API_KEY
+```
+
+
+
+
+One thing to think about as you start exploring and integrating MCP Servers is that these are downloading and installing libraries or containerised images. As such, you will need to make sure that you have installed any dependencies. These are typically documented in the MCP Server details. 
 
 In this particular case, you will need to make sure I have uv and Python running, otherwise this is going to fail. Different MCP Servers will have different requirements so make sure you meet them before proceeding. 
 
-Start Amazon Q CLI from the terminal, and review the output. You should see something similar to the following:
+Start Amazon Q CLI from the terminal, and review the output. You should see something similar to the following (you might miss it as it is only on thre screen for a few moments):
 
 ```
-To learn more about MCP safety, see https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-mcp-security.html
-⠴ 0 of 1 mcp servers initialized
+0 of 1 mcp servers initialized. ctrl-c to start chatting now
 ```
 
-and after are few minutes, you should see the familiar Amazon Q CLI splash screen but with some additional text at the top:
+and very shortly after that, you should see the familiar Amazon Q CLI splash screen but with some additional text at the top:
 
 ```
 ✓ promptzdevmcp loaded in 1.29 s
@@ -804,6 +884,7 @@ You can exit this (CTRL + C) or leave it running until it finishes if you want.
 
 Congratulations, you have configured your first MCP Server. 
 
+---
 
 **Context Hooks**
 
@@ -835,6 +916,8 @@ Use /context hooks help to manage hooks.
 ```
 
 As I do not have any configured, nothing is showing.
+
+---
 
 **Task 17**
 
@@ -868,8 +951,9 @@ Review the output. What happens?
 
 Run the "/context hooks" command. What has changed.
 
-You can add context hooks, you can add them at the local or global level, using the "--global" to make the hook global, or setting it as a local, profile context hook without using that argument. 
+---
 
+You can add context hooks, you can add them at the local or global level, using the "--global" to make the hook global, or setting it as a local, profile context hook without using that argument. 
 
 Like with context, when you add context hooks these are added to the "context.json" file that we looked at earlier. Here is what mine looks like after adding a context hook that reads a file called "todo-hook.md" as part of every prompt when it is run.
 
@@ -891,6 +975,67 @@ Like with context, when you add context hooks these are added to the "context.js
   }
 }
 ```
+---
+
+**Managing conversations (Chats) across Amazon Q CLI sessions**
+
+Whilst you are working within your Amazon Q CLI session, you might need to stop and exit. However, you want to then return and then carry on working where you left off. Don't worry, Amazon Q CLI has you covered.
+
+*Starting with --resume*
+
+The first thing you can do is to use the "--resume" option when starting Amazon Q CLI. When you do this, it will look at the current directory you are in, and then look to carry on where you left off. You can see here in the screen that I start Amazon Q CLI with the "--resume" option, and it then looks at the current directory, sees that we were working on something and then is ready to continue.
+
+```
+ q chat --resume
+✓ promptzdevmcp loaded in 2.83 s
+✓ 1 of 1 mcp servers initialized.
+Picking up where we left off...
+
+╭─────────────────────────────── Did you know? ────────────────────────────────╮
+│                                                                              │
+│     You can resume the last conversation from your current directory by      │
+│                        launching with q chat --resume                        │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+/help all commands  •  ctrl + j new lines  •  ctrl + s fuzzy search
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+We've briefly discussed the Model Context Protocol (MCP) in Amazon Q, which is an open protocol that allows
+applications to provide context to LLMs and extend capabilities through additional tools.
+
+```
+
+*Saving and Loading conversations*
+
+As you are working, there might be times when want to provide a quick summary of the current conversation you have been having within your Amazon Q CLI. Perhaps it has been a long session and you want to retain all the prompts and information so you can review at a later time.
+
+You can now do this, using the "/save {name}" command, providing a name of the conversation you want to save. It will then generate a json document in the current directory.
+
+```
+> /save project
+
+✔ Exported conversation state to project.json
+```
+
+You can also load up a conversation from an Amazon Q CLI session using the "/load {name}" and it will then load up the conversation, leaving you ready to carry on where you left off.
+
+**Task 18**
+
+From your Amazon Q CLI session, at the ">" prompt try saving your current conversation:
+
+```
+> /save project-customer-survey
+```
+
+After it has saved, open up a new terminal and review the output.
+
+Now close your Amazon Q CLI session and start it again. From the ">" prompt, lets reload that conversation:
+
+```
+> /load project-customer-survey.json
+```
+
+After it loads, ask it something about the customer survey application. 
 
 ---
 

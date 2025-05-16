@@ -46,6 +46,8 @@ When you use the command line, you use a piece of software called a terminal. Wh
 
 Amazon Q CLI runs in a terminal, configured and enabled via the shell. It supports most terminal applications (for example iterm2, Ghostty, tux - you can check out the source code for the complete list), and supports three shells today: bash, zsh, and fish.
 
+---
+
 **Different installation options**
 
 **Windows**
@@ -71,9 +73,13 @@ There are many flavours of Linux, so you will need to determine which installati
 
 * Minimal installation - you can alternatively download and unzip Amazon Q CLI from a zip file. Follow the [installation guide](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-installing-ssh-setup-autocomplete.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el) to walk through installing Amazon Q CLI. This approach works on any Linux system including headless (remote) systems.
 
+---
+
 **Compiling from source**
 
 You can compile Amazon Q CLI from source if you want to build and run your own binaries. This is outside the scope of this workshop, but check out the "Supporting Resources" below for a blog post that walks you through the process.
+
+---
 
 **Logging in**
 
@@ -111,6 +117,8 @@ Accept the pop ups that appear, and once you have completed those steps (it was 
 Logged in successfully
 ```
 
+---
+
 **Confirming installation**
 
 To confirm that Amazon Q CLI is installed correctly, you can use the "q doctor" command. Run it in a new terminal window, and if everything is configured correctly you should get something like
@@ -137,13 +145,27 @@ which should produce the following. If you have a version OLDER than 1.9.1 then 
 q 1.9.1
 ```
 
+---
+
 **Updating Amazon Q CLI**
 
-You can update Amazon Q CLI to the latest version by running the following command, which will check for updates. You will be prompted to upgrade (Yes/No) which will then install the latest version for you automatically (if you proceed).
+You can update Amazon Q CLI to the latest version by running the following command, which will check for updates.
+
+```
+q update
+```
+
+ You will be prompted to upgrade (Yes/No) which will then install the latest version for you automatically (if you proceed).
 
 ![upgrade screen for q cli](/images/q-cli-upgrade.png)
 
 As Amazon Q CLI is an active project, make sure to check for updates and make use of the new capabilities as they are released.
+
+You can also view the latest changelog from the command line by typing the following command:
+
+```
+q version --changelog
+```
 
 ---
 
@@ -196,6 +218,8 @@ q debug log
 as you start using Amazon Q CLI, depending on the logging level set, you will now see realtime logging. This is useful if you are trying to troubleshoot issues.
 
 You can view other options by checking out "q debug help".
+
+---
 
 **Settings**
 
