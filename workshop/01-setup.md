@@ -120,7 +120,7 @@ Logged in successfully
 
 You can watch this process in this short video.
 
-[![Logging into Amazon Q CLI with Builder ID](/images/q-cli-builder-id-login.png)(https://youtu.be/WuInQ2Urmow)]
+[![Logging into Amazon Q CLI with Builder ID](/images/q-cli-builder-id-login.png)](https://youtu.be/WuInQ2Urmow)
 
 
 ---
