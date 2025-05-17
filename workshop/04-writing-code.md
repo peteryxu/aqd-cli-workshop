@@ -37,11 +37,13 @@ This will be our working directory for this lab. Don't go into Amazon Q CLI yet,
 
 **Task 01**
 
-The first thing we are going to do is create some context files which Amazon Q CLI will use when generating output. In the current (aqcli-app) directory:
+The first thing we are going to do is create some context files which Amazon Q CLI will use when generating output. As we mentioned in earlier parts of this tutorial, context is critical in getting good results when using AI coding assistants. As we think about what context we might want to provide to help steer Amazon Q CLI, we are going to create additional context around how we want the code to be structured, and provide some technologies that we want it to use. 
 
-1. Create a new directory ".amazonq/rules"
-2. In the ".amazonq/rules" create two files. "1.project-layout-rules.md" and "2.project-spec.md"
-3. In the "1.project-layout-rules.md" file, add the following:
+In the current (aqcli-app) directory:
+
+1. Create a new directory **".amazonq/rules"**
+2. In the **".amazonq/rules"** create two files. **"1.project-layout-rules.md"** and **"2.project-spec.md"**
+3. In the **"1.project-layout-rules.md"** file, add the following:
 
 ```
 Use the following project structure when writng code
@@ -55,7 +57,7 @@ src/
 ├ app.py
 ```
 
-4. In the "2.project-spec.md" file add the following:
+4. In the **"2.project-spec.md"** file add the following:
 
 ```
 When creating Python code, use the following guidance
@@ -66,7 +68,7 @@ When creating Python code, use the following guidance
 - Implement Flask-SQLAlchemy for database operations
 ```
 
-After saving these files, you should now have two files in the ".amazonq/rules" directory.
+After saving these files, you should now have two files in the **".amazonq/rules"** directory.
 
 During the previous labs we learned about how Amazon Q CLI reads certain files when starting, to preload context. What we have done is provide context around what we expect from a project layout perspective, as well as guidelines as to how to build the application. We should see how this affects the output in the next steps.
 
@@ -76,7 +78,7 @@ During the previous labs we learned about how Amazon Q CLI reads certain files w
 
 As we work on our new project, we are going to create a new profile and use this to define some additional context files we want to use just for this project.
 
-Start Amazon Q CLI, and from the ">" prompt, lets create our profile
+Start Amazon Q CLI, and from the **">"** prompt, lets create our profile
 
 ```
 > /profile create customer-survey-project
@@ -111,9 +113,9 @@ You should now have the following directory layout.
     └── database_schema.yaml
 ```
 
-Start Amazon Q CLI again. We need to switch to the profile we created so run "/profile set customer-survey-project".
+Start Amazon Q CLI again. We need to switch to the profile we created so run **"/profile set customer-survey-project"**.
 
-Now run the "/context show" directory. It should give you output similar to the following:
+Now run the **"/context show"** directory. It should give you output similar to the following:
 
 ```
 [customer-survey-project] > /context show
@@ -145,7 +147,7 @@ which should display the following:
 Added 1 path(s) to profile context.
 ```
 
-Now repeat the "/context show" command and review how its different. What has changed?
+Now repeat the **"/context show"** command and review how its different. What has changed?
 
 ---
 
@@ -175,13 +177,13 @@ Exit Amazon Q CLI to return to the command line. From the command line enter the
 export EDITOR=vi
 ```
 
-> If you want to use VSCode, then you can use "export EDITOR="code -w"
+> If you want to use VSCode, then you can use **"export EDITOR="code -w"**
 
 Check to make sure that this has set correctly (from the command line, echo $EDITOR), and then go back into your Amazon Q CLI session.
 
-First, from the ">" prompt, set the right profile ("/profile set customer-survey-project") to use.
+First, from the **">"** prompt, set the right profile ("/profile set customer-survey-project") to use.
 
-Now run "/editor" which should bring up your editor. Paste the prompt above into this file, and then save/edit. If you are using vim, press ESC, then write ":wq!".
+Now run **"/editor"** which should bring up your editor. Paste the prompt above into this file, and then save/edit. If you are using vim, press ESC, then write ":wq!".
 
 You should now see Amazon Q CLI start to work. As it works, you will need to review Tools that it wants to use (for example, writing to your file system). Respond "t" to trust and save you from having to enter this every time.
 
@@ -238,7 +240,7 @@ You can stop the application at any time by pressing CTRL + C.
 
 ---
 
-*Troubleshooting*
+**Troubleshooting**
 
 First stop the application if it is running by pressing CTRL + C.
 
@@ -251,7 +253,7 @@ You can try your own variations, but the key to getting good output is to frame 
 
 ---
 
-*Adding Tests**
+**Adding Tests**
 
 Amazon Q CLI makes it easy to add tests to our project. In this next lab we are going to generate tests for the code we have just created. 
 
