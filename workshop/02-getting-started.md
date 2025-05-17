@@ -46,7 +46,7 @@ How many times have you forgotten the various parameters you need to use to use 
 
 We can now do this a different way, which will save you more time. We can translate what you want to do (our intent), and Amazon Q CLI will figure out which command to use. It will present its suggestion, and then allow you to edit (if you need to) and then run that command. 
 
-You invoke this by typing “q ai” or “q translate” in the command line, followed by the action you want Q to convert into commands.
+You invoke this by typing **“q ai”** or **“q translate”** in the command line, followed by the action you want Q to convert into commands.
 
 ![demo of command line translation](/images/q-cli-cmd-translation.gif)
 
@@ -255,12 +255,17 @@ No files in the current directory matched the rules above.
 
 We can see here that it is looking at files that match **".amazonq/rules/**/*.md"**, **"README.md"**, and **"AmazonQ.md"**. If you have these in your project workspace, it will read these and add those as context.
 
+> **Note!** It can be a bit confusing how it displays "global:" and then ".amazonq/rules/**/*.md" - what does this mean? This refers to the Global Amazon Q CLI configuration, which is located in "~/.aws/amazonq...."
+
 
 *Adding local vs global context*
 
 You can add files to both your local or global context. 
 
-Local context means the current profile you are working in. As you switch or change to different profiles, the context files you have configured will change. To do this you use the **"/context add {markdown file}"**.
+* Global context allows you to add, remove context files that will be used all the time when you interact with Amazon Q CLI.
+* Local context allows you to add, remove context files in just the current profile you are working in. As you switch or change to different profiles, the context files you have configured will change. 
+
+To add local context files you use the **"/context add {markdown file}"**. To add global context files, you use **"/context add --global {markdown file}"**
 
 ---
 

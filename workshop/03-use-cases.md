@@ -45,6 +45,8 @@ Context files contain information like development rules, project details, or co
 * **Testing Requirements** - Include test strategies, coverage requirements, and QA procedures. Guide Amazon Q CLI to provide appropriate test code and strategies.
 * **Managing tasks** - Breaking down large complex software projects into a set of tasks, and then tracking these via markdown documents which Amazon Q CLI can manage.
 * **Capturing State** - For large projects when you start to reach the maximum of the context window, dumping the current state so that it can be re-used in susbsequent sessions will maintain understanding of what Amazon Q CLI has done before. 
+* **Enforcing Organisational coding/technical standards** - You might want to your developers to use specific practices/boilerplate code/etc that are approved by your organisation.
+
 
 The list of how I am seeing people use context files continues to grow, and is an area where you should be exploring and experimenting.
 

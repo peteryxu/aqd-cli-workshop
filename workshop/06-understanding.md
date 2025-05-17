@@ -34,7 +34,7 @@ You can use this approach for your own codebases. There are some things that you
 
 **Task 02**
 
-They saw a picture is worth a thousand words, and when look at codebases nothing beats having architecture, entity relationship, or sequence diagrams to provide a quick overview of how the application works. You can use Amazon Q CLI to generate these for you, so lets look at that now.
+They say a picture is worth a thousand words, and when look at codebases nothing beats having architecture, entity relationship, or sequence diagrams to provide a quick overview of how the application works. You can use Amazon Q CLI to generate these for you, so lets look at that now.
 
 From the ">" prompt in Amazon Q CLI session, enter the following prompt:
 

@@ -1,5 +1,9 @@
 ## Tracking changes with this workshop
 
+17th May 2025
+
+- incorporate feedback from GP (address typos, make clearer a few sections, add additional use case)
+
 16th May 2025
 
 - updated workshop for Amazon Q CLI 1.10

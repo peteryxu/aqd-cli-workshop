@@ -175,16 +175,20 @@ q version --changelog
 
 ---
 
-### Exploring Amazon Q CLI configuration
+### Exploring Amazon Q CLI configuration (Optional)
 
-Now that we have installed Amazon Q CLI we can dive deeper and look at how we can tune and configure it to our preferences.
+This is an optional section for those of you who want to dive deeper at Amazon Q CLI, looking at how you can tune and configure it to your preferences. Feel free to skip this section if you want.
 
 **Directory structure**
 
-You can use Amazon Q CLI anywhere as it will be installed in your path and should be available anywhere. When you start Amazon Q CLI, it will look at a global directory that is "~/.aws/amazonq". In addition to this global directory, the directory you are in when you start Amazon Q CLI is the project workspace directory. Amazon Q CLI will use this directory (".amazonq"). To summarise.
+You can launch Amazon Q CLI from a terminal window, the current directory is called the **"Project Workspace directory"**. It will look for specific configuration files in this directory, in the **.amazonq/"** directory, if it exists.
 
-* Global Amazon Q CLI directory - this is "~/.aws/amazonq" and is used by Amazon Q CLI to read in global configuration settings for context, profiles, and Model Context Protocol (MCP) settings - don't worry, we will look at what these are in a bit
-* Project Workspace directory - this is "./amazonq" and is used by Amazon Q CLI to read in project specific configuration files (for example context or MCP configuration)
+In addition to this, the Amazon Q CLI **Global directory"** is always in the **"~/.aws/amazonq"** directory, where it also looks for specific configuration files.
+
+To summarise.
+
+* Global Amazon Q CLI directory - this is **"~/.aws/amazonq"** and is used by Amazon Q CLI to read in global configuration settings for context, profiles, and Model Context Protocol (MCP) settings
+* Project Workspace directory - this is **".amazonq"** directory in the current directory where Amazon Q CLI was launched, and is used by Amazon Q CLI to read in project specific configuration files
 
 Don't worry too much at this stage though, you do not need to do anything yet. I am just providing you with this background info so you understand how you can tailor and configure Amazon Q CLI to provide the best output. We will see how later in this workshop.
 
