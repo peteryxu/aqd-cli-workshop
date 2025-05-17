@@ -18,6 +18,8 @@ From the ">" prompt, enter the following prompt:
 
 Follow along and after a few minutes you should have an updated project that now allows you to run this application locally as well as via gunicorn.
 
+---
+
 **Task 02**
 
 We are going to containerise this application, so in preparation for this lets ask Amazon Q CLI to help generate an entrypoint.sh script.
@@ -27,6 +29,8 @@ We are going to containerise this application, so in preparation for this lets a
 ```
 
 Follow along and review the script that is created. Given the non deterministic nature of how tools like Amazon Q CLI work, you might find that it only creates this script. More likely is that it will also create supporting Dockerfile and even Docker Compose files in your project.
+
+---
 
 **Task 03**
 
@@ -54,6 +58,8 @@ Try the script in a new terminal window and review the output - did it build ok?
 
 You could easily extend this script to ensure that you add tagging, or publishing this to a container repository like Amazon Elastic Container Registry (Amazon ECR). We are not going to do that in this lab, but you might want to try this yourself.
 
+---
+
 **Task 04**
 
 Now that we have a script to build our container images locally every time we make a change, we are ready to move this to the next stage. We will ask Amazon Q CLI to help us with the creation of GitHub actions so that we can use GitHub actions to automate the builds for us.
@@ -77,7 +83,6 @@ You can then try and initialise the GitHub actions to build the project. If you 
 If you want to see what my project looked like, you can [check out the GitHub repo here](https://github.com/094459/aqd-cli-demo)
 
 ---
-
 
 **Summary**
 

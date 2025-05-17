@@ -33,6 +33,8 @@ Don't worry, these files are not critial and were only created as part of the pr
 
 This will be our working directory for this lab. Don't go into Amazon Q CLI yet, as there are some thing we want to setup before we start.
 
+---
+
 **Task 01**
 
 The first thing we are going to do is create some context files which Amazon Q CLI will use when generating output. In the current (aqcli-app) directory:
@@ -68,6 +70,8 @@ After saving these files, you should now have two files in the ".amazonq/rules" 
 
 During the previous labs we learned about how Amazon Q CLI reads certain files when starting, to preload context. What we have done is provide context around what we expect from a project layout perspective, as well as guidelines as to how to build the application. We should see how this affects the output in the next steps.
 
+---
+
 **Task 02**
 
 As we work on our new project, we are going to create a new profile and use this to define some additional context files we want to use just for this project.
@@ -87,6 +91,8 @@ Created profile: customer-survey-project
 ```
 
 Ok this looks good, we are now ready for the next task. You will need to exit Amazon Q CLI as we are going to do more stuff on the command line.
+
+---
 
 **Task 03**
 
@@ -141,6 +147,8 @@ Added 1 path(s) to profile context.
 
 Now repeat the "/context show" command and review how its different. What has changed?
 
+---
+
 **Task 04**
 
 We are now ready to ask Amazon Q CLI to write some code for use. For that we need a prompt, so here is one I preparaed earlier.
@@ -181,6 +189,18 @@ For the next 10-12 minutes, you should see Amazon Q CLI start to write this appl
 
 When it finishes, Amazon Q CLI provides a summary of what it has done. Often it will put this in a README.md file. Scroll back through the terminal to review the summary and compare what it has created against some of the context files we provided.
 
+---
+
+*Viewing the code*
+
+When I use Amazon Q CLI to write code, to make it easier to review it I either start the Amazon Q CLI session from within a terminal in the IDE I am using, or I open up a new terminal, and then start an IDE session from the project directory. This way I now have a graphical tool to interact and review the files that have been created.
+
+![running Amaozn Q CLI in VSCode terminal](/images/q-cli-ide.png)
+
+(example of running Amazon Q CLI in the terminal within VSCode)
+
+---
+
 **Task 05**
 
 In this task we are going to see how we can use Amazon Q CLI to help us run the application. In doing so, if it encounters errors, it will be able to resolve these and then iterate on the code.
@@ -216,6 +236,8 @@ With luck you should be able to view our Customer Feedback application. If this 
 
 You can stop the application at any time by pressing CTRL + C.
 
+---
+
 *Troubleshooting*
 
 First stop the application if it is running by pressing CTRL + C.
@@ -227,7 +249,49 @@ Review the error in the logs. And the use that within the chat session. Use prom
 
 You can try your own variations, but the key to getting good output is to frame what you were doing, together with the error message. Sometimes you might need to include a lot of the additional information in the error, other time just the error is suffucient.
 
+---
+
+*Adding Tests**
+
+Amazon Q CLI makes it easy to add tests to our project. In this next lab we are going to generate tests for the code we have just created. 
+
 **Task 06**
+
+From the **">"** enter the following prompt:
+
+```
+> Add unit tests to this project for the routes and models. Aim for 50% test coverage
+```
+
+This will take around 10-15 minutes to complete, but as it starts to work you will see it first build up a picture of the project before then proceeding to implement test fixtures and then the tests themselves.
+
+It should run the tests and then show you a report. It is almost certain that you will get some warnings come up (typically around deprecated classes/methods/libraries). You can remediate these warnings, using them as inputs and crafting prompts to update code to address those warnings.  For example, this is a warning that came up with the code it generated:
+
+```
+tests/test_survey_routes.py::TestSurveyRoutes::test_delete_survey
+  /Users/ricsue/amazon-q-developer-cli/workshop-test/tests/test_survey_routes.py:209: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+    deleted_survey = Survey.query.get(survey_id)
+
+====================================== 37 passed, 49 warnings in 7.34s =======================================
+```
+
+I then used the following prompt to get Amazon Q CLI to help address this:
+
+```
+> Review the code and update the code to address warnings from the test, specifically "LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get()"
+```
+
+After about 5 minutes, we have updated code and we can see when the tests run, we have fewer warnings. Amazon Q CLI provides a detail of how it updated the code to address the use of the deprecated method.
+
+```
+============================================= 37 passed in 7.29s =============================================
+```
+
+Adding tests to new projects, or to existing projects that do not have them, is an incredible superpower that you get when using tools like Amazon Q CLI. However, you should make sure you review the test code and sense check to make sure that it is testing what you want and need it to test. 
+
+---
+
+**Task 07**
 
 Before we finish this lab, take some time to review your context usage. From the ">" prompt, enter "/usage" and review the output.
 

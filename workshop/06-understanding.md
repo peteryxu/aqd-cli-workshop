@@ -32,6 +32,8 @@ At the end of the review, did it also suggest areas of improvement?
 
 You can use this approach for your own codebases. There are some things that you should be aware of. From the ">" prompt, enter "/usage" to view your context window and the available tokens you have. For this small codebase, its not going to be an issue, but if you are working on very large codebases, you are going to need to scope down where Amazon Q CLI looks or you might exceed the limits.
 
+---
+
 **Task 02**
 
 They say a picture is worth a thousand words, and when look at codebases nothing beats having architecture, entity relationship, or sequence diagrams to provide a quick overview of how the application works. You can use Amazon Q CLI to generate these for you, so lets look at that now.
@@ -56,6 +58,7 @@ Again you will need to use an enhanced markdown viewer to view these diagrams. T
 
 ![example of UML sequence diagram](/images/q-cli-uml.png)
 
+---
 
 **Task 03**
 
@@ -127,6 +130,8 @@ json
   }
 }
 ```
+
+---
 
 **Task 04**
 
