@@ -844,6 +844,9 @@ promptzdevmcp (MCP):
 
 As you add more MCP Servers, each Tool will be listed and you will be able to control whether you trust specific, all, or none of the tools.
 
+
+---
+
 > **Note!**
 > The latest version of Amazon Q CLI load these up in the background. When you do a **"/tools"** you might see something like:
 >
@@ -859,7 +862,7 @@ As you add more MCP Servers, each Tool will be listed and you will be able to co
 >
 > You will have to wait until these load, so try again after a few seconds to make sure they are all then listed.
 
-
+---
 
 Back to the prompt - respond **"t"** to trust the tool. It will then being looking through the available prompts that are stored to find a relevant one. When I ran this, it generated the following:
 
