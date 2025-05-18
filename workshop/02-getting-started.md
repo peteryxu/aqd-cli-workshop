@@ -854,8 +854,6 @@ As you add more MCP Servers, each Tool will be listed and you will be able to co
 >Servers still loading
 > ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 > - promptzdevmcp
-> - awslabscost_analysis_mcp_server
-> - awslabscdk_mcp_server
 >
 > Trusted tools can be run without confirmation
 > ```
