@@ -253,9 +253,9 @@ When you start Amazon Q CLI, it will start with a fresh, clean context. It will 
 No files in the current directory matched the rules above.
 ```
 
-We can see here that it is looking at files that match **".amazonq/rules/**/*.md"**, **"README.md"**, and **"AmazonQ.md"**. If you have these in your project workspace, it will read these and add those as context.
+We can see here that it is looking at files that match **".amazonq/rules/\*\*/*.md"**, **"README.md"**, and **"AmazonQ.md"**. If you have these in your project workspace, it will read these and add those as context.
 
-> **Note!** It can be a bit confusing how it displays "global:" and then ".amazonq/rules/**/*.md" - what does this mean? This refers to the Global Amazon Q CLI configuration, which is located in "~/.aws/amazonq...."
+> **Note!** It can be a bit confusing how it displays "global:" and then **".amazonq/rules/\*\*/*.md"** - what does this mean? This refers to the Global Amazon Q CLI configuration, which is located in **"~/.aws/amazonq...."**
 
 
 *Adding local vs global context*
@@ -840,13 +840,26 @@ promptzdevmcp (MCP):
 - promptzdevmcp___get_prompt        trusted
 - promptzdevmcp___list_prompts      trusted
 
-
-Trusted tools can be run without confirmation
-
-* Default settings
 ```
 
 As you add more MCP Servers, each Tool will be listed and you will be able to control whether you trust specific, all, or none of the tools.
+
+> **Note!**
+> The latest version of Amazon Q CLI load these up in the background. When you do a **"/tools"** you might see something like:
+>
+> ```
+>Servers still loading
+> ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+> - promptzdevmcp
+> - awslabscost_analysis_mcp_server
+> - awslabscdk_mcp_server
+>
+> Trusted tools can be run without confirmation
+> ```
+>
+> You will have to wait until these load, so try again after a few seconds to make sure they are all then listed.
+
+
 
 Back to the prompt - respond **"t"** to trust the tool. It will then being looking through the available prompts that are stored to find a relevant one. When I ran this, it generated the following:
 
