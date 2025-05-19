@@ -917,7 +917,7 @@ Congratulations, you have configured and tested your first MCP Server.
 
 ---
 
-**Prompts**
+**MCP Prompts**
 
 MCP Servers can provide three types of resources: Tools, Resources, and Prompts. When you are reviewing MCP Server details, they will typically provide documentation that covers which of these they support. Tools are the most common resource MCP Server provide and provide the ability for you to define functions that can be called by your AI coding assistant. Resources in MCP are a way to share data between the server and clients. Unlike tools, which are used for executing actions, resources are used for sharing and synchronizing state (for example, static data like configuration files, dynamic data that changes over time like user data, binary data like an image file, etc). Prompts in MCP enable you to create templates of prompts that allow you to create consistent, reusable prompts for your user interaction.
 
