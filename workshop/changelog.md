@@ -1,5 +1,11 @@
 ## Tracking changes with this workshop
 
+19th May 2025
+
+- added "/context show -expand" to show status of context hooks
+- added "/prompts" section with new tasks around configuring your own MCP Server
+- updated somem confusion around what "global" context is
+
 17th May 2025
 
 - incorporate feedback from GP (address typos, make clearer a few sections, add additional use case)

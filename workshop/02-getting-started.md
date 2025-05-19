@@ -255,8 +255,6 @@ No files in the current directory matched the rules above.
 
 We can see here that it is looking at files that match **".amazonq/rules/\*\*/*.md"**, **"README.md"**, and **"AmazonQ.md"**. If you have these in your project workspace, it will read these and add those as context.
 
-> **Note!** It can be a bit confusing how it displays "global:" and then **".amazonq/rules/\*\*/*.md"** - what does this mean? This refers to the Global Amazon Q CLI configuration, which is located in **"~/.aws/amazonq...."**
-
 
 *Adding local vs global context*
 
@@ -919,6 +917,141 @@ Congratulations, you have configured and tested your first MCP Server.
 
 ---
 
+**Prompts**
+
+MCP Servers can provide three types of resources: Tools, Resources, and Prompts. When you are reviewing MCP Server details, they will typically provide documentation that covers which of these they support. Tools are the most common resource MCP Server provide and provide the ability for you to define functions that can be called by your AI coding assistant. Resources in MCP are a way to share data between the server and clients. Unlike tools, which are used for executing actions, resources are used for sharing and synchronizing state (for example, static data like configuration files, dynamic data that changes over time like user data, binary data like an image file, etc). Prompts in MCP enable you to create templates of prompts that allow you to create consistent, reusable prompts for your user interaction.
+
+We have already looked at how Amazon Q CLI supports MCP Tools, but it also supports MCP Prompts with the **"/prompts"** command. This will look at any MCP Servers that are providing Prompts resources, and then list them. You are then able to use these within your Amazon Q CLI sessions, referring to defined prompt templates with the **"@{prompt}"** command.
+
+**Task 17**
+
+Open a new terminal window and create a new directory (for example, "~/projects/mcp-prompts").
+
+From this window, create a file called **"mcp-server.py"** and add the following code. This will generate a simple MCP Server that provides a Tool and a Prompt:
+
+```
+import asyncio
+import sys
+
+from crawl4ai import *
+from mcp.server.fastmcp import Context, FastMCP
+
+# Create an MCP server
+mcp = FastMCP("ContextScraper")
+
+@mcp.tool()
+async def crawl(url: str, ctx: Context) -> str:
+    """crawls a given webpage URL and returns a markdown representation of the webpage content"""
+
+    # Suppress stdout outputs
+    dev_null = open("/dev/null", "w")
+    sys.stdout = dev_null
+
+    # Crawl the given webpage using Crawl4AI
+    async with AsyncWebCrawler() as crawler:
+        result = await crawler.arun(url=url)
+        return result.markdown
+
+@mcp.prompt()
+def create_context_from_url(url: str) -> str:
+    """A prompt that takes a URL and uses the crawl tool to add webpages to Q developer context rules"""
+    return f'Use the crawl tool to crawl url={url}. Write the webpage content to a markdown file in ".amazonq/rules/" of the current directory. Choose a fitting name for the file'
+
+@mcp.prompt()
+def create_new_project() -> str:
+    """A prompt that bootstraps a new project repository as per our requirements"""
+    return f'Create a new project layout. Create a top level src directory, and in the src directory create subdirectories for templates, models, routes, and static. Add a README.md to the src directory.'
+```
+
+After saving this file, create a virtual python environment and install a couple of dependencies:
+
+```
+python -m venv .mcp
+source .mcp/bin/activate
+pip install mcp crawl4ai mcp[cli]
+```
+
+After load these, create a new **"mcp.json"** configuration file in a folder called **".amazonq"** in the current directory.
+
+```
+mkdir .amazonq
+touch .amazonq/mcp.json
+```
+
+And then add the following to this file:
+
+```
+{
+    "mcpServers": {
+        "ContextScraper": {
+            "command": "uv",
+            "args": ["run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+        }
+    }
+}
+```
+
+Save this file and then return back to the new directory you created. Make sure you are not in the ".amazonq" directory. Start an Amazon Q CLI session.
+
+You should see that it has started a new MCP Server.
+
+From the **">"** prompt, type **"/prompts"** and hit return. You should see something like the following:
+
+```
+> /prompts list
+
+Prompt                    Arguments (* = required)
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+context_scraper (MCP):
+- create_context_from_url url*
+- create_new_project
+```
+
+We can try this out now, from a new **">"** enter the following
+
+```
+@create_new_project
+```
+
+Which should generate output like the following:
+
+```
+> @create_new_project
+I'll help you create this project layout with the requested directory structure and README.md file. Let
+me do that for you.
+
+
+🛠️  Using tool: execute_bash
+ ⋮
+ ● I will run the following shell command:
+mkdir -p src/templates src/models src/routes src/static
+ ⋮
+ ↳ Purpose: Creating the project directory structure with src and its subdirectories
+
+
+Allow this action? Use 't' to trust (always allow) this tool for the session. [y/n/t]:
+
+> t
+
+ ⋮
+ ● Completed in 0.29s
+```
+
+Check out the results in your current directory. It should have implemented the new project layout.
+
+We can try the other Prompt, which takes input (and URL) and then creates a context file based on searching that web page. (feel free to change the web page for something different)
+
+```
+> @create_context_from_url url=https://blog.beachgeek.co.uk/mcp-finch/
+```
+
+Once finished, run the **"/context show"** command. 
+
+Do you see this now added to your context? This could be useful when you need to add some new API docs for a library you are working on and want to add them to your context.
+
+
+---
+
 **Context Hooks**
 
 Context hooks are a feature in Amazon Q CLI that you can use to automatically inject context into your conversations with Q Developer CLI. Instead of manually adding context with the **"/context"** command, context hooks run commands and include their output as context.
@@ -952,7 +1085,7 @@ As I do not have any configured, nothing is showing.
 
 ---
 
-**Task 17**
+**Task 18**
 
 Lets add a new context hook that is invoked every time we prompt. Exit Amazon Q CLI and create a new file called **"MYHOOK.md"** in the current directory, and add this to the file:
 
@@ -1008,6 +1141,34 @@ Like with context, when you add context hooks these are added to the **"context.
   }
 }
 ```
+
+You can check what context hooks you have within your Amazon Q CLI session by running the **"/context show --expand"** command, which will provide you with the following summary at the top of the page.
+
+```
+🌍 global:
+    .amazonq/rules/**/*.md (2 matches)
+    README.md (1 match)
+    AmazonQ.md
+
+    🔧 Hooks:
+    On Session Start:
+      <none>
+    Per User Message:
+      <none>
+
+👤 profile (default):
+    <none>
+
+    🔧 Hooks:
+    On Session Start:
+      <none>
+    Per User Message:
+      <none>
+```
+
+(It will also dump out any context files you have added, so if you have defined those you will need to scroll upwards to see the above summary)
+
+
 ---
 
 **Managing conversations (Chats) across Amazon Q CLI sessions**
@@ -1052,7 +1213,7 @@ You can now do this, using the **"/save {name}"** command, providing a name of t
 
 You can also load up a conversation from an Amazon Q CLI session using the **"/load {name}"** and it will then load up the conversation, leaving you ready to carry on where you left off.
 
-**Task 18**
+**Task 19**
 
 From your Amazon Q CLI session, at the **">"** prompt try saving your current conversation:
 
@@ -1081,6 +1242,8 @@ Some additional reading material that dives deeper into this topic if you want t
 * [Configuring Model Context Protocol (MCP) with Amazon Q CLI](https://dev.to/aws/configuring-model-context-protocol-mcp-with-amazon-q-cli-e80)
 
 * [Running Model Context Protocol (MCP) Servers on containers using Finch](https://dev.to/aws/running-model-context-protocol-mcp-servers-on-containers-using-finch-kj8)
+
+* [Q-Bits: Enhance Amazon Q Developer CLI's Context Using MCP for Web Crawling](https://community.aws/content/2ulohBgBuogjKVEKTjGff71oOY3/q-bits-enhance-amazon-q-developer-cli-s-context-using-mcp-for-web-crawling) 
 
 
 ### Completed!
