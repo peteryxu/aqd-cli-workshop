@@ -991,9 +991,21 @@ And then add the following to this file:
 }
 ```
 
-Save this file and then return back to the new directory you created. Make sure you are not in the ".amazonq" directory. Start an Amazon Q CLI session.
+All we are doing here is providing the mechanism by which to run our MCP Server, so in this case, just using uv to run it with these parameters.
 
-You should see that it has started a new MCP Server.
+Save this file and then return back to the new directory you created. You should end up with something like this:
+
+```
+mcp-prompts/
+  ├── .mcp
+  ├── .amazonq
+  │    └── mcp.json
+  └── mcp-server.py
+```
+
+Make sure you are not in the ".amazonq" directory. Start an Amazon Q CLI session.
+
+You will see it try and load up the MCP Server we have specified in the mcp.json.
 
 From the **">"** prompt, type **"/prompts"** and hit return. You should see something like the following:
 
