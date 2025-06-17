@@ -774,6 +774,6 @@ Some additional reading material that dives deeper into this topic if you want t
 
 ### Completed!
 
-Now that we have an idea of how Amazon Q CLI works and explored some of the features, we can take a look at some of the use cases in [Exploring Use Cases](03-use-cases.md)
+Now that we have an idea of how Amazon Q CLI works and explored some of the features, we can take a look at some of the use cases in [Exploring Use Cases](03a-use-cases.md)
 
 
