@@ -39,8 +39,7 @@ To follow along this workshop, you are going to need:
 * A [supported terminal]() software ([most are supported](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-supported-envs.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el))
 * A supported shell - bash, zsh, or fish
 * (optional) A code editing tool (Zed, VSCode, etc) - this will make it easier to work with files that are generated, but vim also works
-* (optional) A container runtime tool for your machine - Docker, Finch, Rancher, Podman are all ok
-* (optional) An AWS Account is required for one of tha labs - if you don't have one don't worry, you can still do all the other labs without one
+
 
 You will doing the following as part of this workshop:
 
