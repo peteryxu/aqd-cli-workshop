@@ -160,6 +160,8 @@ Some additional reading material that dives deeper into this topic if you want t
 
 * [From Diagram to Code with Amazon Q Developer](https://github.com/welcloud-io/wio-from-diagram-to-code-with-amazon-q-developer)
 
+* [Amazon Q Developer CLI supports image inputs in your terminal](https://aws.amazon.com/blogs/devops/amazon-q-developer-cli-supports-image-inputs-in-your-terminal/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
+
 ---
 
 ### Completed!

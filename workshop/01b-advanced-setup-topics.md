@@ -79,7 +79,7 @@ You can also open up the settings file using the command **"q settings open"** w
 ```
 {
   "chat.defaultModel": "claude-4-sonnet",
-  "chat.editModel": "vi",
+  "chat.editMode": "vi",
   "mcp.loadedBefore": true
 }
 ```
@@ -94,15 +94,44 @@ You can view your current settings, using the command **q settings all**:
 q settings all
 
 chat.defaultModel = "claude-4-sonnet"
-chat.editModel = "vi"
+chat.editMode = "vi"
 mcp.loadedBefore = true
 ```
+
+You can view the settings of individual settings using the format **q settings {setting}**, for example:
+
+```
+q setting chat.Mode
+```
+
 
 You can view the various options by using the "help" option when running this:
 
 ```
 q settings help
 ```
+
+---
+
+**Available settings in Amazon Q CLI**
+
+As Amazon Q CLI is an open source project, I was able to use it to review the source files and create a list of available settings. The following list is what was produced. I have not had a chance to review them all, and they will change over time.
+
+* chat.enableNotifications (boolean) - Enable notifications for chat (default: false)
+* chat.greeting.enabled (boolean) - Show greeting message when starting chat (default: true)
+* chat.editMode (string) - Set the edit mode for the chat interface
+* chat.skimCommandKey (string) - Configure the command key for skim in chat (default is ctrl + s)
+* api.timeout (integer, millesends) - 300000 (5 minutes) is the default timeout when calling backend Amazon Q services
+* ssh.remote-prompt (string) - Configure remote prompt behavior (default: "ask")
+* ssh.remote-prompt.timeout (integer) - Set timeout for remote prompt in milliseconds (default: 2000)
+* telemetry.enabled (boolean) - Enable or disable telemetry (default: true)
+* shell-integrations.enabled (boolean) - Enable shell integrations (default:true)
+* shell-integrations.immediateLogin (boolean) - Prompt for immediate login in shell integrations
+* dotfiles.enabled (boolean) - Enable dotfiles management (default: true)
+* mcp.loadedBefore (boolean) - Track if Model Context Protocol has been loaded before
+* mcp.initTimeout (integer, millesends) - 5000 (5 seconds) is the default timeout to wait for MCP Servers in interactive mode
+* mcp.noInteractiveTimeout (integer, millesends) - 30000 (30 seconds) is the default timeout to wait for MCP Servers in interactive mode
+
 
 ---
 
