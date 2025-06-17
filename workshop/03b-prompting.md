@@ -2,7 +2,7 @@
 
 ## Writing good Prompts
 
-There are no labs in this section of this tutorial. We are just going to explore good practices around Prompt design. This is super important in order to get the best out of AI Coding Tools like Amaozn Q CLI. This is a fast evolving and change space, so I will be updating this as I learn new things, and as other share their Prompting good practices with me. Be sure to check this on a regular basis, as well as the supporting resources at the end.
+There is a temptation when using AI Coding Assistants like Amazon Q CLI to dive right in and think that you do not need to invest time in writing Prompts. I would encourage readers to rethink this, and spend time BEFORE using these tools to write code. Why? Time invested here, will help you better understand what it is you are trying to achieve and better direct AI to help produce good output.
 
 **Good Prompts are not enough**
 
@@ -20,10 +20,9 @@ Whilst this looks simple written down, as you start using these tools with your 
 > You might be thinking that if Context is so important, why don't I just give the AI Coding Assistant everything and let it figure it all out. Whilst that might be an option in the future, where we are today is that we are limited in how much we can provide them. Both from a capacity perspective (for example, Amazon Q CLI has a context window of 200K tokens), but also from a practical perspective - currently, LLMs have a habbit of going down rabbit holes when you provide too much context. The key is balance, and that is something that you will get an intuition for over time as you use these tools more regularly.
 >
 
-## What makes a good Prompt?
+## Fundamentals of a good Prompt
 
-The key to a good Prompt is to provide both specific task details, combined with enough relevant context so that the LLM can provide you with consistently good output. In the following sections we will explore what this looks like and provide some examples:
-
+A well crafted Prompt centres on clarity. AI Coding Assistants produce better results when given precise instructions and a clearly defined scope. Consider these essential elements when designing your prompts:
 **1. Specificity and clarity**
 
 AI Coding Assistants want you to provide as much detail and clarity about the task you want to it do do.
@@ -31,7 +30,9 @@ AI Coding Assistants want you to provide as much detail and clarity about the ta
 * **Provide detailed and un ambiguous direction** - you should provide as much detail as you can, making sure you provide specific details. The more **relevant** details you leave out, the more you are leaving for the LLM to fill in the blanks.
 * **Break down problems into smaller tasks** - there is a temptation to ask AI Coding Assistants to deliver the end result you are looking for. For larger problems, you will get better results in trying to break down that problem into a series of tasks, and then tackle them one at a time.
 * **Create Prompts to tackle specific tasks** - you will find over time that certain tasks can be achieved very effectively with the same Prompt, so you should look to re-use these across your teams. Typically these might be tasks like creating documentatio in a specific way, or generating diagrams of your projects, but there are other common Prompts you will find yourself returning to.
-* **Iterate in a linear style** - the output of previous tasks (and the Prompt used) is provided in subsequent requests, which provides useful Context and helps ensure that the output generated aligns and makes sense. Do not clear context or use new sessions to carry on working on tasks (unless you encounter issues or halucinations that require a reset) 
+* **Iterate in a linear style** - the output of previous tasks (and the Prompt used) is provided in subsequent requests, which provides useful Context and helps ensure that the output generated aligns and makes sense. Do not clear context or use new sessions to carry on working on tasks (unless you encounter issues or halucinations that require a reset)
+* **Define your constraints** - outline any restrictions, for example: "Do not implement sections outside the specified requirements."
+* **Role** - Specify the required expertise or persona. For instance: "You are an experienced software engineer with specialised knowledge in Python."
 
 Things to avoid:
 
@@ -43,7 +44,7 @@ Things to avoid:
 
 Depending on the tool you are using, you might need to provide Context within your prompt, or provide it as a document (typically in markdown format) within your project workspace. When providing Context, you can look at this as both functional and non functional. Your output is critically dependant on your context. Make sure you:
 
-* **Describe your situation** - You should provide clear background details that describe your project, look at and explain your functional and non functional requirements, and outline your constraints.
+* **Describe your situation** - you should provide clear background details that describe your project, look at and explain your functional and non functional requirements, and outline your constraints.
 * **Provide additional context that might not be in the code** - AI Coding Assistants cannot read minds (yet!) so do not make any assumptions and provide any additional information and Context that you think they might need. A good example of this is when working with new libraries you might want to use. You can add these to your local project workspace as Context - check out the supporting resources at the end of this lab for a deep dive on this
 * **Define project standards via scaffolding documents** - defining key pieces of information in markdown documents, which I call scaffolding docs, help root the AI Coding Tools suggestions and recommendations. Refine these over time based on your own or organisational needs. Re-use these across your organisation, either directly through the tooling or through third party tools and resources that are emerging to help.
 * **Markdown is your new friend** - Context tends to be written in markdown documents within your project workspace - you are going to be writing a lot of these docs. Plugins to convert from Word/Google docs to markdown exist to enable you to re-use existing documentation.
@@ -68,6 +69,7 @@ The final good practice when thinking about Prompts is to provide good examples 
 * **Provide example input and output data formats** - Be explicit in providing expected inputs for your code, but also what you expect the code to provide as output. Providing an example will help you shape and control your applications data formats. This extends to including data formats and types as well.
 * **Provide sample code snippets or examples you want it to follow** - AI Coding Assistants are great at taking existing example code you have, and using that as a template. Create samples of how you want the code to look - include docstrings for documentation, style preferences, variable names standards, etc.
 
+You need not include every element in every prompt. Use this as checklist to help create well-formed prompts that yield accurate and consistent results.
 
 ---
 
@@ -75,14 +77,14 @@ The final good practice when thinking about Prompts is to provide good examples 
 
 We want to deploy our application on a container on AWS. Lets look at good and bad examples of what a Prompt (and supporting Context) would look like
 
-> *Bad Example*
->
+ *Bad Example*
+
 > How do I deploy a container on AWS?
 
 
 
-> *Better Example*
->
+ *Better Example*
+
 > I need to deploy a containerized Node.js e-commerce application that handles 50,000 daily users with peak loads during promotional events.
 > Requirements:
 > - High availability across multiple regions
@@ -97,35 +99,28 @@ We want to deploy our application on a container on AWS. Lets look at good and b
 
 ---
 
-The following structure can provide AI Coding Assistants useful context. You would create a document in markdown format within your project workspace, and complete the details. 
+## Practical Guidelines
 
-```
-[Business Context] 
-- Project description: 
-- Performance requirements: 
-- Compliance needs: 
-- Scale expectations: 
+The following provides some practical information that you might find helpful in imporoving your Prompts.
 
-[Technical Details] 
-- Current technology stack: 
-- Versions/dependencies: 
-- Technical constraints: 
-- Environment details: 
+**Meta-Prompting**
 
-[Specific Request] 
-- Task description: 
-- Expected outcome: 
-- Special considerations: 
+**Meta Prompting** is where you ask the AI Coding Assistant (or any other LLM) to refine or improve your Prompt.This is a highly effective technique, and my colleague Dennis Traub has written about this in his post, [AI-Powered Prompt Engineering: Create the Perfect Prompt - Every Single Time!](https://community.aws/content/2hVZaVgpovhzdi5ijY12ZKDPGBc/ai-powered-prompt-engineering-create-the-perfect-prompyt-every-single-time?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el). Apply this approach to validate and test your Prompts.
 
-[Output Format] 
-- Desired format: 
-- Level of detail: 
--  Examples needed: 
-- Additional requirements:
-```
+This technique is also useful for generating variants of your Prompts. When you are uncertain about the optimal phrasing of your Prompt, you can request multiple versions of the prompt. For example, put your prompt in a markdown document and then use something like "Provide three alternative prompts for the Prompt in xxxx.". You can also switch to using different Models (for example, switching between Sonnet 3.5, 3.7 and 4.0 which Amazon Q CLI allows you to do) to see if you get different (improved) output.
+
+**Narrow the Scope as Complexity Increases**
+
+As tasks or codebases become more complex, narrow your prompt to focus on specific components or objectives. Reference particular documents or files within your prompt instead of relying solely on the model’s internal retrieval capabilities.
+
+Leverage tools or commands available in Amazon Q CLI, for example @workspace or @file to incorporate relevant external information, code examples, or documentation. This additional context can lead to more accurate and targeted responses. MCP Servers are emerging as a great way to help in this space too.
+
+**Think Multi-modal**
+
+Amazon Q Developer is able to understand information from a variety of formats, from markdown documents within your project workspace, to architecture diagrams. Check out the supporting resources below for a list of curated content that dives deep into this topic.
+
 
 ---
-
 ## Managing your prompts
 
 This lab has shared why writing good Prompts is important. Good Prompts take time, and so you want to make sure that you think about how you are going to manage the artefacts around this.
@@ -158,6 +153,11 @@ Some additional reading material that dives deeper into this topic if you want t
 * [Amazon Q Developer CLI: 4 ways to code with the latest libraries](https://community.aws/content/2o4XzTEHSNwpeF3VhWAX97C6lur/amazon-q-developer-cli-4-ways-to-code-with-the-latest-libraries)
 
 * [The Prompt Engineering Playbook for Programmers](https://addyo.substack.com/p/the-prompt-engineering-playbook-for)
+
+* [Prompting Guideance](https://github.com/DEFRA/defra-ai-sdlc/blob/main/pages/appendix/prompt-library/prompting-guidance.md)
+
+* [From Diagram to Code with Amazon Q Developer](https://github.com/welcloud-io/wio-from-diagram-to-code-with-amazon-q-developer)
+
 ---
 
 ### Completed!

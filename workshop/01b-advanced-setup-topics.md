@@ -104,7 +104,6 @@ You can view the various options by using the "help" option when running this:
 q settings help
 ```
 
-
 ---
 
 ### Supporting Resources
