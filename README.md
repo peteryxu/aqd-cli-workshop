@@ -55,27 +55,37 @@ You will doing the following as part of this workshop:
 This workshop will first of all get you up and running with Amazon Q CLI - installing, configuration, and understanding the different parts that make up Amazon Q CLI. Once we have had some time to explore its capabilities, we will use that knowledge against a number of typical use cases where you might use it.
 
 
-## 1. Installation and Setup
+## Installation and Setup
 
-[Follow this link](workshop/01-setup.md) to get started with installing Amazon Q CLI. You do not need an AWS account to use Amazon Q CLI. You can use the free tier by [creating a Builder ID](https://s12d.com/builder-id), and then using that Builder ID to login.
+[Follow this link](workshop/01a-setup.md) to get started with installing Amazon Q CLI. You do not need an AWS account to use Amazon Q CLI. You can use the free tier by [creating a Builder ID](https://s12d.com/builder-id), and then using that Builder ID to login.
+
+You can then (optionally) [explore more advanced setup topics](/workshop/01b-advanced-setup-topics.md) to get a deeper understanding of how Amazon Q CLI works, looking at important directories and files as well as how to configure various settings.
 
 ---
 
-## 2. Learning and exploring Amazon Q CLI capabilities
+## Learning and exploring Amazon Q CLI capabilities
 
 Once we have Amazon Q CLI installed, setup, and configured, we are ready to explore its capabilities. In this lab we are going to go over the features in detail and provide your first opportunity to get hands on.
 
-[Follow this link](workshop/02-getting-started.md) to explore the wonderful world of Amazon Q CLI, including getting hands on with some excercises.
+[Follow this link](workshop/02a-getting-started.md) to explore the wonderful world of Amazon Q CLI, including getting hands on with some excercises.
+
+Once you have learned the basics, you can dive deeper and [explore more advanced capabilities](workshop/02b-advanced-topics.md).
 
 ---
 
-## 3. Use Cases
+## Use Cases
 
-Understanding how and where you can use tools like Amazon Q CLI is the topic of this next section. [Follow this link](workshop/03-use-cases.md) where we will explore some ideas on how to do this.
+Understanding how and where you can use tools like Amazon Q CLI is the topic of this next section. [Follow this link](workshop/03a-use-cases.md) where we will explore some ideas on how to do this.
 
 ---
 
-## 4. Writing code with Amazon Q CLI 
+## Guide to better Prompts
+
+The key to getting the most out of Amazon Q CLI is to understand how to better Prompt. To understand that, we need to look at how tools like Amazon Q Developer work. This will help you understand how to create better Prompts which will lead to better outcomes. [Follow this link](/workshop/03b-prompting.md) 
+
+---
+
+## Writing code with Amazon Q CLI 
 
 In this lab we are going to use some of the things we have learned to help use write some code using Amazon Q CLI.
 
@@ -83,7 +93,7 @@ In this lab we are going to use some of the things we have learned to help use w
 
 ---
 
-## 5. Automation
+## Automation
 
 In this lab we are going to look at sysadmin and automation use cases, exploring some of the ways you can use Amazon Q CLI in your day to day activities.
 
@@ -91,22 +101,13 @@ In this lab we are going to look at sysadmin and automation use cases, exploring
 
 ---
 
-## 6. Understanding Codebases
+## Understanding Codebases
 
 In this lab we will explore how we can use Amazon Q CLI to help us get up to speed quickly with codebases, and understand the applications or code we are working with.
 
 [Follow this link](workshop/06-understanding.md) dive into this lab.
 
 ---
-
-## 7. Working with AWS (Coming soon!)
-
-In this lab we will explore how we can use Amazon Q CLI to help with your AWS environment, and this is the only lab where you will need to have an AWS account.
-
-[Follow this link](workshop/07-working-with-aws.md) dive into this lab.
-
----
-
 
 
 ## Wrap up 

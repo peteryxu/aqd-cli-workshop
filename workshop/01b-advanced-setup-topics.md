@@ -1,0 +1,123 @@
+![Amazon Q Developer header](/images/q-vscode-header.png)
+
+## Diving deeper into Amazon Q CLI setup
+
+This optional section provides a deeper look at how Amazon Q CLI is setup.
+
+### Exploring Amazon Q CLI configuration (Optional)
+
+This is an optional section for those of you who want to dive deeper at Amazon Q CLI, looking at how you can tune and configure it to your preferences. Feel free to skip this section if you want.
+
+**Directory structure**
+
+You can launch Amazon Q CLI from a terminal window, the current directory is called the **"Project Workspace directory"**. It will look for specific configuration files in this directory, in the **.amazonq/"** directory, if it exists.
+
+In addition to this, the Amazon Q CLI **Global directory"** is always in the **"~/.aws/amazonq"** directory, where it also looks for specific configuration files.
+
+To summarise.
+
+* Global Amazon Q CLI directory - this is **"~/.aws/amazonq"** and is used by Amazon Q CLI to read in global configuration settings for context, profiles, and Model Context Protocol (MCP) settings
+* Project Workspace directory - this is **".amazonq"** directory in the current directory where Amazon Q CLI was launched, and is used by Amazon Q CLI to read in project specific configuration files
+
+Don't worry too much at this stage though, you do not need to do anything yet. I am just providing you with this background info so you understand how you can tailor and configure Amazon Q CLI to provide the best output. We will see how later in this workshop.
+
+**Logging and debugging options**
+
+You can view logs for Amazon Q CLI by acessing the following directories in a new terminal.
+
+* macOS: $TMPDIR/qlog/
+* Linux: ~/.local/share/amazonq/logs/
+* Windows: ~/.local/share/amazonq/logs/
+
+You can configure the verbository of the logs by setting an environment variable, Q_LOG_LEVEL.
+
+```
+export Q_LOG_LEVEL=debug
+q 
+```
+
+This can be set to the following levels:
+
+```
+* error: Only error messages (default)
+* warn: Warning and error messages
+* info: Informational, warning, and error messages
+* debug: Debug, informational, warning, and error messages
+* trace: All messages including detailed trace information
+```
+
+You can get realtime logging information from Amazon Q CLI by running the following command in a terminal window:
+
+```
+q debug log
+```
+
+as you start using Amazon Q CLI, depending on the logging level set, you will now see realtime logging. This is useful if you are trying to troubleshoot issues.
+
+You can view other options by checking out "q debug help".
+
+---
+
+**Settings**
+
+Amazon Q CLI allows you to set a number of different configuration parameters so that you can tailor how it works. You can configure these via Amazon Q CLI itself, using the **"q settings"** command, or by directly updating the configuration file (which we will cover below).
+
+For example, if I wanted to change the default model that Amazon Q CLI uses, I can use the following command from the terminal.
+
+```
+q settings chat.defaultModel claude-4-sonnet
+```
+
+Some useful / interesting settings you can set
+
+* **q settings app.disableAutoupdates true** - this will disable the auto update for Amazon Q CLI
+* **q settings chat.enableThinking true** - this will enable Thinking mode in Amazon Q CLI, which might provide you better results under some use cases
+* **q settings chat.greeting.enabled false** - disables the Amazon Q ascii banner
+
+You can also open up the settings file using the command **"q settings open"** which will open up the settings file in your default editor. For example, on my MacOS, these settings are written to the local **"~/Library/Application Support/amazon-q"** directory as "settings.json" - this is what mine looks like:
+
+```
+{
+  "chat.defaultModel": "claude-4-sonnet",
+  "chat.editModel": "vi",
+  "mcp.loadedBefore": true
+}
+```
+
+On Linux systems they will be localed in **"/home/{username}/.local/share/amazon-q"** (where "{username}" is the logged in username).
+
+
+
+You can view your current settings, using the command **q settings all**:
+
+```
+q settings all
+
+chat.defaultModel = "claude-4-sonnet"
+chat.editModel = "vi"
+mcp.loadedBefore = true
+```
+
+You can view the various options by using the "help" option when running this:
+
+```
+q settings help
+```
+
+
+---
+
+### Supporting Resources
+
+Some additional reading material that dives deeper into this topic if you want to explore:
+
+* [The essential guide to installing Amazon Q Developer CLI on Windows](https://dev.to/aws/the-essential-guide-to-installing-amazon-q-developer-cli-on-windows-lmh)
+* [The essential guide to installing Amazon Q Developer CLI on Linux (headless and desktop)](https://dev.to/aws/the-essential-guide-to-installing-amazon-q-developer-cli-on-linux-headless-and-desktop-3bo7)
+
+
+---
+
+
+### Completed!
+
+Now that you have set everything up, we can proceed to the next step which is [exploring how to get started with Amazon Q CLI](02a-getting-started.md)
