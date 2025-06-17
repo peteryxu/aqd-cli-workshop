@@ -23,6 +23,8 @@ Whilst this looks simple written down, as you start using these tools with your 
 ## Fundamentals of a good Prompt
 
 A well crafted Prompt centres on clarity. AI Coding Assistants produce better results when given precise instructions and a clearly defined scope. Consider these essential elements when designing your prompts:
+
+
 **1. Specificity and clarity**
 
 AI Coding Assistants want you to provide as much detail and clarity about the task you want to it do do.
