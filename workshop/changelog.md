@@ -1,5 +1,12 @@
 ## Tracking changes with this workshop
 
+17th Jun 2025
+
+- split out the main getting started lab into two sections, core and advanced
+- added a new section on prompt good practices
+- split out the setup section into basic and advanced
+- updated to include new features in Amazon Q CLI (subscribe and model)
+
 19th May 2025
 
 - added "/context show -expand" to show status of context hooks

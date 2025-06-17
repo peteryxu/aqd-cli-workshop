@@ -216,6 +216,44 @@ Once you have done that, open up Amazon Q CLI and run the **"/editor"** command.
 
 ---
 
+**Which Model do you want to use in your Amazon Q CLI session?**
+
+You can select the model you want Amazon Q to use to respond to your requests during chat sessions. A default model is set when you start a chat session, and you can either change the model Amazon Q uses for a given session or set a default model for all sessions.
+
+There are two ways you can set the Model you want to use:
+
+* Launching a chat sessions using **"q chat --model <model-name>"**
+* From within the chat session using the **"/model"** command, and then selecting the Model you want to use with the up and down arrows
+
+As of wrting this (June 2025) the following Models are available:
+
+* claude-3.5-sonnet
+* claude-3.7-sonnet
+* claude-4-sonnet
+
+When you exit your Amazon Q CLI chat session, the Model will revert back to the default Model. The default Model can be configured within your settings file. In the [advanced setup](/workshop/01b-advanced-setup-topics.md) we looked at how you can configure the default Model in your settings file.
+
+
+**Task 07b**
+
+If you are not already in a chat session, start Amazon Q CLI, and from the **">"** prompt, type in the following:
+
+```
+/model
+```
+
+Change the Model and try some Prompts. Exit the chat session and then from the command line type the following:
+
+```
+q chat --model claude-4-sonnet
+```
+
+From the chat session, run the **"/model"** command again. You should see that the Model has changed to use Claude v4. 
+
+Exit the chat session and then restart Amazon Q CLI. Re-run the **"/model"** command. The Model should now have reverted back to the default Model.
+
+---
+
 ### Working with Context
 
 Context is what Amazon Q CLI will use together with the prompt you provide, to help it understand what it needs to do. Being able to manage context when using Amazon Q CLI is critical to get good output. In this section we will look at this in more detail.
