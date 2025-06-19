@@ -1,6 +1,10 @@
 ## Tracking changes with this workshop
 
-17th Jun 2025
+19th June 2025
+
+- updated MCP section to address --arg now added to the mcp add command
+
+17th June 2025
 
 - split out the main getting started lab into two sections, core and advanced
 - added a new section on prompt good practices

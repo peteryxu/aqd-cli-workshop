@@ -102,8 +102,6 @@ We are going to add an MCP Server to our Amazon Q CLI setup. We are going to use
 
 Exit Amazon Q CLI so that you are at the terminal. We will use both the cli and the hand crafting methods.
 
-> **Note!** Currently the capabilities of adding mcp servers via the cli have one limitation which means that you will currently need to edit the configration file. This is because you cannot supply args (see [GitHub issue](https://github.com/aws/amazon-q-developer-cli/issues/2025) to track status).
-
 
 **Adding MCP Servers via the cli** 
 
@@ -124,30 +122,31 @@ Commands:
 We are going to use some of these in this lab. From the command line we can use **"q mcp add"** to add a new MCP Server. Enter the following command which will create our global mcp server configuration:
 
 ```
-q mcp add --name "promptz.dev/mcp" --command "npx" --scope "global" --env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" --env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
+q mcp add --name "promptz.dev/mcp" --command "npx" --args "-y" --args "@promptz/mcp" --scope "global" --env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" --env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
 ```
 
-You can see we have used **--name** to give this mcp server a name in the configuration file, **--command** to provide it the command to run, we have defined a **--scope** of global, and then provided some environment variables using the **--env** argument. 
+You can see we have used:
 
-As this stands this will not work, as one thing that is missing is the arguments we need to provide. This is a current limitation of the mcp cli, so we are going to have to edit the configuration by hand. As we defined this as a global configuration, we need to look at **"~/.aws/amazonq/mcp.json"** and when we review this we see the following:
+* **--name** to give this mcp server a name in the configuration file
+* **--command** to provide it the command to run,
+* **--args** to provide the additional arguments for the command (note we could have done this either with a single quote separated by commas, or individual --arg statements as per the above example)
+* **--scope** defines the scope for this MCP configuration at the global level
+* **--env** provides environment variables 
+
+
+When you run this command, you should see something like the following:
 
 ```
-{
-  "mcpServers": {
-    "promptz.dev/mcp": {
-      "command": "npx",
-      "args": [],
-      "env": {
-        "PROMPTZ_API_URL": "https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql",
-        "PROMPTZ_API_KEY": "da2-45yiufdo5rcflbas7rzd3twble"
-      },
-      "timeout": 120000
-    }
-  }
-}
+q mcp add --name "promptz.dev/mcp" --command "npx" --args "-y" --args "@promptz/mcp" --scope "global" --env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" --env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
+
+📁 Created MCP config in '/Users/ricsue/.aws/amazonq/mcp.json'
+
+To learn more about MCP safety, see https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-mcp-security.html
+
+✓ Added MCP server 'promptz.dev/mcp' to 🌍 global
 ```
 
-Use your favourite editor (vi) and update the **args** section so that you end up with the following:
+We can check the configuration by looking at the **mcp.json** file in the **"~/.aws/amazonq"** directory, which we can see looks like the following.
 
 ```
 {
@@ -169,7 +168,7 @@ Use your favourite editor (vi) and update the **args** section so that you end u
 }
 ```
 
-We can check the status of the MCP Server configuration with the following command:
+We can check also the status of the MCP Server configuration with the following command:
 
 ```
 q mcp status --name promptz.dev/mcp
@@ -188,9 +187,7 @@ Env Vars: PROMPTZ_API_URL, PROMPTZ_API_KEY
 
 It is important to note that this does not load this up and check that its working, this is just checking that the configuration files are all in order. To do that, we need to start Amazon Q CLI. 
 
-As mentioned previously, as you start exploring and integrating MCP Servers is that these are downloading and installing libraries or containerised images. As such, you will need to make sure that you have installed any dependencies. These are typically documented in the MCP Server details. 
-
-In this particular case, you will need to make sure I have **uv** and **Python** running, otherwise this is going to fail. Different MCP Servers will have different requirements so make sure you meet them before proceeding. 
+As mentioned previously, as you start exploring and integrating MCP Servers is that these are downloading and installing libraries or containerised images. As such, you will need to make sure that you have installed any dependencies. These are typically documented in the MCP Server details.  In this particular case, you will need to make sure I have **uv** and **Python** running, otherwise this is going to fail. Different MCP Servers will have different requirements so make sure you meet them before proceeding. 
 
 Start Amazon Q CLI from the terminal, and review the output. You should see something similar to the following (you might miss it as it is only on thre screen for a few moments):
 
