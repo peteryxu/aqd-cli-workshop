@@ -124,7 +124,13 @@ Commands:
 We are going to use some of these in this lab. From the command line we can use **"q mcp add"** to add a new MCP Server. Enter the following command which will create our global mcp server configuration:
 
 ```
-q mcp add --name "promptz.dev/mcp" --command "npx" --args "-y" --args "@promptz/mcp" --scope "global" --env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" --env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
+q mcp add --name "promptz.dev/mcp" \
+--command "npx" \
+--args "-y" \
+--args "@promptz/mcp" \
+--scope "global" \
+--env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" \
+--env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
 ```
 
 You can see we have used:
