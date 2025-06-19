@@ -145,11 +145,18 @@ You can see we have used:
 When you run this command, you should see something like the following:
 
 ```
-q mcp add --name "promptz.dev/mcp" --command "npx" --args "-y" --args "@promptz/mcp" --scope "global" --env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" --env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
+q mcp add --name "promptz.dev/mcp" \
+--command "npx" \
+--args "-y" \
+--args "@promptz/mcp" \
+--scope "global" \
+--env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" \
+--env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
 
 📁 Created MCP config in '/Users/ricsue/.aws/amazonq/mcp.json'
 
 To learn more about MCP safety, see https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-mcp-security.html
+
 
 ✓ Added MCP server 'promptz.dev/mcp' to 🌍 global
 ```
