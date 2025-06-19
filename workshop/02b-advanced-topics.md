@@ -59,6 +59,8 @@ At its core, MCP follows a client-server architecture where a host application c
 
 I have seen two common ways that people are integrating MCP Servers locally using STDIO: they are either installing/running libraries or executables, or they are running the same libraries/executables but through a container image. Most of the examples (including my original post) showed the first way (running direct libraries). You might be thinking why would you use one method over another. It depends, but when you run MCP Servers locally you need to make sure that you meet all the dependencies. You might encounter some MCP Servers that have a lot of dependencies (libraries, binaries, etc) or maybe dependencies that clash with your setup. In these circumstances then running those MCP Servers in a container is probably a good approach.
 
+Another good reason to run your MCP Servers in a container is to limit its access to your local machine. When I configure my dev tools to use MCP Servers, I am always using the container option, and I have written about this in some blog posts (see additional resources section at the end).
+
 I have added some additional resources at the end of this lab if you want to dive deeper into this topic.
 
 > **SECURITY ALERT!!**
@@ -767,6 +769,10 @@ Some additional reading material that dives deeper into this topic if you want t
 * [Running Model Context Protocol (MCP) Servers on containers using Finch](https://dev.to/aws/running-model-context-protocol-mcp-servers-on-containers-using-finch-kj8)
 
 * [Q-Bits: Enhance Amazon Q Developer CLI's Context Using MCP for Web Crawling](https://community.aws/content/2ulohBgBuogjKVEKTjGff71oOY3/q-bits-enhance-amazon-q-developer-cli-s-context-using-mcp-for-web-crawling) 
+
+* [Running Model Context Protocol (MCP) Servers on containers using Finch](https://dev.to/aws/running-model-context-protocol-mcp-servers-on-containers-using-finch-kj8)
+
+* [Launch ECS Local Container Endpoints](https://gist.github.com/nathanpeck/6b03e647e79455a460551f8f295c7f9e)
 
 
 ### Completed!
