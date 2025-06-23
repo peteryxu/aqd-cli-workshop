@@ -282,6 +282,7 @@ promptzdevmcp (MCP):
 
 As you add more MCP Servers, each Tool will be listed and you will be able to control whether you trust specific, all, or none of the tools.
 
+> **Tip!** As you work with MCP Servers, using **"/tools"** is a good way to see if they have loaded correctly and are working as expected
 
 ---
 
@@ -589,6 +590,60 @@ Once finished, run the **"/context show"** command.
 
 Do you see this now added to your context? This could be useful when you need to add some new API docs for a library you are working on and want to add them to your context.
 
+---
+
+**Disabling and overriding MCP Server settings**
+
+What if you wanted to temporarily disable an MCP Server, but not delete the configuration file? Taking the **mcp.json** file we have been working with, we can disable it by changing the value of **"disabled"** from False to True. In the following configuration we have disabled it.
+
+
+```
+{
+  "mcpServers": {
+    "promptz.dev/mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@promptz/mcp"
+      ],
+      "env": {
+        "PROMPTZ_API_URL": "https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql",
+        "PROMPTZ_API_KEY": "da2-45yiufdo5rcflbas7rzd3twble"
+      },
+      "disabled": true,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+If we make the change at the Global level (~/.aws/amazonq/mcp.json) then this will disable the MCP Server globally. If we start a new Q session in a terminal after making this change, we will see the following:
+
+```
+○ promptzdevmcp is disabled
+
+🤖 You are chatting with claude-4-sonnet
+
+```
+
+You can validate that this has not been configured by running **"/tools"** to see that any tools have been added.
+
+
+There might be times when you want to:
+
+* disable Global MCP Servers for the current project workspace you are in
+* enable an MCP Server that has been disabled Globally
+
+You can do this by adding a **mcp.json** configuration in your project workspace, of the MCP Server you want to change. This will **override** the MCP Server status - whatever you configure in your local workspace will preside. You will see a different message when you start Amazon Q CLI though:
+
+```
+WARNING: MCP config conflict for promptz.dev/mcp. Using workspace version.
+✓ promptzdevmcp loaded in 2.64 s
+
+🤖 You are chatting with claude-4-sonnet
+```
+
+This tells you that it detected a conflict and is overiding with the project workspace configuration.
 
 ---
 

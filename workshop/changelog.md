@@ -1,5 +1,9 @@
 ## Tracking changes with this workshop
 
+23rd June 2025
+
+- update MCP to show how you can disable MCP Servers using the disable feature
+
 19th June 2025
 
 - updated MCP section to address --arg now added to the mcp add command
