@@ -148,7 +148,7 @@ q -V
 which should produce the following. If you have a version OLDER than 1.9.1 then there is an issue, so make sure you check the installation method used. It is possible you have used an old binary perhaps.
 
 ```
-q 1.9.1
+q 1.12.3
 ```
 
 ---
@@ -172,6 +172,13 @@ You can also view the latest changelog from the command line by typing the follo
 ```
 q version --changelog
 ```
+
+or if you want to dive into a specific release
+
+```
+q version --changelog 1.12.2
+```
+
 
 ---
 

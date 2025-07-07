@@ -20,8 +20,18 @@ You can also trust all the tools by using the **"/tools trustall"** command.
 
 When you exit your Amazon Q CLI session, all trust is reset back the the defaults. When starting Amazon Q CLI from the terminal, you can configure the level of trust of either all or specific tools by using some command line options.
 
-* **q --trust-all-tools** - this will start your Amazon Q CLI session and trust all the available tools
-* **q --trust-tools {tool}** - this will start your Amazon Q CLI session and trust just the specified tools you list
+* **q chat --trust-all-tools** - this will start your Amazon Q CLI session and trust all the available tools (in more recent versions of the Amaozn Q CLI tool, you can also use **"q chat -a"** which is shorter)
+* **q chat --trust-tools {tool}** - this will start your Amazon Q CLI session and trust just the specified tools you list
+
+You will notice when we do this, you will get the following message:
+
+```
+All tools are now trusted (!). Amazon Q will execute tools without asking for confirmation.
+Agents can sometimes do unexpected things so understand the risks.
+```
+
+And you will notice that the Amazon Q CLI prompt changes from **">"** to **"!>"** - this is a visual indicator that you are running with in full trust mode.
+
 
 You might want to disable tools but not want to exit your Amazon Q CLI session. We have already covered how you can use **"/tools untrust {tool}"** to reset each tool back to untrusted. You can also use **"/tools reset"** to reset all of the tools.
 
@@ -656,10 +666,10 @@ Amazon Q CLI supports two types of context hooks:
 * **Conversation start hooks** - Run once at the beginning of a conversation. Their output is added to the conversation context and persists throughout the session.
 * **Per-prompt hooks** - Run with each user message. Their output is added only to the current prompt.
 
-You can view your current context hooks using the "/context hooks" command in the Amazon Q CLI session which will give you output similar to the following:
+You can view your current context hooks using the **"/hooks"** command in the Amazon Q CLI session which will give you output similar to the following:
 
 ```
-> /context hooks
+> /hooks
 
 🌍 global:
     Conversation Start:
@@ -673,7 +683,7 @@ You can view your current context hooks using the "/context hooks" command in th
     Per Prompt:
       <none>
 
-Use /context hooks help to manage hooks.
+Use /hooks help to manage hooks.
 ```
 
 As I do not have any configured, nothing is showing.
@@ -689,15 +699,15 @@ talk like a pirate
 make jokes
 ```
 
-We will now add this as a context hook to see if we can make our Amazon Q CLI talk like a pirate. We use the **"/context hooks"** command, using the "add" to add a context hook. We give it a name (in our case, pirate) and then define which of the two kinds of hooks we want to use (in this case, we want to run this every time we prompt). Finally we run the command, so here just echoing the markdown doc with the instructions.
+We will now add this as a context hook to see if we can make our Amazon Q CLI talk like a pirate. We use the **"/hooks"** command, using the "add" to add a context hook. We give it a name (in our case, pirate) and then define which of the two kinds of hooks we want to use (in this case, we want to run this every time we prompt). Finally we run the command, so here just echoing the markdown doc with the instructions.
 
 ```
-> /context hooks add pirate --trigger per_prompt --command "cat MYHOOK.md"
+> /hooks add pirate --trigger per_prompt --command "cat MYHOOK.md"
 ```
 You should see output similar to the following:
 
 ```
-> /context hooks add pirate --trigger per_prompt --command "cat MYHOOK.md"
+> /hooks add pirate --trigger per_prompt --command "cat MYHOOK.md"
 
 Added profile hook 'pirate'.
 ```
@@ -710,11 +720,11 @@ Lets test this out now. Enter the following prompt:
 
 Review the output. What happens? 
 
-Run the **"/context hooks"** command. What has changed.
+Run the **"/hooks"** command. What has changed.
 
 ---
 
-You can add context hooks, you can add them at the local or global level, using the **"--global"** to make the hook global, or setting it as a local, profile context hook without using that argument. 
+When you add context hooks, you can add them at the local or global level. Use the **"--global"** to make the hook global, or setting it as a local, profile context hook without using that argument. 
 
 Like with context, when you add context hooks these are added to the **"context.json"** file that we looked at earlier. Here is what mine looks like after adding a context hook that reads a file called "todo-hook.md" as part of every prompt when it is run.
 
@@ -803,7 +813,7 @@ You can now do this, using the **"/save {name}"** command, providing a name of t
 ```
 > /save project
 
-✔ Exported conversation state to project.json
+✔ Exported conversation state to project
 ```
 
 You can also load up a conversation from an Amazon Q CLI session using the **"/load {name}"** and it will then load up the conversation, leaving you ready to carry on where you left off.
@@ -821,7 +831,7 @@ After it has saved, open up a new terminal and review the output.
 Now close your Amazon Q CLI session and start it again. From the **">"** prompt, lets reload that conversation:
 
 ```
-> /load project-customer-survey.json
+> /load project-customer-survey
 ```
 
 After it loads, ask it something about the customer survey application. 

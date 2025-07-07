@@ -113,6 +113,29 @@ q settings help
 
 ---
 
+**Enable experimental/beta mode in Amazon Q CLI**
+
+From time to time there will be features released that are only available if you enable Amazon Q CLI's beta/experimental model. To enable this, we can use the **"q settings"** command. Make sure you close any Amazon Q CLI sessions you have open for these settings to take effect.
+
+```
+q settings app.beta true
+```
+
+To verify, when you run "q settings all" you should see the following in the list.
+```
+app.beta = true
+```
+
+Once you restart your Amazon Q CLI session, you will now be able to try out any experimental features. Typically those features will have their own switches. For example, at the time of writing, to enable the **"/knowledge"** experimental feature, you would run the following command:
+
+```
+q settings chat.enableKnowledge true
+```
+
+> **Learn more about "/knowledge" experimental feature by reading [Manage context rot by exploring new experimental features in Amazon Q CLI](https://dev.to/aws/manage-context-rot-by-exploring-new-experimental-features-in-amazon-q-cli-10ki)
+
+---
+
 **Available settings in Amazon Q CLI**
 
 As Amazon Q CLI is an open source project, I was able to use it to review the source files and create a list of available settings. The following list is what was produced. I have not had a chance to review them all, and they will change over time.

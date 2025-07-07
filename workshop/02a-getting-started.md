@@ -474,10 +474,11 @@ You can check your current **"context window"** by using the **"/usage"** comman
 ```
 > /usage
 
-Current context window (260 of 200k tokens used)
-|████████████████████████████████████████████████████████████████████████████████ 0.13%
+Current context window (2650 of 200k tokens used)
+|████████████████████████████████████████████████████████████████████████████████ 1.32%
 
-█ Context files: ~260 tokens (0.13%)
+█ Context files: ~120 tokens (0.06%)
+█ Tools:     ~2530 tokens (1.26%)
 █ Q responses:   ~0 tokens (0.00%)
 █ Your prompts:  ~0 tokens (0.00%)
 
@@ -541,6 +542,7 @@ Current context window (50930 of 200k tokens used)
 ████████████████████████████████████████████████████████████████████████████████ 25.47%
 
 █ Context files: ~10400 tokens (5.20%)
+█ Tools:     ~2530 tokens (1.26%)
 █ Q responses:   ~16730 tokens (8.36%)
 █ Your prompts:  ~23800 tokens (11.90%)
 
@@ -604,6 +606,7 @@ Current context window (12060 of 200k tokens used)
 ████||████████████████████████████████████████████████████████████████████████████ 6.03%
 
 █ Context files: ~11470 tokens (5.73%)
+█ Tools:     ~2530 tokens (1.26%)
 █ Q responses:   ~580 tokens (0.29%)
 █ Your prompts:  ~10 tokens (0.00%)
 ```

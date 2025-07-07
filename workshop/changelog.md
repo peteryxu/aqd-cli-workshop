@@ -1,5 +1,12 @@
 ## Tracking changes with this workshop
 
+7th July 2025
+
+- updates based on Amazon Q CLI v1.12.3
+- update workshop references to /context hooks to /hooks
+- update /load and /save changes
+- add info on beta settings
+
 23rd June 2025
 
 - update MCP to show how you can disable MCP Servers using the disable feature
