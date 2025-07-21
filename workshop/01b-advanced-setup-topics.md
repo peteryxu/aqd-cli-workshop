@@ -73,6 +73,7 @@ Some useful / interesting settings you can set
 * **q settings app.disableAutoupdates true** - this will disable the auto update for Amazon Q CLI
 * **q settings chat.enableThinking true** - this will enable Thinking mode in Amazon Q CLI, which might provide you better results under some use cases
 * **q settings chat.greeting.enabled false** - disables the Amazon Q ascii banner
+* **q settings chat.enableHistoryHints true** - enables inline prompt hints to be enabled, as these are disabled by default. When using chat, inline hints appear when beginning to type a prompt. First if / is typed, gives relevant command hints, otherwise looks through prompt history and display text in grey "ghost text" as a hint which can be accepted by pressing the right arrow key. 
 
 You can also open up the settings file using the command **"q settings open"** which will open up the settings file in your default editor. For example, on my MacOS, these settings are written to the local **"~/Library/Application Support/amazon-q"** directory as "settings.json" - this is what mine looks like:
 
@@ -126,7 +127,7 @@ To verify, when you run "q settings all" you should see the following in the lis
 app.beta = true
 ```
 
-Once you restart your Amazon Q CLI session, you will now be able to try out any experimental features. Typically those features will have their own switches. For example, at the time of writing, to enable the **"/knowledge"** experimental feature, you would run the following command:
+Once you restart your Amazon Q CLI session, you will now be able to try out any experimental features. Typically those features will have their own switches. For example, at the time of writing, to enable the **["/knowledge"](https://github.com/aws/amazon-q-developer-cli/blob/main/docs/knowledge-management.md)** experimental feature, you would run the following command:
 
 ```
 q settings chat.enableKnowledge true
@@ -155,6 +156,17 @@ As Amazon Q CLI is an open source project, I was able to use it to review the so
 * mcp.initTimeout (integer, millesends) - 5000 (5 seconds) is the default timeout to wait for MCP Servers in interactive mode
 * mcp.noInteractiveTimeout (integer, millesends) - 30000 (30 seconds) is the default timeout to wait for MCP Servers in interactive mode
 
+---
+
+**Enabling SigV4 Authentication**
+
+With version 1.12.6 of the Amazon Q CLI, you can now enable experimental SigV4 by setting an environmnet variable before starting your Amazon Q Chat session.
+
+```
+export AMAZON_Q_SIGV4=1
+```
+
+This will enable SigV4 support when accessing AWS endpoints that you might want to use.
 
 ---
 

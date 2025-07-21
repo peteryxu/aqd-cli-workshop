@@ -1,5 +1,13 @@
 ## Tracking changes with this workshop
 
+21st July 2025
+
+- updated based on version Q CLI v1.12.6
+- added new settings to setup section
+- added new link to /knowledge
+- reference to SigV4 experimental
+
+
 7th July 2025
 
 - updates based on Amazon Q CLI v1.12.3
