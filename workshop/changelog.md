@@ -1,5 +1,12 @@
 ## Tracking changes with this workshop
 
+22nd July 2025
+
+- updated login section
+- added a new tip on how to record your q sessions
+- added a new tip on setting alerts to track task completion
+
+
 21st July 2025
 
 - updated based on version Q CLI v1.12.6

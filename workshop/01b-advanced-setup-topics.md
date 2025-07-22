@@ -170,6 +170,39 @@ This will enable SigV4 support when accessing AWS endpoints that you might want 
 
 ---
 
+**Recording your Amazon Q CLI sessions**
+
+There might be times when you want to log the history of your Amazon Q CLI sessions. This can be done using some simple bash/zsh magic. Edit your **".zshrc"** or **".bashrc"** files to add the following function:
+
+```
+function qlog() {
+  timestamp=$(date +"%Y%m%d_%H%M%S")
+  logfile="$HOME/q_chat_logs/q_chat_$timestamp.txt"
+  mkdir -p $HOME/q_chat_logs
+  script -q /dev/null $(which q) chat | tee $logfile
+}
+```
+
+This will create a new command (qlog) which wraps up Amazon Q CLI, and generates output into the defined directory (in this case, a directory called "q_chat_logs" in your home directory).
+
+---
+
+**Alerting when Amazon Q CLI completes a task**
+
+As you start using Amazon Q CLI to do more complex tasks, you may run into the situation where you leave it running in a terminal, but then have to periodically check in to see if its finished.
+
+To make this task more effecient, you can set an alert so that when Amazon Q CLI has completed its task, it will use your terminal alert to notify you. To enable this, you just need to run the following command from the terminal.
+
+```
+q settings chat.enableNotifications true
+```
+
+When a task finishes, your terminal will now notify you. Depending on the terminal you are using, you can configure your alert to let you know when to come back to your Amazon Q CLI session.
+
+If you want to disable this at any time, just run the same command but use "false"
+
+---
+
 ### Supporting Resources
 
 Some additional reading material that dives deeper into this topic if you want to explore:

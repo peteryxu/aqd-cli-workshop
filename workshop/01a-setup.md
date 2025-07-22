@@ -122,6 +122,27 @@ You can watch this process in this short video.
 
 [![Logging into Amazon Q CLI with Builder ID](/images/q-cli-builder-id-login.png)](https://youtu.be/WuInQ2Urmow)
 
+**Additional login options**
+
+The command line login supports a number of additional arguments that provides you with some fine grain control of how to manage the login process:
+
+* **"q login --licence pro"** or **"q login --licence free"** to determine which kind of login you want to use
+* **"q login --use-device-flow"** - sets loging to always use the OAuth device flow for authentication. Useful for instances where browser redirects cannot be handled
+
+When you are using the **"q login --licence pro"** you will need to add two additional arguments:
+
+* "--identity-provider {URL}" - the Identity provider URL for your AWS Identity Center
+* "--region {REGION}" - the AWS region for your Idententy Centre
+
+
+**Logging out**
+
+You can log out at any time by running the following command:
+
+```
+q logout
+```
+
 
 ---
 
