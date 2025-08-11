@@ -807,6 +807,26 @@ This is something to bear in mind as you start adding MCP Server tools and want 
 
 ---
 
+**Changing how you refer to MCP tools using toolsAliases**
+
+In the previous section we shared how you can use **"toolsAliases"** to address namespace clashes.
+
+You can also use aliases to create shorter or more intuitive names for frequently used tools. For example, if you have some long tools you can shorten them with something like:
+
+```
+{
+  "toolAliases": {
+    "@aws-cloud-formation/deploy_stack_with_parameters": "deploy_cf",
+    "@kubernetes-tools/get_pod_logs_with_namespace": "pod_logs"
+  }
+}
+```
+
+This is a nice developer experience feature that I am using with some of my custom agent tools.
+
+
+---
+
 **Disabling MCP Servers**
 
 We are able to disable MCP Servers from custom agents by editing the custom agent JSON file and adding new configuration item called "disabled" and setting this to true (the default is false).
