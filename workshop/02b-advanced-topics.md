@@ -807,7 +807,7 @@ This is something to bear in mind as you start adding MCP Server tools and want 
 
 ---
 
-**Changing how you refer to MCP tools using toolsAliases**
+**Changing how you refer to tools using toolsAliases**
 
 In the previous section we shared how you can use **"toolsAliases"** to address namespace clashes.
 
