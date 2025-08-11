@@ -6,7 +6,7 @@
 
 In this lab we are going to build upon the project we have been building, adding some documentation to help folk who come after us to understand what this codebase does.
 
-**Task 01**
+**Task-01**
 
 Amazon Q CLI is a great tool to use if you are trying to explore a codebase that is new to you. You can use it to explain the entire project, or dive into specific parts, functions, or classes. Lets take a look at some prompts that we might use.
 
@@ -34,7 +34,7 @@ You can use this approach for your own codebases. There are some things that you
 
 ---
 
-**Task 02**
+**Task-02**
 
 They say a picture is worth a thousand words, and when look at codebases nothing beats having architecture, entity relationship, or sequence diagrams to provide a quick overview of how the application works. You can use Amazon Q CLI to generate these for you, so lets look at that now.
 
@@ -60,7 +60,7 @@ Again you will need to use an enhanced markdown viewer to view these diagrams. T
 
 ---
 
-**Task 03**
+**Task-03**
 
 Lets do something a little different this time. Open up a new terminal, and create a new temporary directory.
 
@@ -133,7 +133,7 @@ json
 
 ---
 
-**Task 04**
+**Task-04**
 
 Next we are going to ask it a question I had recently, which was what does qterm do? This is part of the Amazon Q CLI distribution, and I was not sure exactly what it does, so from the ">" Amazon Q CLI session, I entered the following prompt:
 

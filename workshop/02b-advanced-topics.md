@@ -4,56 +4,21 @@
 
 In this lab we are going to build on what you have already learned about Amazon Q CLI's features, looking at some of the more advanced features and capabilities.
 
+**Custom Agents**
 
-**Tools and Trust**
+In the previous labs we referenced **custom agents**. These allow you to create a set of differnt "personas" where you group various related configuration and supporting resources to optimise your Amazon Q CLI session. 
 
-In previous labs (**Task 05**) you looked at **Tools** and how Amazon Q CLI requires you to control how those tools work. We looked at trusting tools as part of the chat session, where you entered **"t"** to trust the tool for the duration of that chat session.
+For example, imagine that you are doing some front end work, some backend work, and maybe also some devops work. For each of these activities you might have a different set of resources (supporting files, images, code) and tools (Model Context Protocol, MCP which we will look at in a bit) that are optimised for these tasks. To optimise our sessions, and being mindful about context engineering good practices, we want to make sure that we only provide what is needed.
 
-Tool permissions have two possible states:
+In previous versions of Amazon Q CLI, you would define these as **Profiles**, and whilst this was helpful it also had some limitations. **Custom agents** improved on that by allowing you to simplify everything you need to get started quickly. Now we can define a set of resources and tools (with permissions) for the work we are going to do, and we can share those configurations easily too.
 
-* **Trusted**: Amazon Q can use the tool without asking for confirmation each time.
-* **Per-request**: Amazon Q must ask for your confirmation each time before using the tool.
-
-You can use the **"/tools trust {tool}"** and **"/tools untrust {tool}"** commands to enable and disable trust for a specified tool that is available in your Amazon Q CLI session.
-
-You can also trust all the tools by using the **"/tools trustall"** command.
-
-When you exit your Amazon Q CLI session, all trust is reset back the the defaults. When starting Amazon Q CLI from the terminal, you can configure the level of trust of either all or specific tools by using some command line options.
-
-* **q chat --trust-all-tools** - this will start your Amazon Q CLI session and trust all the available tools (in more recent versions of the Amaozn Q CLI tool, you can also use **"q chat -a"** which is shorter)
-* **q chat --trust-tools {tool}** - this will start your Amazon Q CLI session and trust just the specified tools you list
-
-You will notice when we do this, you will get the following message:
-
-```
-All tools are now trusted (!). Amazon Q will execute tools without asking for confirmation.
-Agents can sometimes do unexpected things so understand the risks.
-```
-
-And you will notice that the Amazon Q CLI prompt changes from **">"** to **"!>"** - this is a visual indicator that you are running with in full trust mode.
-
-
-You might want to disable tools but not want to exit your Amazon Q CLI session. We have already covered how you can use **"/tools untrust {tool}"** to reset each tool back to untrusted. You can also use **"/tools reset"** to reset all of the tools.
-
-**Task 15**
-
-Open up a new Amazon Q CLI session and run the following commands:
-
-```
-> /tools
-```
-
-Review the output. Which tools are trusted and which are not?
-
-Use the **"/tools trust {name}"** command to enable the **"use_aws"** tool. Re-run the **"/tools"** command and review the status. 
-
-Now run **"/tools trustall"** and review the findings. Run **"/tools reset"** and then check again. You should find that the trust levels have been reset.
+> To read more about some of the use cases, check out [Benefits of using custom agents](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-custom-agents-overview.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el#custom-agent-benefits) in the official documentation pages.
 
 ---
 
 **Model Context Protocol (MCP)**
 
-What is Model Context Protocol (MCP)? MCP is like a USB-C port for your AI applications. Just as USB-C offers a standardized way to connect devices to various accessories, MCP standardizes how your AI apps connect to different data sources and tools.
+Before we dive into custom agents we need to talk about Model Context Protocol (MCP). MCP is like a USB-C port for your AI applications. Just as USB-C offers a standardized way to connect devices to various accessories, MCP standardizes how your AI apps connect to different data sources and tools.
 
 At its core, MCP follows a client-server architecture where a host application can connect to multiple servers. It has three key components: Host, Client, and Server
 
@@ -61,7 +26,7 @@ At its core, MCP follows a client-server architecture where a host application c
 * MCP Client within the host and facilitates communication with MCP servers. It's responsible for discovering server capabilities and transmitting messages between the host and servers.
 * MCP Servers exposes specific capabilities and provides access to data, like,
 
-![MCP Overview](/images/mcp-overview.png)
+![MCP Overview](/images/mcp-response-diagram.png)
 
 > **When is a server not a server?** Although they are called "MCP Servers", you might be thinking that this is a machine running a process or endpoint you need to connect to. MCP Servers can actually be a local process (program, executable) that you run on your local machine, and infact, most MCP Servers as of writing this workshop (May, 2025) run locally. When folk mention MCP Servers, they often mention the method of running those locally as STDIO.
 
@@ -88,413 +53,825 @@ I have added some additional resources at the end of this lab if you want to div
 > 2. Local Execution: MCP servers run locally on your machine
 > 3. Isolation: Each MCP server runs as a separate process
 > 4. Transparency: Users can see what tools are available and what they do
->
+
+Later on in this lab we are going to show you how to integrate MCP Servers into your Amazon Q CLI sessions. Before that, we need to look at the mechanism that enables this, custom agents.
 
 ---
 
-*Adding MCP Servers to Amazon Q CLI*
+**Creating your first Custom agent**
 
-Adding MCP Servers to Amazon Q CLI is super easy, all you need to do is create a configuration file (called **"mcp.json"**). You have a number of ways you can do this, based on your preference. You might want to hand craft configuration files, alternatively you can use the Amazon Q CLI to add them via a number of command arguments.
+Custom agents provide a way to customize Amazon Q CLI behavior by defining specific configurations for different use cases. Each custom agent is defined by a JSON configuration file that specifies which tools the agent can access, what permissions it has, and what context it should include.
+
+In this lab we are going to explore custom agents so that you get comfortable with how they work and can start using them in the activities you do.
+
+**Important:** Custom agent management primarily involves creating and editing configuration files. While some commands are available during chat sessions, switching between custom agents requires starting a new chat session with "q chat --agent [name]".
+
+**Project vs Global custom agents**
+
+When you create custom agents you have the choice of creating global or project custom agents.
+
+* Global custom agents are available across all projects and directories on your system. JSON configuration for global agents are located at **"~/.aws/amazonq/cli-agents/{agent-name}.json"**
+
+* Project-level custom agents are available only within the specific project directory and its subdirectories. JSON configuration for project level custom agents are in the current directory you are in, in the **".amazonq/cli-agents/{agent-name}.json"**
+
+If you want to keep custom agents within your project workspace, then these will be shared across all developers who check out that project (assuming you are sharing this via something like git).
+
+What if you have local, project custom agents and global custom agents? When Amazon Q CLI looks for an custom agent, it follows a specific precedence order: First it will look for **Local custom agents first**, checking for custom agents in the current working directory. Next it will look for **Global custom agents**, and fall back to custom agents in your home directory. If it fails to find any, it will use the **Built-in default** custom agent.
+
+If both local and global directories contain custom agents with the same name, the local custom agent takes precedence. Amazon Q Developer CLI will display a warning message when this occurs:
+
+```
+WARNING: Agent conflict for my-agent. Using workspace version.
+```
+
+---
+
+**Default Agent**
+
+When you start Amazon Q CLI, it uses a default agent configuration that includes basic tools and permissions. This default agent is suitable for general use cases but may not be optimized for specific tasks. 
+
+**Task-01**
+
+This default agent does not have a json configuration file, but you can see it when you run the **"/agent list"** command. We access custom agents via the **"/agent"** command, and the first command we are going to look at is the command to list all available agents.
+
+Run the following command from your Amazon Q CLI session:
+
+```
+> /agent list
+
+* q_cli_default
+```
+
+When you start your Amazon Q CLI session without an **"--agent"** argument, you will use the default custom agent. You can change this behaviour by configuring a setting, selecting the custom agent you want to select as your default option when starting Amazon Q CLI. We will look at that later in this lab.
+
+You can see all the available commands for **"/agent"** by using the **"--help"** argument.
+
+Run the following command from your Amazon Q CLI session:
+
+```
+> /agent help
+
+Agents allow you to organize and manage different sets of context files for different projects or tasks.
+
+Notes
+• Launch q chat with a specific agent with --agent
+• Construct an agent under ~/.aws/amazonq/cli-agents/ (accessible globally) or cwd/.aws/amazonq/cli-agents (accessible in workspace)
+• See example config under global directory
+• Set default agent to assume with settings by running "q settings chat.defaultAgent agent_name"
+• Each agent maintains its own set of context and customizations
+
+Manage agents
+
+Usage: /agent <COMMAND>
+
+Commands:
+  list         List all available agents
+  create       Create a new agent with the specified name
+  schema       Show agent config schema
+  set-default  Define a default agent to use when q chat launches
+  help         Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help
+          Print help (see a summary with '-h')
+```
+
+We have seen the first of these, and we will now look at the others.
+
+---
+
+**Agent Schema**
+
+You might be wondering what the json configuration file looks like for defining a custom agent. Well wonder no more, as we can see what the schema is by typing **"/agent schema"** into your Amazon Q CLI session. It will display the complete schema for configuring a custom agent.
+
+However, you typically do not need to create json configuration files with all the items within that schema. When you are beginning to define and work with custom agents, you should start small and then build up from there.
+
+Before we proceed and start creating our first custom agents, let me walk you through some of the configuration items that you can define with your JSON file.
+
+* **name** - this is a required field, and defines the name of your custom agent
+* **description** - (optional) allows you to provide a description for your custom agent
+* **mcpServers** - (optional) is where you configure MCP Servers for your custom agent
+* **tools** - (optional) allows you to define what tools are available in your Amazon Q CLI session when using this custom agent
+* **toolsAlias** - (optional) provides a mechanism to fix any tool name clashes you have when using multiple MCP Servers that provide tools
+* **allowedTools** - (optional) lets you set the automatically trusted tools
+* **resources** - (optional) is where you add additional context files in the form of markdown documents
+* **hooks** - (optional) lets you define commands to run either once for your session or every prompt - we will explore these later in this lab
+* **toolsSettings** - (optional) provides the ability to pass in configuration details for tools that need them
+* **useLegacyMcpJson** - (optional) is a legacy switch that is enabled if this parameter is not set, and loads up MCP Server configuration from the deprecated mcp.json file
+
+As you can see, you can create a very sparse JSON configuration for your custom agent, just defining a name. I am not sure it would do a lot of use though :O
+
+You can check out the reference documentation about the custom agent configuration options by checking out [Configuration reference](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-custom-agents-configuration.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el) from the official documentation pages.
+
+
+---
+
+**Creating Agents**
+
+Ok so now we have all the theory, lets create a custom agents. We want to create the following:
+
+* **"python developer"** - a custom agent that looks for resources (all the markdown files in the steering/* directory) that provide specific guidance for writing code in Python.
+
+We will add to this configuration in subseqent labs showing you how you can add additional options to your custom agent. For now we will just create the custom agent and add **Resources** as the first items we want these custom agents to have.
+
+**Task-02**
+
+We are going to create and then launch two custom agents. From an Amazon Q CLI session, at the **">"** prompt, type the following:
+
+```
+> /agent create --name python-developer
+```
+
+This will bring up an editor (it will use the default if you are using Linux/Mac will be vim, remember from previous labs you can customise this by setting the EDITOR environment variable). It will look like the following:
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "prompt": null,
+  "mcpServers": {},
+  "tools": [
+    "*"
+  ],
+  "toolAliases": {},
+  "allowedTools": [
+    "fs_read"
+  ],
+  "resources": [
+    "file://AmazonQ.md",
+    "file://README.md",
+    "file://.amazonq/rules/**/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {},
+  "useLegacyMcpJson": true
+}
+```
+
+Edit the file and change it so that it looks like the following:
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "mcpServers": {},
+  "tools": [],
+  "toolAliases": {},
+  "allowedTools": [],
+  "resources": [
+    "file://steering/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
+}
+```
+
+You can see we have adjusted the **"resources"** configuration item to match our requirements, i.e.. load up any markdown files in the steering directory.
+
+Save and exit the file (:wq!)
+
+Congratulations, you have just created your first custom agent. You can check this has worked by running the **"/agent list"** command.
+
+```
+/agent list
+```
+
+Which should produce output similar to the following:
+
+```
+* q_cli_default
+  python-developer
+```
+
+Exit your Amazon Q CLI session. In the current directory, create a sub-directory called "steering" and then a file called "python-dev.md". You can [copy the contents of the file in the resources directory](/resources/python-dev.md) into this file and then save it.
+
+Restart Amazon Q CLI, but this time, use the following arguments:
+
+```
+q chat --agent python-developer
+```
+
+When Amazon Q CLI starts, you should notice that your prompt now has **"[python-developer]"** as a prefix. This is a visual cue to remind you which custom agent you currently have loaded. You can also re-run the **"/agent list"** command and you will see that the current custom agent is highlighted with an asterix.
+
+We can see what context is available in our session by running the **"/context show"** command:
+
+```
+/context show
+```
+
+You should see something like the following:
+
+```
+[python-developer] > /context show
+
+👤 Agent (python-developer):
+    steering/*.md (1 match)
+
+1 matched file in use:
+👤 /Users/ricsue/amazon-q-developer-cli/workshop/steering/python-dev.md (~590 tkns)
+
+Total: ~590 tokens
+
+```
+
+As you can see, this has been picked up by your Amazon Q CLI session and is now part of your session context. 
+
+---
+
+**Configuring custom agents Tools and Trust**
+
+**Task-03**
+
+In previous labs you did earlier you looked at what tools are within Amazon Q CLI, and how to trust and untrust them. In the default custom agent (q_cli_default), all the available built in tools within Aamzon Q CLI are available. When we create a custom agent, we can configure both which tools are available, and the default permission we want to assign. In this lab we are going to explore this.
+
+Using our freshly minted custom agent, we can look at what tools are available for us to use within our custom agent session. Run the **"/tools"** commands to see what tools are configured:
+
+```
+> /tools
+```
+
+You will notice that you have no tools available:
+
+```
+[python-developer] > /tools
+
+Tool       Permission
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+Built-in:
+
+```
+
+This means your Amazon Q CLI session will not be able to understand the world around it (read and write files, execute commands, run the AWS cli, and more). There might be some use cases where this might be useful to you, but for our purposes we need it to be able to read/write files and execute commands.
+
+Lets change this. First we need to find out where our JSON configuration file is, lets go on a short diversion...
+
+When we created our custom agent, we used the command **"/create agent --name python-developer"**. When you create custom agents in this format, you are creating global custom agents. This means that the JSON configuration files are located in the **"~.aws/amazonq/cli-agents"** directory. 
+
+Open up another terminal and navigate to this directory. When you do a directory listing you should see a file called **"python-developer.json"**. Open this in an editor, and you should see the same file you had above. We want to edit it to change the tools available for us to use.
+
+We define which tools we want to make available by setting the **"tools"** configuration section. Amazon Q CLI has a number of different tools it comes with:
+
+* execute_bash - allows it to run bash commands
+* fs_read - read files from the file system
+* fs_write - write files to the file system
+* report_issue - allows you to generate an issue in the GitHub project
+* use_aws - allows you to use the AWS CLI to run commands
+
+We can define whcih specific tools by adding these into the configuration item like:
+
+* "tools": [ "fs_read","fs_write","use_aws],
+
+You can also use wildcards
+
+* "tools": ["*"]
+
+You can also use the special denominator "@builtin" to refer to all the builtin tools within Amazon Q CLI
+
+* "tools": ["@builtin"]
+
+We will come back to this later when we look at configuring MCP Servers, as if you connect to an MCP Server that exposes Tools then you will configure those tools here too using **"@server"**. 
+
+Lets update our configuration file to allow all the built in commands for now.
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "mcpServers": {},
+  "tools": ["@builtin"],
+  "toolAliases": {},
+  "allowedTools": [],
+  "resources": [
+    "file://steering/python-dev.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
+}
+```
+
+Save the file, and now restart Amazon Q CLI with the same command to use the new custom agent, 
+
+```
+q chat --agent python-developer
+```
+
+Now re-run the **"/tools"** command. This time you should see all the available tools.
+
+```
+[python-developer] > /tools
+
+Tool              Permission
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+Built-in:
+- execute_bash    * trust read-only commands
+- fs_read         * trusted
+- fs_write        * not trusted
+- report_issue    * trusted
+- use_aws         * trust read-only commands
+
+```
+
+So all good, we now know how to configure tools. That said, we have the default permissions and maybe we want to set different default permissions for different custom agents. Lets see how we can do that.
+
+Edit the custom agent JSON file again, and this time make edits as follows:
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "mcpServers": {},
+  "tools": ["@builtin"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read","fs_write","use-aws"],
+  "resources": [
+    "file://steering/python-dev.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
+}
+```
+
+You can see we have changed the **"allowedTools"** and defined the tools we want to automatically trust. If you save this file, and then restart your Amazon Q CLI session:
+
+```
+q chat --agent python-developer
+```
+
+Now re-run the **"/tools"** command. This time you should see that the permissions of the tools has changed.
+
+```
+[python-developer] > /tools
+
+
+Tool              Permission
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+Built-in:
+- execute_bash    * trust read-only commands
+- fs_read         * trusted
+- fs_write        * trusted
+- report_issue    * trusted
+- use_aws         * trusted
+```
+
+We have just scratched the surface of how you can customise the tools and permissions, making it easy to create these custom agents and then share these with your developers.
+
+We will come back to this again once we take a look at MCP Servers later in this tutorial.
+
+---
+
+**Setting a default custom agent**
+
+When you start your Amazon Q CLI session, it will start the session using the default custom agent. If you create a number of different custom agents, you may decided that you want to make that the default one so that you don't always have to start your Amaozn Q CLI session using the "--agent {name}" command.
+
+You can change the default custom agent by using the **"/agent set-default"** command. Lets take a look at that next.
+
+**Task-04**
+
+Exit and restart your Amazon Q CLI session without any arguments so you are starting using the default custom agent. From the **">"** prompt, enter the following:
+
+```
+/agent set-default -n python-developer
+```
+
+You should see something like the following:
+
+```
+[python-developer] > /agent set-default -n python-developer
+
+✓ Default agent set to 'python-developer'. This will take effect the next time q chat is launched.
+```
+
+No exit your Amazon Q CLI session and restart it - again without using any arguments. What happens?
+
+When you use this command, it writes into the Amazon Q CLI settings file. You can see this by running the following command from the terminal
+
+```
+q settings open
+```
+
+You will see this line appear in your config file:
+
+```
+chat.defaultAgent	"python-developer"
+```
+
+---
+
+**Configuring context hooks in your custom agent**
+
+Context hooks are a feature in Amazon Q CLI that you can use to automatically inject context into your conversations with Q Developer. Context hooks run commands and include their output as context. In previous versions of Amazon Q CLI, you configured context hooks using a command ("/hooks"), but these are now deprecated and we configure context hooks within custom agents.
+
+Amazon Q CLI supports two types of context hooks:
+
+* **Conversation start hooks** - Run once at the beginning of a conversation. Their output is added to the conversation context and persists throughout the session.
+* **Per-prompt hooks** - Run with each user message. Their output is added only to the current prompt.
+
+> Check out [Behavior and limitations](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-context-hooks.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el#command-line-context-hooks-behavior) to understand some of the constraints when creating hooks
+
+You can view any available context hooks by using the command **"/hooks"** within your Amazon Q CLI session. 
+
+```
+[python-developer] > /hooks
+
+No hooks are configured.
+```
+
+As you can see, we do not currently have any setup so lets change that.
+
+---
+
+**Task-05**
+
+Lets add a new context hook that is invoked every time we prompt. We are going to have some fun and create a per prompt hook that will make Amazon Q CLI talk like a pirate.
+
+Exit Amazon Q CLI and create a new file called **"pirate.md"** in the current directory, and add this to the file:
+
+```
+Talk like a pirate and make bad jokes
+```
+
+Edit the custom agent JSON configuration file we worked on as part of the previous task. Edit the file so that it looks like the following:
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "mcpServers": {},
+  "tools": ["*"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read","fs_write","use_aws"],
+  "resources": [
+    "file://steering/python-dev.md"
+  ],
+  "hooks": {"userPromptSubmit": [
+      {
+        "command": "cat pirate.md",
+        "timeout_ms": 10000,
+        "cache_ttl_seconds": 300
+      }
+    ]},
+  "toolsSettings": {}
+}
+```
+
+You can see we have modified the **"hooks"** configuration section. We have defined **"userPromptSubmit"** which configures a hook per prompt. We could also setup hooks using **"agentSpawn"** which would run when we start our Amazon Q CLI chat session.
+
+> Check out the reference configuration [here](https://github.com/aws/amazon-q-developer-cli/blob/main/docs/agent-format.md#hooks-field)
+
+After saving the file, restart your Amazon Q CLI session. Run the following command:
+
+```
+> /hooks
+```
+
+You should get output like the following:
+
+```
+[python-developer] > /hooks
+
+userPromptSubmit:
+  - cat pirate.md
+
+```
+
+Lets test this out now. Enter the following prompt:
+
+```
+> What is the model you are using
+```
+
+Review the output. What happens? 
+
+You can edit and remove the context hook after this task if you want, or enjoy that Amazon Q CLI is talking to you in pirate.
+
+---
+
+**Adding MCP Servers to our custom agent**
+
+At this beginning of this lab we introduced MCP and how Amazon Q CLI allows you to integrate MCP Servers to your Amazon Q CLI sessions. So far we have used custom agents to add resources (that provide context), understand how to setup tools that we can use in our Amazon Q CLI sessions, and create context hooks. These have all been done by editing the custom agent JSON configuration file.
+
+MCP Servers can expose Tools, Resources, and Prompts (this varies from MCP Server to MCP Server, so consult the documentation as to what they provide). Amazon Q CLI can use Tools and Prompts.
+
+When you add an MCP Server that provides Tools, these map to tools that we have already worked with in previous labs within Amazon Q CLI. We can apply the same controls for MCP Server Tools - give access to and control default permissions for. We will see this later in this lab.
+
+We are going to build upon the previous custom agent we setup, "python-development" and add an MCP Server, specifically the [AWS Documentation MCP Server](https://awslabs.github.io/mcp/servers/aws-documentation-mcp-server). Clicking on that link will show you how to configure this MCP Server for any tool that integrates MCP Servers.
+
+```
+{
+  "mcpServers": {
+    "awslabs.aws-documentation-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
 
 > For a list of AWS MCP Servers, check out the [AWS MCP Server directory](https://awslabs.github.io/mcp/). You can explore a number of different MCP Servers, and the docs proivide an overview of the features that each MCP Server offers, together with the available Tools. If I scroll a bit further I get the installation details.
 
-MCP Servers exist at the global level (every time you start an Amazon Q CLI session), or at specific project workspaces (they will start just for those projects). The location of the **"mcp.json"** file determines this:
+**Note!** Currently Amazon Q CLI **only** supports STDIO MCP Servers, which run locally on your machine. Bear this in mind as you go looking for MCP Servers you want to use.
 
-* Global MCP Settings - **"~/.aws/amazonq/mcp.json"**
-* Workspace specific MCP Settings - **".amazonq/mcp.json"** (relative to the current directory you are in)
+**Task-06**
 
-**Task 16a**
-
-We are going to add an MCP Server to our Amazon Q CLI setup. We are going to use the [Promptz MCP Server](https://www.promptz.dev/mcp), which is an online resource to discover and explore prompts created by the community to enhance your Amazon Q workflow. What we want to do is:
-
-- configure this MCP server based on [its documentation here](https://www.promptz.dev/mcp)
-- make this MCP server global
-- add some environment settings
-- keep all other options as default
-
-Exit Amazon Q CLI so that you are at the terminal. We will use both the cli and the hand crafting methods.
-
-
-**Adding MCP Servers via the cli** 
-
-Introduced in 1.10 of Amazon Q CLI, **"q mcp"**  provides you with tools to help you manage your MCP server settings. When we run this command we can see what it gives us:
-
-```
-Usage: qchat mcp [OPTIONS] <COMMAND>
-
-Commands:
-  add     Add or replace a configured server
-  remove  Remove a server from the MCP configuration
-  list    List configured servers
-  import  Import a server configuration from another file
-  status  Get the status of a configured server
-  help    Print this message or the help of the given subcommand(s)
-```
-
-We are going to use some of these in this lab. From the command line we can use **"q mcp add"** to add a new MCP Server. Enter the following command which will create our global mcp server configuration:
-
-```
-q mcp add --name "promptz.dev/mcp" \
---command "npx" \
---args "-y" \
---args "@promptz/mcp" \
---scope "global" \
---env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" \
---env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
-```
-
-You can see we have used:
-
-* **--name** to give this mcp server a name in the configuration file
-* **--command** to provide it the command to run,
-* **--args** to provide the additional arguments for the command (note we could have done this either with a single quote separated by commas, or individual --arg statements as per the above example)
-* **--scope** defines the scope for this MCP configuration at the global level
-* **--env** provides environment variables 
-
-
-When you run this command, you should see something like the following:
-
-```
-q mcp add --name "promptz.dev/mcp" \
---command "npx" \
---args "-y" \
---args "@promptz/mcp" \
---scope "global" \
---env "PROMPTZ_API_URL = https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql" \
---env "PROMPTZ_API_KEY = da2-45yiufdo5rcflbas7rzd3twble"
-
-📁 Created MCP config in '/Users/ricsue/.aws/amazonq/mcp.json'
-
-To learn more about MCP safety, see https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-mcp-security.html
-
-
-✓ Added MCP server 'promptz.dev/mcp' to 🌍 global
-```
-
-We can check the configuration by looking at the **mcp.json** file in the **"~/.aws/amazonq"** directory, which we can see looks like the following.
+Edit the custom agent JSON configuration file we worked on as part of the previous task. Edit the file so that it looks like the following:
 
 ```
 {
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
   "mcpServers": {
-    "promptz.dev/mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@promptz/mcp"
-      ],
-      "env": {
-        "PROMPTZ_API_URL": "https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql",
-        "PROMPTZ_API_KEY": "da2-45yiufdo5rcflbas7rzd3twble"
-      },
-      "disabled": false,
-      "autoApprove": []
-    }
-  }
+	"awslabs.aws-documentation-mcp-server": {
+        	"command": "uvx",
+        	"args": ["awslabs.aws-documentation-mcp-server@latest"],
+        	"env": {
+          		"FASTMCP_LOG_LEVEL": "ERROR",
+          		"AWS_DOCUMENTATION_PARTITION": "aws"
+        	  }
+		}
+	},
+  "tools": ["*"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read","fs_write","use_aws"],
+  "resources": [
+    "file://steering/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
 }
 ```
+You can see we have taken the MCP Server configuration details from the MCP Server documentation site, and added it to our custom agent configuration.
 
-We can check also the status of the MCP Server configuration with the following command:
-
-```
-q mcp status --name promptz.dev/mcp
-```
-
-which should give you some output like:
+Save the file, and then start your Amazon Q CLI session. Pay attention to what happens at the top of the splash screen. You should see something like the following appear:
 
 ```
-─────────────
-Scope   : 🌍 global
-File    : /Users/ricsue/.aws/amazonq/mcp.json
-Command : npx
-Timeout : 120000 ms
-Env Vars: PROMPTZ_API_URL, PROMPTZ_API_KEY
+⠏ 0 of 1 mcp servers initialized. ctrl-c to start chatting now
 ```
 
-It is important to note that this does not load this up and check that its working, this is just checking that the configuration files are all in order. To do that, we need to start Amazon Q CLI. 
+Once your Amazon Q CLI session has started you can view if has loaded by using the **"/mcp"** command that lists the available MCP Servers. 
 
-As mentioned previously, as you start exploring and integrating MCP Servers is that these are downloading and installing libraries or containerised images. As such, you will need to make sure that you have installed any dependencies. These are typically documented in the MCP Server details.  In this particular case, you will need to make sure I have **uv** and **Python** running, otherwise this is going to fail. Different MCP Servers will have different requirements so make sure you meet them before proceeding. 
-
-Start Amazon Q CLI from the terminal, and review the output. You should see something similar to the following (you might miss it as it is only on thre screen for a few moments):
-
-```
-0 of 1 mcp servers initialized. ctrl-c to start chatting now
-```
-
-and very shortly after that, you should see the familiar Amazon Q CLI splash screen but with some additional text at the top:
-
-```
-✓ promptzdevmcp loaded in 1.29 s
-✓ 1 of 1 mcp servers initialized
-```
-
-To view which MCP Servers you have installed and running at any time, use the **"/mcp"** command. Here is an example of the output:
+From your Amazon Q CLI session, run the following command:
 
 ```
 > /mcp
-promptzdevmcp
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-✓ promptzdevmcp loaded in 2.82 s
+```
+
+You should see something like this.
+
+```
+[python-developer] > /mcp
+
+awslabs.aws-documentation-mcp-server
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+✓ awslabs.aws-documentation-mcp-server loaded in 10.37 s
 
 ```
 
-Exit Amazon Q CLI (using **"/q"**), and create a new project directory somewhere on your machine. From this directory open up Amazon Q CLI. From the **">"** prompt, type in the following:
+So we have verified it has loaded ok.
+
+---
+
+**Configuring MCP Server Tools**
+
+Adding MCP Servers provides you with additional tools you can configure for your Amazon Q CLI Session. These are typically documented by the MCP Server provider, so you will have an idea of what you can expect. Once you have integrated an MCP Server, if it surfaces up tools, you will also see this when you run the **"/tools"** command.
+
+Tools added when you integrate MCP Servers are treated the same as other tools in your Amazon Q CLI session. They can be trusted or untrusted, which defines how these will operate when they are triggered. Like the built in tools within Amazon Q CLI, we can configure these by changing the properties of the custom agent by making updates to the JSON configuration file.
+
+**Task-07**
+
+Run the following command to view the available tools in your Amazon Q CLI session:
 
 ```
-> create a new flask app. use prompts from promptz
+> /tools
 ```
 
-Review the output. You should get something similar to what I had when I ran this:
+You should see something similar to the following:
 
 ```
-I'll help you create a new Flask application. Let me check for available prompts from promptz.dev
-that might be useful for Flask applications.
+[python-developer] > /tools
 
-
-🛠️  Using tool: list_prompts from mcp server promptzdevmcp
- ⋮
- ● Running list_prompts with the param:
- ⋮  {
- ⋮    "arguments": {
- ⋮      "tags": [
- ⋮        "Flask"
- ⋮      ]
- ⋮    },
- ⋮    "name": "list_prompts"
- ⋮  }
-Allow this action? Use 't' to trust (always allow) this tool for the session. [y/n/t]:
-```
-
-You will notice something - we have been asked to trust this tool. When you configure MCP Servers, you are in effect adding new Tools to your Amazon Q CLI. You can see this by running the following command:
-
-```
-/tools
-```
-
-which should give you the following output:
-
-```
-Tool                              Permission
-▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+Tool                      Permission
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 Built-in:
-- use_aws                         * trust read-only commands
-- execute_bash                    * trust read-only commands
-- report_issue                    * trusted
-- fs_read                         * trusted
-- fs_write                        * not trusted
+- execute_bash            * trust read-only commands
+- fs_read                 * trusted
+- fs_write                * trusted
+- report_issue            * trusted
+- use_aws                 * trusted
 
-promptzdevmcp (MCP):
-- promptzdevmcp___list_rules      * not trusted
-- promptzdevmcp___get_rule        * not trusted
-- promptzdevmcp___get_prompt        trusted
-- promptzdevmcp___list_prompts      trusted
-
-```
-
-As you add more MCP Servers, each Tool will be listed and you will be able to control whether you trust specific, all, or none of the tools.
-
-> **Tip!** As you work with MCP Servers, using **"/tools"** is a good way to see if they have loaded correctly and are working as expected
-
----
-
-> **Note!**
-> The latest version of Amazon Q CLI load these up in the background. When you do a **"/tools"** you might see something like:
->
-> ```
->Servers still loading
-> ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-> - promptzdevmcp
->
-> Trusted tools can be run without confirmation
-> ```
->
-> You will have to wait until these load, so try again after a few seconds to make sure they are all then listed.
-
----
-
-Back to the prompt - respond **"t"** to trust the tool. It will then being looking through the available prompts that are stored to find a relevant one. When I ran this, it generated the following:
+awslabs.aws-documentation-mcp-server (MCP):
+- read_documentation      * not trusted
+- recommend               * not trusted
+- search_documentation    * not trusted
 
 ```
-I don't see any Flask-specific prompts available. Let me check for more general web development
-prompts:
 
+As you can see, we have three new tools available that have been provided by the AWS Documentation MCP Server.
 
-🛠️  Using tool: list_prompts (trusted) from mcp server promptzdevmcp
- ⋮
- ● Running list_prompts with the param:
- ⋮  {
- ⋮    "arguments": {
- ⋮      "tags": [
- ⋮        "Web"
- ⋮      ]
- ⋮    },
- ⋮    "name": "list_prompts"
- ⋮  }
- ⋮
- ● Completed in 0.208s
+Lets change this and make some changes for our custom agent to change what tools we want available for this custom agent as well as the default permissions.
 
-
-Let me check for any available prompts without specific tags:
-
-
-🛠️  Using tool: list_prompts (trusted) from mcp server promptzdevmcp
- ⋮
- ● Running list_prompts with the param:
- ⋮  {
- ⋮    "arguments": {},
- ⋮    "name": "list_prompts"
- ⋮  }
- ⋮
- ● Completed in 0.234s
-
-
-I found a relevant prompt for creating a Flask application. Let me get the details:
-
-
-🛠️  Using tool: get_prompt from mcp server promptzdevmcp
- ⋮
- ● Running get_prompt with the param:
- ⋮  {
- ⋮    "arguments": {
- ⋮      "name": "Build a UI for a votingapp"
- ⋮    },
- ⋮    "name": "get_prompt"
- ⋮  }
-Allow this action? Use 't' to trust (always allow) this tool for the session. [y/n/t]:
-```
-
-You can exit this (CTRL + C) or leave it running until it finishes if you want.
-
-Congratulations, you have configured and tested your first MCP Server. 
-
----
-
-**Adding MCP Servers manually**
-
-**Task 16b**
-
-This is an optional lab which you can skip if you are happy using the cli to configure your MCP Servers. Before proceeding, exit from Amazon Q CLI, and then delete the mcp.json file in the "~/.aws/amazonq" directory.
-
-If you prefer you can generate the **"mcp.json"** files yourself, making sure that you configure them in the specific directory based on whether you want them to be project specific, or global. The process is:
-
-1. Create a **"mcp.json"** file
-2. Edit the **"mcp.json"** file to add any MCP Servers you want to add
-
-When you make those changes, the next time you restart Amazon Q CLI, it will try and load up any MCP Servers you have configured.
-
-Make sure you are at the **"~/.aws/amazonq"** directory in yout terminal (the ~ is your home directory)
-
-From this directory create a new file called **"mcp.json"**. Edit that file to add the following:
+Exit the Amazon Q CLI session, and edit your custom agent JSON configuration so that it looks like the following:
 
 ```
 {
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
   "mcpServers": {
-    "promptz.dev/mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@promptz/mcp"
-      ],
-      "env": {
-        "PROMPTZ_API_URL": "https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql",
-        "PROMPTZ_API_KEY": "da2-45yiufdo5rcflbas7rzd3twble"
-      },
-      "disabled": false,
-      "autoApprove": []
-    }
-  }
+	"awslabs.aws-documentation-mcp-server": {
+        	"command": "uvx",
+        	"args": ["awslabs.aws-documentation-mcp-server@latest"],
+        	"env": {
+          		"FASTMCP_LOG_LEVEL": "ERROR",
+          		"AWS_DOCUMENTATION_PARTITION": "aws"
+        	  },
+		"disabled": false
+		}
+	},
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "use_aws",
+    "@awslabs.aws-documentation-mcp-server/read_documentation",
+    "@awslabs.aws-documentation-mcp-server/search_documentation"
+  ],
+  "toolAliases": {},
+  "allowedTools": ["@awslabs.aws-documentation-mcp-server/read_documentation"],
+  "resources": [
+    "file://steering/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
 }
+```
 
+You will notice a few things that we have done:
+
+* we have modified **"tools"** and included the tools from the MCP Server using the format **"@{mcp-server-name}/{tools}"**
+* we have modified the **"allowedTools"** to specify one of the tools from the MCP Server, again using the same format
+
+Restart your Amazon Q CLI session, and re-run the "/tools" command. Review the output. You should get something similar to the following:
+
+```
+[python-developer] > /tools
+
+
+Tool                      Permission
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+Built-in:
+- fs_read                 * trusted
+- fs_write                * not trusted
+- use_aws                 * trust read-only commands
+
+awslabs.aws-documentation-mcp-server (MCP):
+- read_documentation      * trusted
+- search_documentation    * not trusted
 
 ```
 
-Save this file. Restart Amazon Q CLI, and you should see that the MCP Server is now available. Use **"/mcp"** to see the status.
+Let's test this out. In the past I have written a lot about Managed Workflows for Apache Airflow (MWAA), and I know they keep adding new features and capabilities but I have kind of not kept up. I ask the following prompt:
+
+```
+> Check the AWS documentation for MWAA worker sizes
+```
+
+Follow the output. It should prompt you at some point to trust the "search_documentation" tool - if you look above, you can see that we did not trust this tool, only "read_documentation". This is what mine looked like:
+
+```
+> I'll search the AWS documentation for information about MWAA (Amazon Managed
+Workflows for Apache Airflow) worker sizes.
+
+
+🛠️  Using tool: search_documentation from mcp server awslabs.aws-documentation-mcp-server
+ ⋮
+ ● Running search_documentation with the param:
+ ⋮  {
+ ⋮    "name": "search_documentation",
+ ⋮    "arguments": {
+ ⋮      "search_phrase": "MWAA worker sizes Amazon Managed Workflows Apache Airflow",
+ ⋮      "limit": 10
+ ⋮    }
+ ⋮  }
+
+Allow this action? Use 't' to trust (always allow) this tool for the session. [y/n/t]
+```
+
+Respond "t" to trust this tool, and continue to watch the output. You should see at some point that Amazon Q CLI then uses the "read_documentation" tools, and this time does not ask you for permission.
+
+```
+> Perfect! I found the specific documentation page for environment classes. Let me read
+the detailed information about MWAA worker sizes:
+
+
+🛠️  Using tool: read_documentation (trusted) from mcp server awslabs.aws-documentation-mcp-server
+ ⋮
+ ● Running read_documentation with the param:
+ ⋮  {
+ ⋮    "name": "read_documentation",
+ ⋮    "arguments": {
+ ⋮      "url": "https://docs.aws.amazon.com/mwaa/latest/userguide/environment-class.html",
+ ⋮      "max_length": 8000
+ ⋮    }
+ ⋮  }
+
+```
+
+Feel free to try out searches for your favorite AWS Services and see what you get.
+
+Custom agents allow you to provide very flexible and granular control over your MCP Server tools selection and permissions.
 
 ---
 
-**Reviewing your MCP Servers**
+**Clashing tool names - using toolAliases**
 
-At any time you can see what MCP Servers you have configured by using the **"q mcp list"** command from the terminal. Using the previous configuration, when we run it from the same directory we see the following output
+One thing to bear in mind as you add MCP Servers to your Amazon Q CLI is the potential for tools to have a name clash. For example, imagine if you have a tool called "get_issues" and had integrated the GitHub and GitLab MCP Servers. These both expose tools called "get_issues", so how do you manage this?
 
-(the directory on my macbook is "/Users/ricsue/amazon-q-developer-cli/mcp-test", yours will be different)
-
-```
-q mcp list
-
-📄 workspace:
-  /Users/ricsue/amazon-q-developer-cli/mcp-test/.amazonq/mcp.json
-    (empty)
-
-🌍 global:
-  /Users/ricsue/.aws/amazonq/mcp.json
-    • promptz.dev/mcp npx
-
+Within the custom agent configuration, you can create alias for tools and map these to the explicit tool you want to map it to. In the above example, we would add the following to the custom agent JSON configuration file:
 
 ```
+  "toolAliases": {
+    "@github-mcp/get_issues": "github_issues",
+    "@gitlab-mcp/get_issues": "gitlab_issues"
+  }
+```
 
-As you can see we have not defined a local, project workspace MCP Server and so all we see is our global one.
+This is something to bear in mind as you start adding MCP Server tools and want to manage any conflicts that might arise.
 
-**Task 16c**
+---
 
-Exit from Amazon Q CLI so you are at the terminal. In the current directory (in the example above, mine is "/Users/ricsue/amazon-q-developer-cli/mcp-test/" but yours will be different), create a ".amazonq" directory.
+**Disabling MCP Servers**
 
-Move the mcp.json file from the "~/.aws/amazonq" directory to your current directory, into the ".amazonq" directory you created in the previous step. Make sure you are **moving** the file and not copying it.
+We are able to disable MCP Servers from custom agents by editing the custom agent JSON file and adding new configuration item called "disabled" and setting this to true (the default is false).
 
-Now we can re-run the command, and we can see that our MCP Server is now a local, project MCP Server rather than a global one.
+**Task-08**
+
+Edit the custom agent JSON configuration as follows:
 
 ```
-q mcp list
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "mcpServers": {
+	"awslabs.aws-documentation-mcp-server": {
+        	"command": "uvx",
+        	"args": ["awslabs.aws-documentation-mcp-server@latest"],
+        	"env": {
+          		"FASTMCP_LOG_LEVEL": "ERROR",
+          		"AWS_DOCUMENTATION_PARTITION": "aws"
+        	  },
+		"disabled": true
+		}
+	},
+  "tools": ["*"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read","fs_write","use_aws"],
+  "resources": [
+    "file://steering/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
+}
+```
 
-📄 workspace:
-  /Users/ricsue/amazon-q-developer-cli/mcp-test/.amazonq/mcp.json
-    • promptz.dev/mcp npx
-
-🌍 global:
-  /Users/ricsue/.aws/amazonq/mcp.json
-    (empty)
+Save the configuration file and then restart your Amazon Q CLI session. You should see output at the top of the screen that displays:
 
 ```
+○ awslabs.aws-documentation-mcp-server is disabled
+```
+
+If you run **"/mcp"** what do you get?
 
 ---
 
 **MCP Prompts**
 
-MCP Servers can provide three types of resources: Tools, Resources, and Prompts. When you are reviewing MCP Server details, they will typically provide documentation that covers which of these they support. Tools are the most common resource MCP Server provide and provide the ability for you to define functions that can be called by your AI coding assistant. Resources in MCP are a way to share data between the server and clients. Unlike tools, which are used for executing actions, resources are used for sharing and synchronizing state (for example, static data like configuration files, dynamic data that changes over time like user data, binary data like an image file, etc). Prompts in MCP enable you to create templates of prompts that allow you to create consistent, reusable prompts for your user interaction.
-
 We have already looked at how Amazon Q CLI supports MCP Tools, but it also supports MCP Prompts with the **"/prompts"** command. This will look at any MCP Servers that are providing Prompts resources, and then list them. You are then able to use these within your Amazon Q CLI sessions, referring to defined prompt templates with the **"@{prompt}"** command.
 
-**Task 17**
+To do this we are going to implement a custom MCP Server that provides Prompt resources.
 
-Open a new terminal window and create a new directory (for example, "~/projects/mcp-prompts").
+**Task-09**
 
-From this window, create a file called **"mcp-server.py"** and add the following code. This will generate a simple MCP Server that provides a Tool and a Prompt:
+Open a **new terminal window** and create a new directory (for example, "mcp-prompts").
+
+From this window, create a file called **"mcp-server.py"** and add the following code. This will generate a simple MCP Server that provides a Prompt:
 
 ```
 import asyncio
 import sys
 
-from crawl4ai import *
 from mcp.server.fastmcp import Context, FastMCP
 
 # Create an MCP server
-mcp = FastMCP("ContextScraper")
-
-@mcp.tool()
-async def crawl(url: str, ctx: Context) -> str:
-    """crawls a given webpage URL and returns a markdown representation of the webpage content"""
-
-    # Suppress stdout outputs
-    dev_null = open("/dev/null", "w")
-    sys.stdout = dev_null
-
-    # Crawl the given webpage using Crawl4AI
-    async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(url=url)
-        return result.markdown
-
-@mcp.prompt()
-def create_context_from_url(url: str) -> str:
-    """A prompt that takes a URL and uses the crawl tool to add webpages to Q developer context rules"""
-    return f'Use the crawl tool to crawl url={url}. Write the webpage content to a markdown file in ".amazonq/rules/" of the current directory. Choose a fitting name for the file'
+mcp = FastMCP("QCLIPromptDemo")
 
 @mcp.prompt()
 def create_new_project() -> str:
@@ -502,27 +879,24 @@ def create_new_project() -> str:
     return f'Create a new project layout. Create a top level src directory, and in the src directory create subdirectories for templates, models, routes, and static. Add a README.md to the src directory.'
 ```
 
+So what have we created here?
+
+We have created an MCP Server which provides a sample prompt to bootstrap a project using a specific layout (this is a very simplified example, you could build something much more detailed and complex).
+
 After saving this file, create a virtual python environment and install a couple of dependencies:
 
 ```
 python -m venv .mcp
 source .mcp/bin/activate
-pip install mcp crawl4ai mcp[cli]
+pip install mcp mcp[cli]
 ```
 
-After load these, create a new **"mcp.json"** configuration file in a folder called **".amazonq"** in the current directory.
-
-```
-mkdir .amazonq
-touch .amazonq/mcp.json
-```
-
-And then add the following to this file:
+That's it we now have a simple custom MCP Server that provides Prompts. The configuration to use this is as follows:
 
 ```
 {
     "mcpServers": {
-        "ContextScraper": {
+        "QCLIPromptDemo": {
             "command": "uv",
             "args": ["run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
         }
@@ -530,21 +904,71 @@ And then add the following to this file:
 }
 ```
 
-All we are doing here is providing the mechanism by which to run our MCP Server, so in this case, just using uv to run it with these parameters.
+We now need to add this MCP Server to our custom agent JSON configuration. We will use the one we have been using throughout this lab (but feel to create a new one if you want).
 
-Save this file and then return back to the new directory you created. You should end up with something like this:
+Edit this JSON configuration file so it looks like this:
 
 ```
-mcp-prompts/
-  ├── .mcp
-  ├── .amazonq
-  │    └── mcp.json
-  └── mcp-server.py
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "mcpServers": {
+	"awslabs.aws-documentation-mcp-server": {
+        	"command": "uvx",
+        	"args": ["awslabs.aws-documentation-mcp-server@latest"],
+        	"env": {
+          		"FASTMCP_LOG_LEVEL": "ERROR",
+          		"AWS_DOCUMENTATION_PARTITION": "aws"
+        	  },
+		      "disabled": false
+		    },
+	"QCLIPromptDemo": {
+          "command": "uv",
+          "args": ["run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+        }
+	},
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "use_aws",
+    "@awslabs.aws-documentation-mcp-server/read_documentation",
+    "@awslabs.aws-documentation-mcp-server/search_documentation"
+  ],
+  "toolAliases": {},
+  "allowedTools": ["@awslabs.aws-documentation-mcp-server/read_documentation"],
+  "resources": [
+    "file://steering/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
+}
 ```
 
-Make sure you are not in the ".amazonq" directory. Start an Amazon Q CLI session.
+You can see we have added the new MCP Server we created by adding the following to the previous custom agent configuration file:
 
-You will see it try and load up the MCP Server we have specified in the mcp.json.
+```
+	"QCLIPromptDemo": {
+          "command": "uv",
+          "args": ["run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+        }
+```
+
+After saving this file, in the same directory, start an Amazon Q CLI session and confirm that the MCP Server has started ok:
+
+```
+[python-developer] > /mcp
+
+QCLIPromptDemo
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+✓ QCLIPromptDemo loaded in 9.79 s
+
+awslabs.aws-documentation-mcp-server
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+✓ awslabs.aws-documentation-mcp-server loaded in 7.91 s
+```
+
+If you run **"/tools"**, what do you see? It should look exactly as previous. We have not added any new tools with this MCP Server, we have added prompts. So how do we see these? Simple, we use the **"/prompts"** command within our Amazon Q CLI Session.
 
 From the **">"** prompt, type **"/prompts"** and hit return. You should see something like the following:
 
@@ -553,8 +977,7 @@ From the **">"** prompt, type **"/prompts"** and hit return. You should see some
 
 Prompt                    Arguments (* = required)
 ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-context_scraper (MCP):
-- create_context_from_url url*
+QCLIPromptDemo (MCP):
 - create_new_project
 ```
 
@@ -568,290 +991,168 @@ Which should generate output like the following:
 
 ```
 > @create_new_project
+
 I'll help you create this project layout with the requested directory structure and README.md file. Let
 me do that for you.
 
-
-🛠️  Using tool: execute_bash
- ⋮
- ● I will run the following shell command:
-mkdir -p src/templates src/models src/routes src/static
- ⋮
- ↳ Purpose: Creating the project directory structure with src and its subdirectories
-
-
-Allow this action? Use 't' to trust (always allow) this tool for the session. [y/n/t]:
-
-> t
-
- ⋮
- ● Completed in 0.29s
 ```
 
-Check out the results in your current directory. It should have implemented the new project layout.
-
-We can try the other Prompt, which takes input (and URL) and then creates a context file based on searching that web page. (feel free to change the web page for something different)
-
-```
-> @create_context_from_url url=https://blog.beachgeek.co.uk/mcp-finch/
-```
-
-Once finished, run the **"/context show"** command. 
-
-Do you see this now added to your context? This could be useful when you need to add some new API docs for a library you are working on and want to add them to your context.
+Follow the output - you may need to provide permission as it will write files and we have not given this custom agent fs_write permission. Once it has finished, what did you get? Compare it to the prompt defined in the function - does it look like its created what was asked?
 
 ---
 
-**Disabling and overriding MCP Server settings**
+**Configuring fine grained permissions for your Tools**
 
-What if you wanted to temporarily disable an MCP Server, but not delete the configuration file? Taking the **mcp.json** file we have been working with, we can disable it by changing the value of **"disabled"** from False to True. In the following configuration we have disabled it.
+We saw earlier in this lab how we can configure tools within custom agents, controlling which tools a specific custom agent had access to as well as the permissions granted. This is great, but what if you wanted to have more fine grain control over access. For example, we saw that we have a tool called **"execute_bash"** that allows you to run bash commands. What if you wanted to only allow certain commands to run?
 
+This is possible using the **"toolsSettings"** configuration within custom agents. It allows you to configure specific controls that a given tool provides. For example, from the [Github pages](https://github.com/aws/amazon-q-developer-cli/blob/main/docs/built-in-tools.md) we can see that:
+
+* **fs_write** and **fs_read** provide **"allowedPaths"** and **"deniedPaths"** configuration options
+* **use_aws** provide **"allowedServices"** and **"deniedServices"** configuration options
+* **execute_bash** provide **"allowedCommands"**, **"deniedCommands""**, and **"allowReadOnly"** options
+
+You can provide explicity configuration references or use regex. Here is an example of how we would provide more fine grain control of what the **"execute_bash"** tool could do.
 
 ```
-{
-  "mcpServers": {
-    "promptz.dev/mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@promptz/mcp"
-      ],
-      "env": {
-        "PROMPTZ_API_URL": "https://retdttpq2ngorbx7f5ht4cr3du.appsync-api.eu-central-1.amazonaws.com/graphql",
-        "PROMPTZ_API_KEY": "da2-45yiufdo5rcflbas7rzd3twble"
-      },
-      "disabled": true,
-      "autoApprove": []
+"toolsSettings": {
+    "execute_bash": {
+      "allowedCommands": ["git status", "git fetch"],
+      "deniedCommands": ["git commit .*", "git push .*"],
+      "allowReadOnly": true
     }
   }
-}
-```
-
-If we make the change at the Global level (~/.aws/amazonq/mcp.json) then this will disable the MCP Server globally. If we start a new Q session in a terminal after making this change, we will see the following:
-
-```
-○ promptzdevmcp is disabled
-
-🤖 You are chatting with claude-4-sonnet
 
 ```
 
-You can validate that this has not been configured by running **"/tools"** to see that any tools have been added.
 
-
-There might be times when you want to:
-
-* disable Global MCP Servers for the current project workspace you are in
-* enable an MCP Server that has been disabled Globally
-
-You can do this by adding a **mcp.json** configuration in your project workspace, of the MCP Server you want to change. This will **override** the MCP Server status - whatever you configure in your local workspace will preside. You will see a different message when you start Amazon Q CLI though:
+If you are using tools that have been surfaced up via an MCP Server, you will need to review the documentation for that MCP Server and then use this configuration option in the same was as the built in ones. For example:
 
 ```
-WARNING: MCP config conflict for promptz.dev/mcp. Using workspace version.
-✓ promptzdevmcp loaded in 2.64 s
-
-🤖 You are chatting with claude-4-sonnet
+  "toolsSettings": {
+    "@git/git_status": {
+      "git_user": "$GIT_USER"
+    }
+  }
 ```
 
-This tells you that it detected a conflict and is overiding with the project workspace configuration.
+Not every tool has configuration options, so review documentation to find out if they do.
 
----
+**Task-10**
 
-**Context Hooks**
+Lets configure our custom agent so that we limit what files Amazon Q CLI has access to. We want it to be able to read files in the current project directory, but exclude more sensitive files.
 
-Context hooks are a feature in Amazon Q CLI that you can use to automatically inject context into your conversations with Q Developer CLI. Instead of manually adding context with the **"/context"** command, context hooks run commands and include their output as context.
-
-Amazon Q CLI supports two types of context hooks:
-
-* **Conversation start hooks** - Run once at the beginning of a conversation. Their output is added to the conversation context and persists throughout the session.
-* **Per-prompt hooks** - Run with each user message. Their output is added only to the current prompt.
-
-You can view your current context hooks using the **"/hooks"** command in the Amazon Q CLI session which will give you output similar to the following:
-
-```
-> /hooks
-
-🌍 global:
-    Conversation Start:
-      <none>
-    Per Prompt:
-      <none>
-
-👤 profile (default):
-    Conversation Start:
-      <none>
-    Per Prompt:
-      <none>
-
-Use /hooks help to manage hooks.
-```
-
-As I do not have any configured, nothing is showing.
-
----
-
-**Task 18**
-
-Lets add a new context hook that is invoked every time we prompt. Exit Amazon Q CLI and create a new file called **"MYHOOK.md"** in the current directory, and add this to the file:
-
-```
-talk like a pirate
-make jokes
-```
-
-We will now add this as a context hook to see if we can make our Amazon Q CLI talk like a pirate. We use the **"/hooks"** command, using the "add" to add a context hook. We give it a name (in our case, pirate) and then define which of the two kinds of hooks we want to use (in this case, we want to run this every time we prompt). Finally we run the command, so here just echoing the markdown doc with the instructions.
-
-```
-> /hooks add pirate --trigger per_prompt --command "cat MYHOOK.md"
-```
-You should see output similar to the following:
-
-```
-> /hooks add pirate --trigger per_prompt --command "cat MYHOOK.md"
-
-Added profile hook 'pirate'.
-```
-
-Lets test this out now. Enter the following prompt:
-
-```
-> create a simple flask app that returns a json date string
-```
-
-Review the output. What happens? 
-
-Run the **"/hooks"** command. What has changed.
-
----
-
-When you add context hooks, you can add them at the local or global level. Use the **"--global"** to make the hook global, or setting it as a local, profile context hook without using that argument. 
-
-Like with context, when you add context hooks these are added to the **"context.json"** file that we looked at earlier. Here is what mine looks like after adding a context hook that reads a file called "todo-hook.md" as part of every prompt when it is run.
+Following on from previous examples, we will modify the custom agent as follows:
 
 ```
 {
-  "paths": [
-    "project-standards.md"
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "mcpServers": {},
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "use_aws"
   ],
-  "hooks": {
-    "todo": {
-      "trigger": "per_prompt",
-      "type": "inline",
-      "disabled": false,
-      "timeout_ms": 30000,
-      "max_output_size": 10240,
-      "cache_ttl_seconds": 0,
-      "command": "cat MYHOOK.md"
+  "toolAliases": {},
+  "allowedTools": ["fs_read", "fs_write"],
+  "resources": [
+    "file://steering/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["~/projects", "./src/**"],
+      "deniedPaths": ["/tmp/*"]
     }
   }
 }
 ```
 
-You can check what context hooks you have within your Amazon Q CLI session by running the **"/context show --expand"** command, which will provide you with the following summary at the top of the page.
+As you can see we have added the following:
 
 ```
-🌍 global:
-    .amazonq/rules/**/*.md (2 matches)
-    README.md (1 match)
-    AmazonQ.md
-
-    🔧 Hooks:
-    On Session Start:
-      <none>
-    Per User Message:
-      <none>
-
-👤 profile (default):
-    <none>
-
-    🔧 Hooks:
-    On Session Start:
-      <none>
-    Per User Message:
-      <none>
+"toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["./**"],
+      "deniedPaths": ["/tmp/*"]
+    }
+  }
 ```
 
-(It will also dump out any context files you have added, so if you have defined those you will need to scroll upwards to see the above summary)
+Which will block Amazon Q CLI's ability to read files from a specific directory (in this case "/tmp",) but allow it to read files from the current directory and all subdirectories.
+
+Lets create some files to test this out.
+
+```
+echo "import os" > /tmp/q-cli-test.py
+echo "import os" > q-cli-test.py
+echo "import os" > ~/q-cli-test.py
+```
+
+Restart your Amazon Q CLI session, and try the following prompts:
+
+```
+> Can you review the "q-cli-test.py" file and tell me what programming language its wriiten in
+```
+
+Does it run ok?
+
+Now try the following:
+
+```
+> Can you review the "/tmp/q-cli-test.py" file and tell me what programming language its wriiten in
+> Can you review the "~/q-cli-test.py" file and tell me what programming language its wriiten in
+```
+
+Now what happens? You should see something like the following:
+
+```
+> I'll read the "/tmp/q-cli-test.py" file to review it and identify the
+programming language.
+
+> I understand that the file read was rejected due to forbidden arguments. This is
+likely because the path "/tmp/q-cli-test.py" is outside the allowed directory
+scope or contains restricted content.
+
+```
+
+The ability to control at a granular level what your tools have access to is a very powerful capability that you can use to ensure that Amazon Q CLI is only operating on files that you want it to, or run commands that you want it to execute.
+
+---
+
+**Creating project scoped custom agents**
+
+So far in this lab we have created custom agents that are global. We define whether an agent is global or project scoped by the location of the JSON configuration file.
+
+At the beginning of this lab, we used the **"agent create -n xxx"** command to create our agent. By default, this creates custom agents with a global scope. What this means is that the JSON configuration file will get located in **"~/.aws/amazonq/client-agents"** directory.
+
+However, you can add an additional argument **"-d"** to specify the directory where you want this to be created. When you do this, it will create the JSON configuration in the **".amazonq/client-agents"** directory, which sets the custom agent to be project scoped.
+
+What if you have local, project custom agents and global custom agents? When Amazon Q CLI looks for an custom agent, it follows a specific precedence order: First it will look for **Local custom agents first**, checking for custom agents in the current working directory. Next it will look for **Global custom agents**, and fall back to custom agents in your home directory. If it fails to find any, it will use the **Built-in default** custom agent. If both local and global directories contain custom agents with the same name, the local custom agent takes precedence. Amazon Q Developer CLI will display a warning message when this occurs:
+
+```
+WARNING: Agent conflict for my-agent. Using workspace version.
+```
+
+
+> **Check out current good practices for organising custom agents** You can get some good ideas about how to organise your custom agents by checking out the official docs, [Best practices for organizing custom agents](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-custom-agents-management.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el#custom-agent-organization)
 
 
 ---
 
-**Managing conversations (Chats) across Amazon Q CLI sessions**
-
-Whilst you are working within your Amazon Q CLI session, you might need to stop and exit. However, you want to then return and then carry on working where you left off. Don't worry, Amazon Q CLI has you covered.
-
-*Starting with --resume*
-
-The first thing you can do is to use the **"--resume"** option when starting Amazon Q CLI. When you do this, it will look at the current directory you are in, and then look to carry on where you left off. You can see here in the screen that I start Amazon Q CLI with the "--resume" option, and it then looks at the current directory, sees that we were working on something and then is ready to continue.
-
-```
- q chat --resume
-✓ promptzdevmcp loaded in 2.83 s
-✓ 1 of 1 mcp servers initialized.
-Picking up where we left off...
-
-╭─────────────────────────────── Did you know? ────────────────────────────────╮
-│                                                                              │
-│     You can resume the last conversation from your current directory by      │
-│                        launching with q chat --resume                        │
-│                                                                              │
-╰──────────────────────────────────────────────────────────────────────────────╯
-
-/help all commands  •  ctrl + j new lines  •  ctrl + s fuzzy search
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-We've briefly discussed the Model Context Protocol (MCP) in Amazon Q, which is an open protocol that allows
-applications to provide context to LLMs and extend capabilities through additional tools.
-
-```
-
-*Saving and Loading conversations*
-
-As you are working, there might be times when want to provide a quick summary of the current conversation you have been having within your Amazon Q CLI. Perhaps it has been a long session and you want to retain all the prompts and information so you can review at a later time.
-
-You can now do this, using the **"/save {name}"** command, providing a name of the conversation you want to save. It will then generate a json document in the current directory.
-
-```
-> /save project
-
-✔ Exported conversation state to project
-```
-
-You can also load up a conversation from an Amazon Q CLI session using the **"/load {name}"** and it will then load up the conversation, leaving you ready to carry on where you left off.
-
-**Task 19**
-
-From your Amazon Q CLI session, at the **">"** prompt try saving your current conversation:
-
-```
-> /save project-customer-survey
-```
-
-After it has saved, open up a new terminal and review the output.
-
-Now close your Amazon Q CLI session and start it again. From the **">"** prompt, lets reload that conversation:
-
-```
-> /load project-customer-survey
-```
-
-After it loads, ask it something about the customer survey application. 
-
----
 
 ### Supporting Resources
 
 Some additional reading material that dives deeper into this topic if you want to explore:
 
-* [Configuring Model Context Protocol (MCP) with Amazon Q CLI](https://dev.to/aws/configuring-model-context-protocol-mcp-with-amazon-q-cli-e80)
+* [Overcome development disarray with Amazon Q Developer CLI custom agents](https://aws.amazon.com/blogs/devops/overcome-development-disarray-with-amazon-q-developer-cli-custom-agents/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
 
 * [Running Model Context Protocol (MCP) Servers on containers using Finch](https://dev.to/aws/running-model-context-protocol-mcp-servers-on-containers-using-finch-kj8)
 
-* [Q-Bits: Enhance Amazon Q Developer CLI's Context Using MCP for Web Crawling](https://community.aws/content/2ulohBgBuogjKVEKTjGff71oOY3/q-bits-enhance-amazon-q-developer-cli-s-context-using-mcp-for-web-crawling) 
+* [Building AIOps with Amazon Q Developer CLI and MCP Server](https://aws.amazon.com/blogs/machine-learning/building-aiops-with-amazon-q-developer-cli-and-mcp-server/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
 
-* [Running Model Context Protocol (MCP) Servers on containers using Finch](https://dev.to/aws/running-model-context-protocol-mcp-servers-on-containers-using-finch-kj8)
-
-* [Launch ECS Local Container Endpoints](https://gist.github.com/nathanpeck/6b03e647e79455a460551f8f295c7f9e)
-
+* [Containerize legacy Spring Boot application using Amazon Q Developer CLI and MCP server](https://aws.amazon.com/blogs/machine-learning/containerize-legacy-spring-boot-application-using-amazon-q-developer-cli-and-mcp-server/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
 
 ### Completed!
 

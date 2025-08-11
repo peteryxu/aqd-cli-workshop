@@ -84,9 +84,23 @@ Experiment with a few command line tools you are familiar with.
 
 So far we have used Amazon Q CLI as just a tool to help us run commands more effectively. You can use Amazon Q Developer CLI in chat mode, and engage in natural language conversations, ask questions, and receive responses from Amazon Q within your terminal environment.
 
-You access this from your terminal by either entering “q” or “q chat”, or you can provide some inputs and it will begin processing that once it starts, for example, "q 'show me a Docker file that runs a Python flask application' "
+You access this from your terminal by either entering “q” or “q chat”, or you can provide some inputs and it will begin processing that once it starts, for example, "q 'show me a Docker file that runs a Python flask application' ".
 
-**Task 03**
+When you start an Amazon Q CLI chat session, that sessions loads configuration settings from a number of different locations so its worth noting these.
+
+* **Global Configurations** - Amazon Q CLI will load up general settings that you define using the **"q settings"** command from the settings.json file (which you saw in the Advanced Setup part of this workshop)
+* **Session Configuration** - Amazon Q CLI will load up "custom agent configuration" for your particular session, allowing you to define things like MCP Servers, Context Resources, Tools permissions (we will explore these later in this workshop)
+
+**Amazon Q CLI custom agents**
+
+Starting with v1.13.1 of the Amazon Q CLI tool, when you start your Amazon Q CLI chat session, you will load up something called a "custom agent" configuration. Amazon Q CLI allows you to create something called **Custom Agents** which act as a configuration repository allowing you to define things like resources, tools, context. Don't worry, we will dive into this later, but its important to know that when you start Amazon Q CLI, when you enter **"q chat"** with no arguments, you will be loading up the default Agent configuration which is called **q_cli_default**.
+
+You can start your Amazon Q CLI chat with different custom agents by using the **"--agent {name-of-agent}"** argument. For example, if you created a custom agent called "php-dev" then you would start your Amazon Q CLI session with the command 
+**"q chat --agent php-dev"** and this would load up that configuration rather than the default. 
+
+We will be exploring custom agents in more detail later on in this lab.
+
+**Task-03**
 
 From the command line, type in "q" or "q chat" and you should enter the Amazon Q CLI chat screen, which looks like this:
 
@@ -100,11 +114,35 @@ Type in the following:
 
 It should generate some response. Amazon Q CLI can be used for a very broad range of use cases (check out the [Use Cases](/workshop/03-use-cases.md) section to explore this) - you are not limited to using it for just AWS work. We will see this as we proceed along this tutorial.
 
+To get help, you can type in **"/help"**. From your Amazon Q CLI session **">"**, type:
+
+```
+> /help
+```
+
+At this stage, don't worry too much about what all those commands mean as we will be exploring these over the coming labs.
+
+In the previous section we introduced Amazon Q CLI custom agents. We can look at what custom agent we have loaded by running the **"/agent list"** command. Type:
+
+```
+/agent list
+```
+
+You should get output similar to the following:
+
+```
+> /agent list
+
+* q_cli_default
+```
+
+This shows that we are using the default agent configuration called **q_cli_default**. We will be exploring this in much more detail later on.
+
 We can exit the Amazon Q CLI chat by either entering "/q" at the ">" prompt, or by pressing CTRL + C. Try exiting the chat now.
 
 ---
 
-**Task 04**
+**Task-04**
 
 Amazon Q CLI does more than just respond to your prompts, and has full agentic capabilities. It takes your prompts and then breaking these down into tasks which it will act upon. You will notice this as you start using it and see the word "Thinking..." appear. As it starts to work on the tasks you have given it, it will prompt you along the way as and when it needs more input, to confirm an operation it wants to do, or to keep you informed.
 
@@ -113,18 +151,26 @@ Open up Amazon Q CLI chat (by typing in "q" in the terminal)
 From the **">"** prompt, enter the following:
 
 ```
-> show me without creating, an optimised Docker file to run a Python Flask application. Make sure it uses the latest version of Python
+> show me WITHOUT CREATING ANY FILES, an optimised Docker file to run a Python Flask application. Make sure it uses the latest version of Python
 ```
 
 Review the output - does it look ok to you?
 
 ---
 
-**Task 05**
+**Tools**
 
-The previous prompt added the phrase "without creating" deliberately. We wanted Amazon Q CLI just to show us something.
+The previous prompt added the phrase "WITHOUT CREATING ANY FILES" deliberately. We wanted Amazon Q CLI just to show us something. It is capable of doing much more than this though. Amazon Q CLI has a concept of **Tools** that allow it to interact with the wider world. To make sure that we have control, Amazon Q CLI has the concept of permissions for these **Tools**, allowing you to set the level of trust and automation.
 
-It is capable of doing much more than this though. Amazon Q CLI has a concept of **Tools** that allow it to interact with the wider world. The various tools allow it to read, write, and execute commands. Amazon Q CLI gives you control though, so before we get it to do those things, we need to give it permission.
+Amazon Q CLI confgiures **Tools** as **"Trusted"** or **"Untrusted"**. What this means is that when Amazon Q CLI wants to use one of these Tools, if a Tool is "Untrusted" you will be prompted to ask for permission to proceed with running that Tool. You can either trust this one time, trust it going forward, or decline.
+
+By default, Amazon Q CLI auto trusts the built in Tools that perform "Read" operations, but does not trust any tool that needs to write to the file system or execute a command or program. Amazon Q CLI gives you the ability to control though.
+
+Why is this important? Imagine you are working on a big project, that might write files and run programs. If you leave the Tools setting to untrusted, you will be asked every time to proceed. You might want to automatically approve in some situations, and therefore havinv the control to trust these tools will let Amazon Q CLI proceed without prompting you.
+
+Lets take a look at this, exploring Tools permissions and then seeing how this work by extending the previous task.
+
+**Task-05**
 
 Open up a Amazon Q CLI chat session. From the **">"** prompt, type the following:
 
@@ -147,9 +193,6 @@ Built-in:
 - execute_bash    * trust read-only commands
 
 
-Trusted tools can be run without confirmation
-
-* Default settings
 ```
 
 You will notice that we have two tools that are automatically trusted - **fs_read** and **report_issue**. **fs_read** allows Amazon Q CLI to read files from your computer, and **report_issue** allows to generate issues you run into when using Amazon Q CLI that will be logged in the GitHub project repo.
@@ -174,7 +217,7 @@ If we exit Amazon Q CLI and go back, the trust settings reset back the the defau
 
 So far we have just tried a single line prompt in Amazon Q CLI chat, but you can enter multi line prompts in a number of ways. The first way is to press **CTRL and J** and you will be moved to a new line. Alternatively, you and add a backslash **"\\"** to the end of your line, and when you hit enter, you will start a new line. This is what most people who spend time at the terminal will be familiar with.
 
-**Task 06**
+**Task-06**
 
 From an Amazon Q CLI chat session, use the two methods to enter the following multi-line prompt:
 
@@ -190,7 +233,7 @@ Whilst using **CTRL + J** and **\\** works for adhoc multi-line prompts, you mig
 
 ---
 
-*Configuring your favorite text editor*
+**Configuring your favorite text editor**
 
 When it comes to editors, its hard to beat vim. I know that others have a different (wrong in my view) perspective :-). The good news is that whatever is your favourite editor, you can configure Amazon Q CLI to use it in only a few steps.
 
@@ -202,7 +245,7 @@ export EDITOR=vim
 
 I launch Amazon Q CLI, and now I can use the **"/editor"** command and it will launch vim for me, and I can edit the prompt until I am happy. When I save and exit, it returns me back to Amazon Q CLI, and it starts to work.
 
-**Task 07**
+**Task-07**
 
 Close your Amazon Q CLI session, and set your EDITOR environment variable to your preferred editor. Here are some options:
 
@@ -216,7 +259,28 @@ Once you have done that, open up Amazon Q CLI and run the **"/editor"** command.
 
 ---
 
-**Which Model do you want to use in your Amazon Q CLI session?**
+**Using images as part of your prompt**
+
+Amazon Q CLI supports images as part of your prompts. This means that you can refer to images within your project workspace as part of what you want Amazon Q CLI to help you with. For example, maybe you have some architecture diagrams you want to help build out some infrastructure as code, or you have a entity relationship diagram of a data model you want to build some SQL for, or maybe you have some sample design layouts you want to convert to some prototype code.
+
+In the next lab we will take a look at how you can do this.
+
+**Task-08**
+
+In the resources directory you will find a file called [example-erd.png](/resources/example-erd.png). Copy this to your local directory into a directory called "data-model".
+
+Start Amazon Q CLI and then from the **">"** enter the following prompt:
+
+```
+> Create a sample data model in python from the example-erd.png diagram in the data-model directory
+```
+
+Review the output. You should see how it is able to read the file, extract the key elements and then start generated code.
+
+
+---
+
+**Selecting the large language model to use in your Amazon Q CLI session?**
 
 You can select the model you want Amazon Q to use to respond to your requests during chat sessions. A default model is set when you start a chat session, and you can either change the model Amazon Q uses for a given session or set a default model for all sessions.
 
@@ -234,7 +298,7 @@ As of wrting this (June 2025) the following Models are available:
 When you exit your Amazon Q CLI chat session, the Model will revert back to the default Model. The default Model can be configured within your settings file. In the [advanced setup](/workshop/01b-advanced-setup-topics.md) we looked at how you can configure the default Model in your settings file.
 
 
-**Task 07b**
+**Task-09**
 
 If you are not already in a chat session, start Amazon Q CLI, and from the **">"** prompt, type in the following:
 
@@ -254,13 +318,19 @@ Exit the chat session and then restart Amazon Q CLI. Re-run the **"/model"** com
 
 ---
 
-### Working with Context
+### Context Engineering
 
-Context is what Amazon Q CLI will use together with the prompt you provide, to help it understand what it needs to do. Being able to manage context when using Amazon Q CLI is critical to get good output. In this section we will look at this in more detail.
+Context is what Amazon Q CLI will use together with the prompt you provide, to generate its output. Being able to manage context when using Amazon Q CLI is critical to get good output. In this section we will look at this in more detail.
+
+*Not a finite resource*
 
 The first thing to understand is that context is not and infinite resource, and it has to be managed. The **"context window"** is a finite resource that Amazon Q CLI uses to help it generate output. The **"context window"** is measured in tokens, which are the unit of text processing that large language models use. Currently Amazon Q CLI has a maximum context window of 200K tokens. 
 
-When you start Amazon Q CLI, it will automatically look for and add to the **"context window"** any content in markdown documents in the following directories:
+Research doen by Stanford University into the efficacy of different context sizes against different foundation models shows that as you increase context, the output degrades. So having more is not always a good thing.
+
+![graph of context window and performance](/images/sota-context-limits.png)
+
+In Amazon Q CLI, you can configure **Resources** that provide the context you want to provide. Resources are markdown files that live within your filesystem. When you start Amazon Q CLI, it will use the agent configuration (don't worry, we will come back to what this is later) to determine what resources are loaded into context. The default agent (q_cli_default) will configure the following resouces automatically:
 
 |Directory|File|Notes|
 |---------|----|-----|
@@ -269,43 +339,24 @@ When you start Amazon Q CLI, it will automatically look for and add to the **"co
 | Current directory/.amazonq/rules/ | *.md | In the current directory where you launched Amazon Q CLI, look for any markdown files in the .amazonq/rules directory|
 
 
-This means that if we create markdown files in these locations, Amazon Q CLI will pick these up and use them as context. This is good to know, but what if you want to add your additional files as context? Luckily for us we can do this easily using the **"/context add"** command, which we will see in a moment.
-
->*Markdown documents as context*
->
-> Creating documents in markdown format is a good way to provide context and help steer the output. For example, I typically put together my own coding preferences in a markdown doc for Amazon Q CLI to use. It will review those resources and factor that into the output it creates.
-
-When you start Amazon Q CLI, it will start with a fresh, clean context. It will look however for a number of resources to load up into its context memory. From the Amazon Q CLI chat session, we can look at this by typing in the **"/context show"** command.
+From the Amazon Q CLI chat session, we can look at what **Resources** you have currently defined as context by typing in the **"/context show"** command.
 
 ```
 > /context show
 
-🌍 global:
-    .amazonq/rules/**/*.md
-    README.md
+👤 Agent (q_cli_default):
     AmazonQ.md
-
-👤 profile (default):
-    <none>
+    README.md
+    .amazonq/rules/**/*.md
 
 No files in the current directory matched the rules above.
 ```
 
-We can see here that it is looking at files that match **".amazonq/rules/\*\*/*.md"**, **"README.md"**, and **"AmazonQ.md"**. If you have these in your project workspace, it will read these and add those as context.
-
-
-*Adding local vs global context*
-
-You can add files to both your local or global context. 
-
-* Global context allows you to add, remove context files that will be used all the time when you interact with Amazon Q CLI.
-* Local context allows you to add, remove context files in just the current profile you are working in. As you switch or change to different profiles, the context files you have configured will change. 
-
-To add local context files you use the **"/context add {markdown file}"**. To add global context files, you use **"/context add --global {markdown file}"**
+We can see here that it is looking at the default agent configuration (q_cli_default), and this configuration has files that match **".amazonq/rules/\*\*/*.md"**, **"README.md"**, and **"AmazonQ.md"**. If you have these in your project workspace, it will read these and add those as context and you will see **1 match** displayed against them.
 
 ---
 
-**Task 08**
+**Task-10**
 
 Open up an Amazon Q CLI chat session, and run the following command at the **">"** prompt:
 
@@ -315,75 +366,20 @@ Open up an Amazon Q CLI chat session, and run the following command at the **">"
 
 Does it look like the output above? When running some of the previous steps, it might have created a README.md file, and if so you should see this appear.
 
-When you run the **"/context show"** you also see something called **"profile"**. Lets look at what that is next.
+Exit the Amazon Q CLI session and create AmazonQ.md or README.md files in the current directory. You can leave the files blank. Restart Amazon Q CLI and then re-run the **"/context show"** command. What changed?
+
+You should notice that Amazon Q CLI has picked up these files, and now shows them as **"Matched"**.
 
 ---
 
-**Profiles**
+**Adding and removing Resources to your Context**
 
-Profiles allow you to switch between sets of contexts, allowing you to create unique ways for Amazon Q CLI to behave and interact with your systems. When you start Amazon Q CLI, you start with a default profile. This contains a global context and workspace context:
-
-- Global context: Files that are applied to **all profiles**
-- Workspace context: Files specific to the current profile
-
-You can create new profiles using the **"/profile create xxxx"** where xxx is a name (for example, python-dev). When you add new profiles, they will have their own unique **workspace context**, allowing you to specify patterns of files that make that profile behave and interact in ways unique to your workflow and processes.
-
-For example, you might create:
-
-* A "terraform" profile with infrastructure-as-code guidelines
-* A "python" profile with Python coding standards
-* A "java" profile with Java best practices
-
-**Task 09**
-
-From an Amazon Q CLI chat session, we will create two new profiles. One for Java Development, and another for Python. We might want to do this to reflect different preferences and rules we use that are unique to each language. From the **">"** prompt, enter:
-
-```
-> /profile create python-dev
-```
-
-Review the output. It should just return that it has created a profile. Now repeat this for a Java profile:
-
-```
-> /profile create java-dev
-```
-
-Review the context using **"/context show"** and pay attention to the profile details. Which profile are you currently using?
+In the previous lab we looked at **"Resources"** and how these provide context to your Amazon Q CLI sessions. We need to be able to manage this so we can add/remove those resources and have better control over the context we provide Amazon Q CLI. To do that, we can use the **"/context add"** and **"/context remove"** commands (you can also use **"/context rm"**).
 
 
-By having multiple profiles, you can quickly change the context that Amazon Q uses to provide responses without having to manually specify these files in each conversation. 
+**Task-11**
 
-Ok so how do you switch to a different profile?
-
----
-
-**Task 10**
-
-We can change between profiles (inclduing the default profile) by using the **"/profile set"** command within the Amazon Q CLI chat session. Lets try this out now. 
-
-```
-> /profile set python-dev
-```
-
-Change to the Java and then back to the default profile and then run the **"/context"** show command.
-
-When you exit Amazon Q CLI, the next time you use it you will be reset to the default profile. You can start Amazon Q CLI in a specific profile by starting it with the **"--profile"** argument.
-
-```
-q --profile python-dev
-```
-
-Which will start your Amazon Q CLI session using this profile.
-
----
-
-**Add Context to Profiles**
-
-Profiles provide us with a granular way of managing important context files. Lets take a look at how we add context files to specific Profiles.
-
-**Task 11**
-
-In your current directory I create a new file, called **"project-standards.md"** (dont worry, you can leave this empty). Then add it to your local context usig the following command:
+In your current directory I create a new file, called **"project-standards.md"**. Edit the file and add some text (don't worry, just whatever comes to mind). Then add it to your local context usig the following command:
 
 ```
 > /context add project-standards.md
@@ -400,70 +396,57 @@ You should see something like the following:
 ```
 > /context show
 
-🌍 global:
-    .amazonq/rules/**/*.md (2 matches)
-    README.md (1 match)
-    AmazonQ.md
-
-👤 profile (default):
+👤 Agent (q_cli_default):
+    AmazonQ.md 
+    README.md
     project-standards.md (1 match)
+    .amazonq/rules/**/*.md
+
+1 matched file in use:
+👤 /Users/ricsue/amazon-q-developer-cli/workshop/project-standards.md (~590 tkns)
+
+Total: ~590 tokens
 
 ```
 
-As you can see I was using the default profile. You can try changing profiles to see how this looks different.
-
-If you close your Amazon Q CLI session and launch it back in the same directory, you will notice that it still trys to load the files you specified into context. This is beacuase when you use the "/context add" command, it writes a configuration to the following directory: **"~/.aws/amazonq/profiles/{profile}/context.json"**. This is what the file looks like in my setup:
-
-```
-{
-  "paths": [
-    "project-standards.md"
-  ],
-  "hooks": {}
-}
-```
-
-You can add files to your global context, which will mean that every time you start an Amazon Q CLI session it will look for that resource. To do this you use the **"/context add --global {markdown file}"** which will then change the scope of the files you have added from local (your current profile), to global.
-
----
-
-**Task 12**
-
-In your current directory I create a new file, called "coding-standards.md" (dont worry, you can leave this empty). Then add it to your global context usig the following command:
-
-```
-> /context add --global coding-standards.md
-```
-
-Review your context, and you should see that this appears in the global context.
-
-When you use the "/context add --global" command, it writes a file in your "~/.aws/amazonq" directory called "global_context.json", containing a list of all the resources have defined. Here is what mine looks like:
-
-```
-{
-  "paths": [
-    ".amazonq/rules/**/*.md",
-    "README.md",
-    "AmazonQ.md",
-    "LICENSE"
-  ],
-  "hooks": {}
-}
-```
-
-You might be wondering, ok I know how to add files to context but what if I made a mistake. How do I remove or change? Amazon Q CLI has you covered with the "/context rm" command, which you can use to remove context (both local and global).
+You might be wondering, ok I know how to add files to context but what if I made a mistake. How do I remove or change? Amazon Q CLI has you covered with the "/context rm" command, which you can use to remove context.
 
 ```
 > /context rm project-standards.md
 ```
 
-You can of course also edit the configuration files and restart Amazon Q CLI too.
+If you re-run the **"/context show"** command, you should now see this has disappeared.
+
+
+The final command you should be aware of is the **"/context clear"** which should be used with care as it will remove ALL of your current configured resources you have added as context. When you run this command, it will only remove them for the duration of the session you are currently in. 
+
+Once you exit and then restart your Amazon Q CLI session they will come back. One thing to note though, **ONLY THOSE RESOURCES DEFINED IN THE CUSTOM AGENT** will get added (and yeah, this custom agent thing keeps coming up and I promise we are getting to that very soon!).
+
+Lets look at this in action. Add a new resource to your context
+
+```
+> /context add project-standards.md
+```
+
+Then run the **"/context show"** command. You should see this has been added to your context. Now run the **"/context clear"** command
+
+```
+> /context clear
+```
+
+It shoudl generate the following output:
+
+```
+Cleared context
+```
+
+Run the **"/context show"** command and review the output. Now exit your Amazon Q CLI session, restart it and then re-run the **"/context show"** command. You should see that your context has all the original, default resources, but the one we added ("project-standards.md") is not longer there.
 
 ---
 
 **Managing Context**
 
-You might be wondering how many docs, or how big those docs can be when adding these to your context? Amazon Q CLI provides 200K tokens for your **"context window"**. As you add more context in your Amazon Q CLI sessions, you will start to use up this. Managing your **"context window"** is therefore important and will ensure that you have consistent and good outcomes when using Amazon Q CLI. This next lab will look at some of the options and strategies you can use.
+We have already mentioned that Amazon Q CLI provides 200K tokens for your **"context window"**. As you add resources to your context, you might be wondering how much of that you are using up? As you add more resources to context in your Amazon Q CLI sessions, you will start to use up your 200K limit. Managing your **"context window"** is therefore important and will ensure that you have consistent and good outcomes when using Amazon Q CLI. This next lab will look at some of the options and strategies you can use.
 
 ---
 
@@ -484,34 +467,9 @@ Current context window (2650 of 200k tokens used)
 
 ```
 
-You can find out how much context specific files are taking up by running the **"/context show"** command. 
-
-In the following output I ran this command on a project where I have several files that are automatically added to the context (as they are in the rules directory of the project). You can see how this uses up tokens against the limit.
-
-
-```
-> /context show
-
-🌍 global:
-    .amazonq/rules/**/*.md (2 matches)
-    README.md (1 match)
-    AmazonQ.md
-
-👤 profile (default):
-    <none>
-
-3 matched files in use:
-🌍 /Users/ricsue/amazon-q-developer/katowice/book-sharing-app/book-sharing-app/.amazonq/rules/2.project-spec.md (~80 tkns)
-🌍 /Users/ricsue/amazon-q-developer/katowice/book-sharing-app/book-sharing-app/README.md (~9880 tkns)
-🌍 /Users/ricsue/amazon-q-developer/katowice/book-sharing-app/book-sharing-app/.amazonq/rules/1.project-layout-rules.md (~50 tkns)
-
-Total: ~10010 tokens
-
-```
-
 If you start exceeding these limits, you will start to see variability and inconsistencies in the output you get, so its important to manage this.
 
-**Task 13**
+**Task-12**
 
 Open up an Amazon Q CLI session and run the **"/usage"** command.
 
@@ -519,7 +477,7 @@ Review the output and take a few minutes to review this section.
 
 ---
 
-*Compacting*
+**Compacting**
 
 If you do start to reach the limits, you can compact your context. Compacting will generate a summary of everything in the current context. Once this summary has been completed, it will replace your current context.
 
@@ -615,11 +573,36 @@ You can see that it has reduced the overall "context window" in this example.
 
 ---
 
-*Clearing*
+**Task-13**
+
+Exit your Amazon Q CLI session, and in the current directory create two files, "AmazonQ.md" and "README.md". Fill these with some text (if you are stuck, I have provided a [resource here](/resources/compact.md) that you can use to copy/paste into these files).
+
+Start an Amazon Q CLI session and run the following prompts (and make up some of your own)
+
+```
+> Review the AmazonQ.md file and provide a summary of what is planned
+> Review and suggest improvements to the design
+```
+
+Once this has completed, run the **"/usage"** command. Then run the following:
+
+```
+/compact
+```
+
+What happened? Review the usage again, you should notice a change.
+
+---
+
+**Clearing**
 
 There might be times when you want to reset your current context. For example, during an Amazon Q CLI session, you notice that the quality of the responses are not what you think they should be. Or perhaps you have completed one task and you want to reset context to begin another.
 
 You can clear the current context by using the **"/clear"** command, which will first ask you to confirm that you want to do this.
+
+**Task-14**
+
+Following on from the previous session, from the **">"** run the following command:
 
 ```
 > /clear
@@ -637,7 +620,9 @@ Conversation history cleared.
 
 So far we have been using Amazon Q CLI in chat mode to write prompts and then get responses. Sometimes you might want to run a command from within your chat session. You could exit and then restart, but you will lose any context and conversation history that you have built up. Don't worry though, there is a way. You can use the **"!"** to preface any command you want to run, and it will execute the command and then return the results back to you in the chat session.
 
-**Task 14**
+When running commands bear in mind that each invocation is stateless. If I use "! cd {directory}" and then run "! ls" I will not get the directory listing for the {directory} but for the current Amazon Q CLI directory where you launched it. If you need to do that you should concatanate your commands, so using this as an example "!cd {directory} && ls".
+
+**Task-15**
 
 Open up Amazon Q CLI and run the following commands:
 
@@ -649,6 +634,75 @@ Review the output - you should see your current directory listed out. Experiment
 
 ---
 
+**Managing conversations (Chats) across Amazon Q CLI sessions**
+
+Whilst you are working within your Amazon Q CLI session, you might need to stop and exit. However, you want to then return and then carry on working where you left off. Don't worry, Amazon Q CLI has you covered.
+
+*Starting with --resume*
+
+The first thing you can do is to use the **"--resume"** option when starting Amazon Q CLI. When you do this, it will look at the current directory you are in, and then look to carry on where you left off. You can see here in the screen that I start Amazon Q CLI with the "--resume" option, and it then looks at the current directory, sees that we were working on something and then is ready to continue.
+
+```
+ q chat --resume
+
+Picking up where we left off...
+
+╭─────────────────────────────── Did you know? ────────────────────────────────╮
+│                                                                              │
+│     You can resume the last conversation from your current directory by      │
+│                        launching with q chat --resume                        │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+/help all commands  •  ctrl + j new lines  •  ctrl + s fuzzy search
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+We've briefly discussed the Model Context Protocol (MCP) in Amazon Q, which is an open protocol that allows
+applications to provide context to LLMs and extend capabilities through additional tools.
+
+```
+
+*Saving and Loading conversations*
+
+As you are working, there might be times when want to provide a quick summary of the current conversation you have been having within your Amazon Q CLI. Perhaps it has been a long session and you want to retain all the prompts and information so you can review at a later time.
+
+You can now do this, using the **"/save {name}"** command, providing a name of the conversation you want to save. It will then generate a json document in the current directory.
+
+```
+> /save session-checkpoint
+
+✔ Exported conversation state to session-checkpoint
+```
+
+You can also load up a conversation from an Amazon Q CLI session using the **"/load {name}"** and it will then load up the conversation, leaving you ready to carry on where you left off.
+
+**Task-16**
+
+From a new Amazon Q CLI session, at the **">"** prompt lets generate some history by asking the following (feel free to use your own if you prefer)
+
+```
+> I want to design a customer service application. can you provide me with the top three things i need to think about
+> What sort of data model would a customer service application need? Just show me, don't generate any code.
+```
+
+Now try saving your current conversation:
+
+```
+> /save session-checkpoint
+```
+
+After it has saved, open up a new terminal and review the output.
+
+Now close your Amazon Q CLI session and start it again. From the **">"** prompt, lets reload that conversation:
+
+```
+> /load session-checkpoint
+```
+
+After it loads, ask it something about the customer service application (or if you did your own prompts, something about those)
+
+You should notice that Amazon Q CLI is able to carry on where it left off.
+
+---
 
 ### Supporting Resources
 
@@ -656,6 +710,7 @@ Some additional reading material that dives deeper into this topic if you want t
 
 * [Getting started with Amazon Q Developer CLI](https://dev.to/aws/getting-started-with-amazon-q-developer-cli-4dkd)
 
+* [Amazon Q Developer CLI supports image inputs in your terminal](https://aws.amazon.com/blogs/devops/amazon-q-developer-cli-supports-image-inputs-in-your-terminal/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
 
 ### Completed!
 

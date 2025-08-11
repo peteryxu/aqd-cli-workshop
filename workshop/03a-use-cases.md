@@ -21,17 +21,17 @@ So what use cases are best suited for using tools like Amazon Q Developer CLI. I
 
 So these are just a few of the uses cases. Let me know if you are using it for something else.
 
-### Use Cases for Profiles
+### Use Cases for Custom Agents
 
-Profiles allow you to switch between sets of contexts that give you unique ways for Amazon Q Developer CLI to interact with you and your systems. Here are some example scenarios where you might find these useful:
+Custom Agents allow you to switch between sets of contexts and tools that give you unique ways for Amazon Q Developer CLI to interact with you and your systems. Here are some example scenarios where you might find these useful:
 
-* **Language specific development** - Create separate profiles for Python, Java, JavaScript, etc., each with language-specific best practices and coding standards.
-* **Role Based Workflow** - Maintain different profiles for when you work as a developer, architect, or DevOps engineer. Switch contexts based on your current role or responsibility.
-* **Project separation** - Create distinct profiles for different client projects or internal initiatives. Keep project-specific requirements and documentation isolated.
-* **Environment-Specific Development** - Maintain profiles for development, staging, and production environments. Include environment-specific configuration and deployment guidelines.
-* **Technology Stack Separatation** - Separate profiles for frontend, backend, infrastructure, or data science work. Switch seamlessly between different technical domains.
+* **Language specific development** - Create separate agents for Python, Java, JavaScript, etc., each with language-specific best practices and coding standards.
+* **Role Based Workflow** - Maintain different agents for when you work as a developer, architect, or DevOps engineer. Switch contexts based on your current role or responsibility.
+* **Project separation** - Create distinct agents for different client projects or internal initiatives. Keep project-specific requirements and documentation isolated.
+* **Environment-Specific Development** - Maintain agents for development, staging, and production environments. Include environment-specific configuration and deployment guidelines.
+* **Technology Stack Separatation** - Separate agents for frontend, backend, infrastructure, or data science work. Switch seamlessly between different technical domains.
 
-There are probably more use cases where you can use Profiles, so look beyond this list - its just a starting point.
+There are probably more use cases where you can use agents, so look beyond this list - its just a starting point.
 
 ### Use Cases for Context files
 
@@ -53,6 +53,8 @@ The list of how I am seeing people use context files continues to grow, and is a
 ---
 
 ### Supporting Resources
+
+* [Overcome development disarray with Amazon Q Developer CLI custom agents](https://aws.amazon.com/blogs/devops/overcome-development-disarray-with-amazon-q-developer-cli-custom-agents/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
 
 * [Currated Amazon Q Developer content, including use cases](https://github.com/cremich/awesome-q-developer)
 

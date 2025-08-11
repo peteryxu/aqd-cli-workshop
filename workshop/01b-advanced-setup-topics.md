@@ -58,6 +58,51 @@ You can view other options by checking out "q debug help".
 
 ---
 
+**Getting diagnostic info from your Amazon Q CLI installation**
+
+A very handy option when you have installed Amazon Q CLI is the following command:
+
+```
+q diagnostic
+```
+
+Which provides a summarised output of your installation setup. Your output will be different from mine, but this is what I got when I ran this:
+
+```
+[q-details]
+version = "1.13.2"
+hash = "e44ee53d76813a5ef107dcd0d6181b089xxxxxx"
+date = "2025-08-08T20:32:47.811878Z (22h ago)"
+variant = "full"
+
+[system-info]
+os = "macOS 15.6.0 (24G84)"
+chip = "Apple M1 Pro"
+total-cores = 10
+memory = "32.00 GB"
+
+[environment]
+cwd = "/Users/USER/amazon-q-developer-cli/workshop"
+cli-path = "/Users/USER/amazon-q-developer-cli/workshop"
+os = "Mac"
+shell-path = "/bin/zsh"
+shell-version = "5.9"
+terminal = "iTerm 2"
+install-method = "brew"
+
+[env-vars]
+PATH = "{your path}"
+QTERM_SESSION_ID = "xxxxxxxx"
+Q_SET_PARENT_CHECK = "1"
+Q_TERM = "1.13.1"
+SHELL = "/bin/zsh"
+TERM = "xterm-256color"
+__CFBundleIdentifier = "com.googlecode.iterm2"
+```
+
+
+---
+
 **Settings**
 
 Amazon Q CLI allows you to set a number of different configuration parameters so that you can tailor how it works. You can configure these via Amazon Q CLI itself, using the **"q settings"** command, or by directly updating the configuration file (which we will cover below).
@@ -141,6 +186,7 @@ q settings chat.enableKnowledge true
 
 As Amazon Q CLI is an open source project, I was able to use it to review the source files and create a list of available settings. The following list is what was produced. I have not had a chance to review them all, and they will change over time.
 
+* chat.defaultAgent (agent) - Allows you to set the default agent when starting Amazon Q CLI. The agent refers to the name of the agent you define when you run the "q agent create" command.
 * chat.enableNotifications (boolean) - Enable notifications for chat (default: false)
 * chat.greeting.enabled (boolean) - Show greeting message when starting chat (default: true)
 * chat.editMode (string) - Set the edit mode for the chat interface

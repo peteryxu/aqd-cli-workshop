@@ -1,5 +1,17 @@
 ## Tracking changes with this workshop
 
+11th August 2025
+
+This is a big refactor as there was significant changes to how Amazon Q CLI works. /hooks and /profiles are now gone, MCP Server configuration has changed.
+
+- updated to reflect changes in Q CLI v1.13.1 and v1.13.2 - **big update**
+- deprecated /profile to /agent and updated content to reflect this change, including changes to context and how this is managed (significant change, removal of global context)
+- refactored tasks, including removing and adding based on updated Amazon Q CLI functionality
+- added a new image task
+- added new section on fine grain tool permissions
+
+
+
 22nd July 2025
 
 - updated login section

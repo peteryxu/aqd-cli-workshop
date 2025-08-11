@@ -54,6 +54,8 @@ Amazon Q CLI runs in a terminal, configured and enabled via the shell. It suppor
 
 To install Amazon Q CLI on Windows, you will need to use Windows Subsystem for Linux (wsl). I have put together an installation guide you can follow - [Installing Amazon q CLI in wsl](https://dev.to/aws/the-essential-guide-to-installing-amazon-q-developer-cli-on-windows-lmh)
 
+> **Note!** Whilst there is currently no native Windows installer, because Amazon Q CLI is an open source project you can compile the source to generate your own binaries. You can see an [example](https://github.com/DiscreteTom/amazon-q-developer-cli-for-windows) of this [here](https://github.com/DiscreteTom/amazon-q-developer-cli-for-windows). I have not tried this compiled executable of Amazon Q CLI. Before you download and try it for yourself, make sure you follow your existing security procedures and policies. 
+
 **MacOS**
 
 If you have a MacOS, then the simplest way of installing Amazon Q CLI is via homebrew using the following command:
@@ -169,7 +171,7 @@ q -V
 which should produce the following. If you have a version OLDER than 1.9.1 then there is an issue, so make sure you check the installation method used. It is possible you have used an old binary perhaps.
 
 ```
-q 1.12.3
+q 1.13.1
 ```
 
 ---
@@ -197,7 +199,7 @@ q version --changelog
 or if you want to dive into a specific release
 
 ```
-q version --changelog 1.12.2
+q version --changelog 1.13.1
 ```
 
 
