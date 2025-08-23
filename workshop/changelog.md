@@ -1,5 +1,10 @@
 ## Tracking changes with this workshop
 
+23rd August 2025
+
+- update MCP section to incorporate new settings in v1.14.1 to disable MCP Servers from custom agents
+- update custom agent section to incorporate new /agent swap option
+
 11th August 2025
 
 This is a big refactor as there was significant changes to how Amazon Q CLI works. /hooks and /profiles are now gone, MCP Server configuration has changed.

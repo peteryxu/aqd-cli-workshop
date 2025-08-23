@@ -64,8 +64,6 @@ Custom agents provide a way to customize Amazon Q CLI behavior by defining speci
 
 In this lab we are going to explore custom agents so that you get comfortable with how they work and can start using them in the activities you do.
 
-**Important:** Custom agent management primarily involves creating and editing configuration files. While some commands are available during chat sessions, switching between custom agents requires starting a new chat session with "q chat --agent [name]".
-
 **Project vs Global custom agents**
 
 When you create custom agents you have the choice of creating global or project custom agents.
@@ -129,6 +127,7 @@ Commands:
   create       Create a new agent with the specified name
   schema       Show agent config schema
   set-default  Define a default agent to use when q chat launches
+  swap         Swap to a new agent at runtime
   help         Print this message or the help of the given subcommand(s)
 
 Options:
@@ -455,6 +454,18 @@ You will see this line appear in your config file:
 ```
 chat.defaultAgent	"python-developer"
 ```
+
+---
+
+**Switching between custom agents**
+
+As you create more custom agents, you might want to switch between them within your sessions. This is as simple as running a command from within your Amazon Q CLI session:
+
+```
+> /agent swap {agent name}
+```
+
+When you do this, it will load any MCP Servers you have configured, configure tools and permissions, as well as set any resources you have defined as context.
 
 ---
 
@@ -827,51 +838,6 @@ This is a nice developer experience feature that I am using with some of my cust
 
 ---
 
-**Disabling MCP Servers**
-
-We are able to disable MCP Servers from custom agents by editing the custom agent JSON file and adding new configuration item called "disabled" and setting this to true (the default is false).
-
-**Task-08**
-
-Edit the custom agent JSON configuration as follows:
-
-```
-{
-  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
-  "name": "python-developer",
-  "description": "",
-  "mcpServers": {
-	"awslabs.aws-documentation-mcp-server": {
-        	"command": "uvx",
-        	"args": ["awslabs.aws-documentation-mcp-server@latest"],
-        	"env": {
-          		"FASTMCP_LOG_LEVEL": "ERROR",
-          		"AWS_DOCUMENTATION_PARTITION": "aws"
-        	  },
-		"disabled": true
-		}
-	},
-  "tools": ["*"],
-  "toolAliases": {},
-  "allowedTools": ["fs_read","fs_write","use_aws"],
-  "resources": [
-    "file://steering/*.md"
-  ],
-  "hooks": {},
-  "toolsSettings": {}
-}
-```
-
-Save the configuration file and then restart your Amazon Q CLI session. You should see output at the top of the screen that displays:
-
-```
-○ awslabs.aws-documentation-mcp-server is disabled
-```
-
-If you run **"/mcp"** what do you get?
-
----
-
 **MCP Prompts**
 
 We have already looked at how Amazon Q CLI supports MCP Tools, but it also supports MCP Prompts with the **"/prompts"** command. This will look at any MCP Servers that are providing Prompts resources, and then list them. You are then able to use these within your Amazon Q CLI sessions, referring to defined prompt templates with the **"@{prompt}"** command.
@@ -1018,6 +984,68 @@ me do that for you.
 ```
 
 Follow the output - you may need to provide permission as it will write files and we have not given this custom agent fs_write permission. Once it has finished, what did you get? Compare it to the prompt defined in the function - does it look like its created what was asked?
+
+
+---
+
+**Disabling MCP Servers**
+
+We are able to disable MCP Servers from custom agents by editing the custom agent JSON file and adding new configuration item called "disabled" and setting this to true (the default is false).
+
+**Task-08**
+
+Edit the custom agent JSON configuration as follows:
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "mcpServers": {
+	"awslabs.aws-documentation-mcp-server": {
+        	"command": "uvx",
+        	"args": ["awslabs.aws-documentation-mcp-server@latest"],
+        	"env": {
+          		"FASTMCP_LOG_LEVEL": "ERROR",
+          		"AWS_DOCUMENTATION_PARTITION": "aws"
+        	  },
+		"disabled": true
+		}
+	},
+  "tools": ["*"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read","fs_write","use_aws"],
+  "resources": [
+    "file://steering/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {}
+}
+```
+
+Save the configuration file and then restart your Amazon Q CLI session. You should see output at the top of the screen that displays:
+
+```
+○ awslabs.aws-documentation-mcp-server is disabled
+```
+
+If you run **"/mcp"** what do you get?
+
+---
+
+**Disabling MCP for your organisation**
+
+MCP Servers provide power capabilities to AI Coding Agents like Amazon Q CLI, but as mentioned above, they come with risks. For some those risks might be too high and you might want to disable the configuration of MCP Servers at an organisational level. This capability is available but only for those that login using the professional/company accounts. From the Amazon Q Developer central administration screens, you can see that there is toggle that allows you to enable or disable the use of MCP Servers.
+
+![Amazon Q Developers Settings Screen](/images/disable-mcp-org.png)
+
+If you disable MCP Servers, when you now start an instance of Amazon Q CLI with a custom agent that has MCP Servers configured, you will see the following:
+
+```
+⚠️  WARNING: MCP functionality has been disabled by your administrator.
+```
+
+This capability currently is a global setting, so if you disable it, it will disable it for all your accounts.
 
 ---
 
