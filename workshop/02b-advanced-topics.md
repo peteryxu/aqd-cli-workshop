@@ -844,7 +844,7 @@ We have already looked at how Amazon Q CLI supports MCP Tools, but it also suppo
 
 To do this we are going to implement a custom MCP Server that provides Prompt resources.
 
-**Task-09**
+**Task-08**
 
 Open a **new terminal window** and create a new directory (for example, "mcp-prompts").
 
@@ -992,7 +992,7 @@ Follow the output - you may need to provide permission as it will write files an
 
 We are able to disable MCP Servers from custom agents by editing the custom agent JSON file and adding new configuration item called "disabled" and setting this to true (the default is false).
 
-**Task-08**
+**Task-09**
 
 Edit the custom agent JSON configuration as follows:
 
