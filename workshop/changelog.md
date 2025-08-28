@@ -1,5 +1,11 @@
 ## Tracking changes with this workshop
 
+28th August 2025
+
+- added a Rules section and update custom agent to follow rules nomlecature
+- added new resource - [Mastering Amazon Q Developer with Rules](https://aws.amazon.com/blogs/devops/mastering-amazon-q-developer-with-rules/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
+- update and change from "steering" to "rules"
+
 23rd August 2025
 
 - update MCP section to incorporate new settings in v1.14.1 to disable MCP Servers from custom agents

@@ -322,11 +322,9 @@ Exit the chat session and then restart Amazon Q CLI. Re-run the **"/model"** com
 
 Context is what Amazon Q CLI will use together with the prompt you provide, to generate its output. Being able to manage context when using Amazon Q CLI is critical to get good output. In this section we will look at this in more detail.
 
-*Not a finite resource*
+Context is **not** and infinite resource, and needs to be managed. The **"context window"** is a finite resource that Amazon Q CLI uses to shape the generated output. The **"context window"** is measured in tokens, which are the unit of text processing that large language models use. Currently Amazon Q CLI has a maximum context window of 200K tokens. 
 
-The first thing to understand is that context is not and infinite resource, and it has to be managed. The **"context window"** is a finite resource that Amazon Q CLI uses to help it generate output. The **"context window"** is measured in tokens, which are the unit of text processing that large language models use. Currently Amazon Q CLI has a maximum context window of 200K tokens. 
-
-Research doen by Stanford University into the efficacy of different context sizes against different foundation models shows that as you increase context, the output degrades. So having more is not always a good thing.
+Research done by Stanford University into the efficacy of different context sizes against different foundation models shows that as you increase context, the output degrades. So having more is not always a good thing.
 
 ![graph of context window and performance](/images/sota-context-limits.png)
 
@@ -616,7 +614,41 @@ Conversation history cleared.
 
 ---
 
-**Executing commands**
+### Rules 
+
+As you start using Amazon Q CLI on a more regular basis, you will start to find that providing certain instructions over and over to complete certain tasks.This repetitive setup reduces productivity and creates the potential for inconsistent outputs if you forget.  **Rules** are a way to build a library of coding standards and best practices that **are automatically used as context**.  What I find most compelling about using rules with Amazon Q CLI is how it minimizes the repetitive setup that usually comes with completing tasks. Instead of repeatedly instructing your AI assistant on your preferences and standards for each request, you can define these once as rules. This creates a consistent, predictable experience that automatically respects what you want it to do.
+
+You define rules in Markdown files, stored in your project’s workspace. Amazon Q CLI will look at a number of files and directories for these rules by default, and we can see this when we run the following command **"/context show"**:
+
+```
+> /context show
+
+👤 Agent (q_cli_default):
+    AmazonQ.md
+    README.md
+    .amazonq/rules/**/*.md
+
+💬 Session (temporary):
+    <none>
+
+No files in the current directory matched the rules above.
+```
+
+You will notice the **.amazonq/rules/**/*.md** which automatically looks for markdown files which will then be added as rules. As we have not created any rules, then none show up. We will cover this in a future lab.
+
+**Sharing Rules files**
+
+Within your project workspace, storing rules files withi your project workspace (in the ".amazonq/rules" directory) allows you to share these will automatically be available for anyone who checks out the code.
+
+**Rules vs Context**
+
+You might be wondering why separate Rules from the resources we can add as context. This is a good question, and the way I like to think of this is that Rules are what you want to persist across all your prompts when using Amazon Q CLI, whereas Context is resources you want to add (and remove) based on the task you are doing.
+
+For a deeper dive, Check out the supporting resources for a nice deep dive on Rules, how they work and how to optimise the rules that you create.
+
+---
+
+### Executing commands
 
 So far we have been using Amazon Q CLI in chat mode to write prompts and then get responses. Sometimes you might want to run a command from within your chat session. You could exit and then restart, but you will lose any context and conversation history that you have built up. Don't worry though, there is a way. You can use the **"!"** to preface any command you want to run, and it will execute the command and then return the results back to you in the chat session.
 
@@ -709,6 +741,8 @@ You should notice that Amazon Q CLI is able to carry on where it left off.
 Some additional reading material that dives deeper into this topic if you want to explore:
 
 * [Getting started with Amazon Q Developer CLI](https://dev.to/aws/getting-started-with-amazon-q-developer-cli-4dkd)
+
+* [Mastering Amazon Q Developer with Rules](https://aws.amazon.com/blogs/devops/mastering-amazon-q-developer-with-rules/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
 
 * [Amazon Q Developer CLI supports image inputs in your terminal](https://aws.amazon.com/blogs/devops/amazon-q-developer-cli-supports-image-inputs-in-your-terminal/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
 

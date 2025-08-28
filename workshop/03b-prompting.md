@@ -152,6 +152,8 @@ Some additional reading material that dives deeper into this topic if you want t
 
 * [Specification-Driven Development with Amazon Q Developer](https://cremich.cloud/specification-driven-development-with-amazon-q-developer)
 
+* [Mastering Amazon Q Developer with Rules](https://aws.amazon.com/blogs/devops/mastering-amazon-q-developer-with-rules/?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el)
+
 * [Amazon Q Developer CLI: 4 ways to code with the latest libraries](https://community.aws/content/2o4XzTEHSNwpeF3VhWAX97C6lur/amazon-q-developer-cli-4-ways-to-code-with-the-latest-libraries)
 
 * [The Prompt Engineering Playbook for Programmers](https://addyo.substack.com/p/the-prompt-engineering-playbook-for)

@@ -30,15 +30,22 @@ This will be our working directory for this lab. Don't go into Amazon Q CLI yet,
 
 **Task-01**
 
-The first thing we are going to do is create some context files which Amazon Q CLI will use when generating output. As we mentioned in earlier parts of this tutorial, context is critical in getting good results when using AI coding assistants. As we think about what context we might want to provide to help steer Amazon Q CLI, we are going to create additional context around how we want the code to be structured, and provide some technologies that we want it to use. 
+The first thing we are going to do is create some context files which Amazon Q CLI will use when generating output. As we mentioned in earlier parts of this tutorial, context is critical in getting good results when using AI coding assistants. The use of a Rules file will help here, as well as leveraging something that is project specific.  
 
 In the current (aqcli-app) directory:
 
-1. Create a new directory **"steering"**
-2. In the **"steering"** create two files. **"1.project-layout-rules.md"** and **"2.project-spec.md"**
-3. In the **"1.project-layout-rules.md"** file, add the following:
+1. Create a new directory **".amazonq/rules"**
+2. In the **".amazonq/rules"** directory create a file called **"project-layout-rules.md"**
+3. In the **"project-layout-rules.md"** file, add the following:
 
 ```
+When creating Python code, use the following guidance
+
+- Use Flask as the web framework
+- Follow Flask's application factory pattern
+- Use environment variables for configuration
+- Implement Flask-SQLAlchemy for database operations
+
 Use the following project structure when writng code
 
 src/
@@ -50,23 +57,13 @@ src/
 ├ app.py
 ```
 
-4. In the **"2.project-spec.md"** file add the following:
-
-```
-When creating Python code, use the following guidance
-
-- Use Flask as the web framework
-- Follow Flask's application factory pattern
-- Use environment variables for configuration
-- Implement Flask-SQLAlchemy for database operations
-```
 
 After saving these files, this is what you should have in your project workspace:
 
 ```
-└── steering
-    ├── 1.project-layout-rules.md
-    └── 2.project-spec.md
+└── .amazonq
+  └── rules
+    └── project-layout-rules.md
 ```
 
 Now we have setup resources we are going to use to help provide context to Amazon Q CLI, we can proceed.
@@ -96,7 +93,7 @@ This will bring up the editor to edit the JSON configuration for this custom age
   "toolAliases": {},
   "allowedTools": ["fs_read"],
   "resources": [
-    "file://steering/*.md, "file://data-model/*"
+    "file://.amazonq/rules/**/*.md", "file://data-model/*"
   ],
   "hooks": {}
 }
@@ -120,12 +117,12 @@ You can check that this has been configured correctly by checking using the **"/
 If we look at our file system now, it should look somethig like:
 
 ```
-├── .amazonq
-│   └── cli-agents
-│       └── customer-survey-project.json
-└── steering
-    ├── 1.project-layout-rules.md
-    └── 2.project-spec.md
+└── .amazonq
+    ├── cli-agents
+    |   └── customer-survey-project.json
+    └── rules
+      └── project-layout-rules.md
+
 ```
 
 Now that we have created this, lets re-start our Amazon Q CLI session so that it uses it. To do that we run the following command:
@@ -156,13 +153,12 @@ You should now have the following directory layout.
 
 ```
 ├── .amazonq
-│   └── cli-agents
-│       └── customer-survey-project.json
-├── data-model
-|   └── database_schema.yaml
-└── steering
-    ├── 1.project-layout-rules.md
-    └── 2.project-spec.md
+|   ├── cli-agents
+|   |   └── customer-survey-project.json
+|   └── rules
+|     └── project-layout-rules.md
+└── data-model
+    └── database_schema.yaml
 
 ```
 
@@ -178,21 +174,20 @@ When Amazon Q CLI starts, run **"/context show"** to see how your environment lo
 [customer-survey-project] > /context show
 
 👤 Agent (customer-survey-project):
-    steering/*.md (2 matches)
+    .amazonq/rules/**/*.md (1 match)
     data-model/* (1 match)
 
 💬 Session (temporary):
     <none>
 
 3 matched files in use:
-👤 /Users/ricsue/amazon-q-developer-cli/workshop/aqcli-app/steering/1.project-layout-rules.md (~40 tkns)
-👤 /Users/ricsue/amazon-q-developer-cli/workshop/aqcli-app/steering/2.project-spec.md (~60 tkns)
+👤 /Users/ricsue/amazon-q-developer-cli/workshop/aqcli-app/.amazonq/rules/1.project-layout-rules.md (~590 tkns)
 👤 /Users/ricsue/amazon-q-developer-cli/workshop/aqcli-app/data-model/database_schema.yaml (~520 tkns)
 
 Total: ~620 tokens
 ```
 
-Amazon q CLI has picked up our steering files for context, as well as the data model that we want to use. Run these commands in your own Amazon Q CLI session and confirm that you get the same output.
+Amazon q CLI now has both a rule and data model that we want to use to help ground decisions and outputs it generates. Run these commands in your own Amazon Q CLI session and confirm that you get the same output.
 
 ---
 
@@ -258,7 +253,7 @@ It will be in the **".amazonq/cli-agents"** directory. Edit the file so that it 
   "toolAliases": {},
   "allowedTools": ["fs_read", "fs_write"],
   "resources": [
-    "file://steering/*.md", "file://data-model/*"
+    "file://.amazonq/rules/**/*.md", "file://data-model/*"
   ],
   "hooks": {}
 }
@@ -424,7 +419,7 @@ Exit the Amazon Q CLI session, and then edit the local custom agent JSON configu
   "toolAliases": {},
   "allowedTools": ["fs_read", "fs_write"],
   "resources": [
-    "file://steering/*.md", "file://data-model/*"
+    "file://.amazonq/rules/**/*.md", "file://data-model/*"
   ],
   "hooks": {}
 }

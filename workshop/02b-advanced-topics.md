@@ -169,7 +169,7 @@ You can check out the reference documentation about the custom agent configurati
 
 Ok so now we have all the theory, lets create a custom agents. We want to create the following:
 
-* **"python developer"** - a custom agent that looks for resources (all the markdown files in the steering/* directory) that provide specific guidance for writing code in Python.
+* **"python developer"** - a custom agent that loads a rule that provide specific guidance for writing code in Python.
 
 We will add to this configuration in subseqent labs showing you how you can add additional options to your custom agent. For now we will just create the custom agent and add **Resources** as the first items we want these custom agents to have.
 
@@ -219,14 +219,14 @@ Edit the file and change it so that it looks like the following:
   "toolAliases": {},
   "allowedTools": [],
   "resources": [
-    "file://steering/*.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {}
 }
 ```
 
-You can see we have adjusted the **"resources"** configuration item to match our requirements, i.e.. load up any markdown files in the steering directory.
+You can see we have adjusted the **"resources"** configuration item to match our requirements, i.e.. load up any rules in the rules directory.
 
 Save and exit the file (:wq!)
 
@@ -243,7 +243,15 @@ Which should produce output similar to the following:
   python-developer
 ```
 
-Exit your Amazon Q CLI session. In the current directory, create a sub-directory called "steering" and then a file called "python-dev.md". You can [copy the contents of the file in the resources directory](/resources/python-dev.md) into this file and then save it.
+Exit your Amazon Q CLI session. In the current project workspace directory, create a sub-directory in your ".amazonq" directory called "rules" and then a file called "python-dev.md". You can [copy the contents of the file in the resources directory](/resources/python-dev.md) into this file and then save it. This should be what it looks like:
+
+```
+├── .amazonq
+│   ├── cli-agents
+│   │   └── python-dev.json
+│   └── rules
+│       └── python-dev.md
+```
 
 Restart Amazon Q CLI, but this time, use the following arguments:
 
@@ -262,13 +270,16 @@ We can see what context is available in our session by running the **"/context s
 You should see something like the following:
 
 ```
-[python-developer] > /context show
+[python-dev] > /context show
 
-👤 Agent (python-developer):
-    steering/*.md (1 match)
+👤 Agent (python-dev):
+    .amazonq/rules/**/*.md (1 match)
+
+💬 Session (temporary):
+    <none>
 
 1 matched file in use:
-👤 /Users/ricsue/amazon-q-developer-cli/workshop/steering/python-dev.md (~590 tkns)
+👤 /Users/ricsue/amazon-q-developer-cli/mmdd/.amazonq/rules/python-dev.md (~590 tkns)
 
 Total: ~590 tokens
 
@@ -342,7 +353,7 @@ Lets update our configuration file to allow all the built in commands for now.
   "toolAliases": {},
   "allowedTools": [],
   "resources": [
-    "file://steering/python-dev.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {}
@@ -384,7 +395,7 @@ Edit the custom agent JSON file again, and this time make edits as follows:
   "toolAliases": {},
   "allowedTools": ["fs_read","fs_write","use-aws"],
   "resources": [
-    "file://steering/python-dev.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {}
@@ -514,7 +525,7 @@ Edit the custom agent JSON configuration file we worked on as part of the previo
   "toolAliases": {},
   "allowedTools": ["fs_read","fs_write","use_aws"],
   "resources": [
-    "file://steering/python-dev.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {"userPromptSubmit": [
       {
@@ -613,7 +624,7 @@ Edit the custom agent JSON configuration file we worked on as part of the previo
   "toolAliases": {},
   "allowedTools": ["fs_read","fs_write","use_aws"],
   "resources": [
-    "file://steering/*.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {}
@@ -717,7 +728,7 @@ Exit the Amazon Q CLI session, and edit your custom agent JSON configuration so 
   "toolAliases": {},
   "allowedTools": ["@awslabs.aws-documentation-mcp-server/read_documentation"],
   "resources": [
-    "file://steering/*.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {}
@@ -924,7 +935,7 @@ Edit this JSON configuration file so it looks like this:
   "toolAliases": {},
   "allowedTools": ["@awslabs.aws-documentation-mcp-server/read_documentation"],
   "resources": [
-    "file://steering/*.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {}
@@ -1016,7 +1027,7 @@ Edit the custom agent JSON configuration as follows:
   "toolAliases": {},
   "allowedTools": ["fs_read","fs_write","use_aws"],
   "resources": [
-    "file://steering/*.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {}
@@ -1105,7 +1116,7 @@ Following on from previous examples, we will modify the custom agent as follows:
   "toolAliases": {},
   "allowedTools": ["fs_read", "fs_write"],
   "resources": [
-    "file://steering/*.md"
+    "file://.amazonq/rules/**/*.md"
   ],
   "hooks": {},
   "toolsSettings": {
