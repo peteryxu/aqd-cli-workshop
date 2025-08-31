@@ -1,5 +1,9 @@
 ## Tracking changes with this workshop
 
+31st August 2025
+
+- merge PR from community to address two issues (#2 and #3)
+
 28th August 2025
 
 - added a Rules section and update custom agent to follow rules nomlecature

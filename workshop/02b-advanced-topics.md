@@ -891,22 +891,26 @@ uv init
 uv add mcp "mcp[cli]"
 ```
 
-That's it we now have a simple custom MCP Server that provides Prompts. The configuration to use this is as follows:
+That's it we now have a simple custom MCP Server that provides Prompts. The configuration to use this is as follows, replacing {path to directory} with the directory you created in the previous steps, in our example this was 'mcp-server' :
 
 ```
 {
     "mcpServers": {
         "QCLIPromptDemo": {
             "command": "uv",
-            "args": ["--directory", "/FULLPATH/TO/mcp-prompts", "run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+            "args": ["--directory", "{path to directory}", "run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
         }
     }
 }
 ```
 
-We now need to add this MCP Server to our custom agent JSON configuration. We will use the one we have been using throughout this lab (but feel to create a new one if you want).
+We now need to add this MCP Server to our custom agent JSON configuration. We will use the one we have been using throughout this lab (but feel to create a new one if you want). When I do a "pwd" I get the following working directory:
 
-Edit this JSON configuration file so it looks like this:
+```
+/Users/ricsue/amazon-q-developer-cli/mcp-server
+```
+
+Which gives me the path I need for the MCP Server. I then edit this JSON configuration file so it looks like this:
 
 ```
 {
@@ -925,7 +929,7 @@ Edit this JSON configuration file so it looks like this:
 		    },
 	"QCLIPromptDemo": {
           "command": "uv",
-          "args": ["run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+          "args": ["--directory", "/Users/ricsue/amazon-q-developer-cli/mcp-server", "run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
         }
 	},
   "tools": [
@@ -945,12 +949,14 @@ Edit this JSON configuration file so it looks like this:
 }
 ```
 
-You can see we have added the new MCP Server we created by adding the following to the previous custom agent configuration file:
+
+
+You can see we have added the new MCP Server we created by adding the following to the previous custom agent configuration file. Again, yours will be slightly different as the directory you have created for mcp-server will be different.:
 
 ```
 	"QCLIPromptDemo": {
           "command": "uv",
-          "args": ["run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+          "args": ["--directory", "/Users/ricsue/amazon-q-developer-cli/mcp-server", "run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
         }
 ```
 
