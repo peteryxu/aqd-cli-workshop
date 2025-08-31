@@ -874,6 +874,9 @@ mcp = FastMCP("QCLIPromptDemo")
 def create_new_project() -> str:
     """A prompt that bootstraps a new project repository as per our requirements"""
     return f'Create a new project layout. Create a top level src directory, and in the src directory create subdirectories for templates, models, routes, and static. Add a README.md to the src directory.'
+
+if __name__ == "__main__":
+    mcp.run()
 ```
 
 So what have we created here?
@@ -883,9 +886,9 @@ We have created an MCP Server which provides a sample prompt to bootstrap a proj
 After saving this file, create a virtual python environment and install a couple of dependencies:
 
 ```
-python -m venv .mcp
-source .mcp/bin/activate
-pip install mcp mcp[cli]
+cd mcp-prompts
+uv init
+uv add mcp "mcp[cli]"
 ```
 
 That's it we now have a simple custom MCP Server that provides Prompts. The configuration to use this is as follows:
@@ -895,7 +898,7 @@ That's it we now have a simple custom MCP Server that provides Prompts. The conf
     "mcpServers": {
         "QCLIPromptDemo": {
             "command": "uv",
-            "args": ["run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
+            "args": ["--directory", "/FULLPATH/TO/mcp-prompts", "run", "--with", "mcp", "mcp", "run", "mcp-server.py"]
         }
     }
 }
