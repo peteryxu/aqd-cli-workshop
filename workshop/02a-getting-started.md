@@ -479,15 +479,6 @@ Review the output and take a few minutes to review this section.
 
 If you do start to reach the limits, you can compact your context. Compacting will generate a summary of everything in the current context. Once this summary has been completed, it will replace your current context.
 
-If you try to do this when you have plenty of context available, you will see the following message:
-
-```
-> /compact
-
-Conversation too short to compact.
-
-```
-
 I run **"/compact"** after doing some work on an existing code base to add some new features. I ran **"/usage"** before and after running **"/compact"** so you can see the kind of output generated.
 
 
@@ -569,6 +560,23 @@ Current context window (12060 of 200k tokens used)
 
 You can see that it has reduced the overall "context window" in this example.
 
+If you try to do this when you have plenty of context available, you will see the following message:
+
+```
+> /compact
+
+Conversation too short to compact.
+
+```
+
+The default behaviour is that Amazon Q CLI will automatically try and compact as you reach the limit of your context window. You might want to control this behaviour, and the good news is that you can do this by setting the following in your Amazon Q CLI settings.json.
+
+```
+q settings chat.disableAutoCompaction true
+```
+
+After you run this command, compaction will now not automatically occur and you can control this within your Amazon Q CLI Session.
+
 ---
 
 **Task-13**
@@ -592,13 +600,80 @@ What happened? Review the usage again, you should notice a change.
 
 ---
 
+**Tangent Mode**
+
+In the previous labs, we have explored context engineering and looked at some of the techniques you have available to you to effectively manage your context. In this lab we are going to introduce a new experimental feature that provides some useful additional capabilities to help you minimise polluting your context. What does this mean? As your Amazon Q CLI sessions progress, you might need to use Amazon Q CLI to do adjacent tasks (for example, maybe troubleshoot an issue, or perhaps dive into a rabbit hole) but those tasks might not necessarily contribute to your objective and so you might not want to include the output of those interactions in your context. 
+
+**Tangent mode** creates conversation checkpoints, allowing you to explore side topics without disrupting your main conversation flow. Enter tangent mode, ask questions or explore ideas, then return to your original conversation exactly where you left off.
+
+
+**Task-14**
+
+The first thing we need to do is enable this by using the /experiment mode ( [see the advanced section for more details if you missed that section out](/workshop/01b-advanced-setup-topics.md) ) - move down to "Tangent Mode" and then press space
+
+```
+? Select an experiment to toggle ›
+  Knowledge          [ON]  - Enables persistent context storage and retrieval across chat sessions (/knowledge)
+  Thinking           [OFF] - Enables complex reasoning with step-by-step thought processes
+❯  Tangent Mode      [OFF]  - Enables entering into a temporary mode for sending isolated conversations (/tangent)
+  Todo Lists         [OFF] - Enables Q to create todo lists that can be viewed and managed using /todos
+```
+
+After pressing space, you should see the followiing.
+
+```
+ Tangent Mode experiment enabled
+```
+
+From the Amazon Q CLI session, you can now run the command **"/tangent"**
+
+```
+> /tangent
+```
+
+You will notice that the **">"** prompt changes to **"↯ >"**, to let you know that you are now in tangent mode. What might you do when you are in tangent mode? Here are some example use cases:
+
+* Explore alternatives approaches - you might have started along one path, but you can use tangents to explore alternatives so that they do not add to your existing context
+* Getting help on Amazon Q CLI - if you need to ask Amazon Q CLI for help on some of its features, but dont want that to pollute your context
+* Clarification - you might want to dive into some details to make sure that you have everything you need, but want to do this in a way that does not distract your existing context
+
+You can check out some [additional examples use cases here](https://github.com/aws/amazon-q-developer-cli/blob/main/docs/tangent-mode.md#usage-examples)
+
+```
+> /tangent
+
+Created a conversation checkpoint (↯). Use ctrl + t or /tangent to restore the conversation later.
+Note: this functionality is experimental and may change or be removed in the future.
+
+↯ >
+```
+
+You can now use Amazon Q CLI in exactly the same way, knowing that your previous conversations have been check pointed and safe. Once you have finished, you can exit your session and return back to your previous conversation by running the **"/tangent"** command again.
+
+```
+↯ > /tangent
+
+Restored conversation from checkpoint (↯). - Returned to main conversation.
+```
+
+You will notice that your prompt changes back, and you are now ready to carry on with your session.
+
+> If you see the following when you run the command (**"/tangent"**) command, you have not enabled Tangent in the experimental model
+> 
+> ```
+> > /tangent
+> Tangent mode is disabled. Enable it with: q settings chat.enableTangentMode true
+> ```
+
+---
+
 **Clearing**
 
 There might be times when you want to reset your current context. For example, during an Amazon Q CLI session, you notice that the quality of the responses are not what you think they should be. Or perhaps you have completed one task and you want to reset context to begin another.
 
 You can clear the current context by using the **"/clear"** command, which will first ask you to confirm that you want to do this.
 
-**Task-14**
+**Task-15**
 
 Following on from the previous session, from the **">"** run the following command:
 
@@ -652,9 +727,9 @@ For a deeper dive, Check out the supporting resources for a nice deep dive on Ru
 
 So far we have been using Amazon Q CLI in chat mode to write prompts and then get responses. Sometimes you might want to run a command from within your chat session. You could exit and then restart, but you will lose any context and conversation history that you have built up. Don't worry though, there is a way. You can use the **"!"** to preface any command you want to run, and it will execute the command and then return the results back to you in the chat session.
 
-When running commands bear in mind that each invocation is stateless. If I use "! cd {directory}" and then run "! ls" I will not get the directory listing for the {directory} but for the current Amazon Q CLI directory where you launched it. If you need to do that you should concatanate your commands, so using this as an example "!cd {directory} && ls".
+There are two things you need to bear in mind When running commands. **First**, each invocation is stateless. If I use "! cd {directory}" and then run "! ls" I will not get the directory listing for the {directory} but for the current Amazon Q CLI directory where you launched it. If you need to do that you should concatanate your commands, so using this as an example "!cd {directory} && ls". **Second** The output of the commands you run is added to the context window. If you run command that generate a lot of output, you will potentially use up your context window more quickly.
 
-**Task-15**
+**Task-16**
 
 Open up Amazon Q CLI and run the following commands:
 
@@ -707,7 +782,7 @@ You can now do this, using the **"/save {name}"** command, providing a name of t
 
 You can also load up a conversation from an Amazon Q CLI session using the **"/load {name}"** and it will then load up the conversation, leaving you ready to carry on where you left off.
 
-**Task-16**
+**Task-17**
 
 From a new Amazon Q CLI session, at the **">"** prompt lets generate some history by asking the following (feel free to use your own if you prefer)
 

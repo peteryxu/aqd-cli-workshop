@@ -159,26 +159,30 @@ q settings help
 
 ---
 
-**Enable experimental/beta mode in Amazon Q CLI**
+### Enable experimental features in Amazon Q CLI
 
-From time to time there will be features released that are only available if you enable Amazon Q CLI's beta/experimental model. To enable this, we can use the **"q settings"** command. Make sure you close any Amazon Q CLI sessions you have open for these settings to take effect.
+From time to time there will be features released that are initially only available if you enable them using Amazon Q CLI's beta/experimental mode. You can easily do this from within your Amazon Q CLI session by using the **"/experiment"** command, which will then allow you to toggle any of the experimental features that are currently available.
 
-```
-q settings app.beta true
-```
-
-To verify, when you run "q settings all" you should see the following in the list.
-```
-app.beta = true
-```
-
-Once you restart your Amazon Q CLI session, you will now be able to try out any experimental features. Typically those features will have their own switches. For example, at the time of writing, to enable the **["/knowledge"](https://github.com/aws/amazon-q-developer-cli/blob/main/docs/knowledge-management.md)** experimental feature, you would run the following command:
+When you enter this command, you will see the following (you might see a different set of experimental features if you are using a later version of Amazon Q CLI)
 
 ```
-q settings chat.enableKnowledge true
+> /experiment
+
+⚠ Experimental features may be changed or removed at any time
+
+? Select an experiment to toggle ›
+❯ Knowledge          [ON]  - Enables persistent context storage and retrieval across chat sessions (/knowledge)
+  Thinking           [OFF] - Enables complex reasoning with step-by-step thought processes
+  Tangent Mode       [OFF] - Enables entering into a temporary mode for sending isolated conversations (/tangent)
+  Todo Lists         [OFF] - Enables Q to create todo lists that can be viewed and managed using /todos
+
+>
 ```
 
-> **Learn more about "/knowledge" experimental feature by reading [Manage context rot by exploring new experimental features in Amazon Q CLI](https://dev.to/aws/manage-context-rot-by-exploring-new-experimental-features-in-amazon-q-cli-10ki)
+
+You can use the **UP** and **DOWN** arrow keys and then press **SPACE** to toggle the status of the experimental feature between ON or OFF. As you can see above, I have enabled the "Knowledge" feature, but the other remain disabled.
+
+> What this feature is doing is simplifying configuration to your Amazon Q CLI settings file which we have covered above. As you toggle these different experimental features you will see that they are updated in your settings.json file.
 
 ---
 
@@ -255,6 +259,7 @@ Some additional reading material that dives deeper into this topic if you want t
 
 * [The essential guide to installing Amazon Q Developer CLI on Windows](https://dev.to/aws/the-essential-guide-to-installing-amazon-q-developer-cli-on-windows-lmh)
 * [The essential guide to installing Amazon Q Developer CLI on Linux (headless and desktop)](https://dev.to/aws/the-essential-guide-to-installing-amazon-q-developer-cli-on-linux-headless-and-desktop-3bo7)
+* Learn more about "/knowledge" experimental feature by reading [Manage context rot by exploring new experimental features in Amazon Q CLI](https://dev.to/aws/manage-context-rot-by-exploring-new-experimental-features-in-amazon-q-cli-10ki)
 
 
 ---

@@ -1,5 +1,17 @@
 ## Tracking changes with this workshop
 
+16th September 2025
+
+- update workshop to include Q CLI v1.15.0
+- update the experimental section in advanced setup
+- update the command section to add some additional warning around context window usage when running commands
+- added details around how to enable/disable auto compaction of context, and cleaned up the /compact section
+- update custom agent create to include generation mode
+- updated custom agent to include the prompt in the schema
+- updated custom agent hooks to include an example using agentSpawn
+- added new section to cover tangent mode (experimental)
+- added new section to cover todos (experimental)
+
 31st August 2025
 
 - merge PR from community to address two issues (#2 and #3)

@@ -125,6 +125,7 @@ Usage: /agent <COMMAND>
 Commands:
   list         List all available agents
   create       Create a new agent with the specified name
+  generate     Generate an agent configuration using AI
   schema       Show agent config schema
   set-default  Define a default agent to use when q chat launches
   swap         Swap to a new agent at runtime
@@ -149,6 +150,7 @@ Before we proceed and start creating our first custom agents, let me walk you th
 
 * **name** - this is a required field, and defines the name of your custom agent
 * **description** - (optional) allows you to provide a description for your custom agent
+* **prompt** - (optional) allows you to define a high-level context to the agent, similar to a system prompt
 * **mcpServers** - (optional) is where you configure MCP Servers for your custom agent
 * **tools** - (optional) allows you to define what tools are available in your Amazon Q CLI session when using this custom agent
 * **toolsAlias** - (optional) provides a mechanism to fix any tool name clashes you have when using multiple MCP Servers that provide tools
@@ -175,7 +177,7 @@ We will add to this configuration in subseqent labs showing you how you can add 
 
 **Task-02**
 
-We are going to create and then launch two custom agents. From an Amazon Q CLI session, at the **">"** prompt, type the following:
+In this task we are going to create our first custom agent. From an Amazon Q CLI session, at the **">"** prompt, type the following:
 
 ```
 > /agent create --name python-developer
@@ -214,6 +216,7 @@ Edit the file and change it so that it looks like the following:
 {
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
+  "prompt": null,
   "mcpServers": {},
   "tools": [],
   "toolAliases": {},
@@ -289,6 +292,82 @@ As you can see, this has been picked up by your Amazon Q CLI session and is now 
 
 ---
 
+**Using the generate command to create custom agents**
+
+Introduced in v1.15 of Amazon Q CLI, a new command looks to simplify the creation of your custom agents. It guides you through some of the steps, whilst still ending up in the editor to configure your json file. From your Amazon Q CLI session, you start the process by running the **"/agent generate"** command:
+
+```
+> /agent generate
+```
+
+You will now be asked for the following details:
+
+* **name of the custom agent** - you need to provide a name, in the previous example this was done via the "--name python-dev" argument
+* **agent description** - provide a description of what this custom agent will do. Amazon Q CLI will then use this to generate a sample system prompt that this custom agent will use (which you can edit) 
+* **agent scope** - specify whether you want this to be a local workspace custom agent, or a global one
+
+```
+> /agent generate
+
+✔ Enter agent name:  · python-dev
+✔ Enter agent description:  · Python developer
+? Agent scope ›
+❯ Local (current workspace)
+  Global (all workspaces)
+```
+
+After hitting return you will see
+
+```
+⠏ Generating agent config for 'python-dev'...
+```
+
+And you will then return back to the text editor where you can continue configuring your agent. This is the output that was generated when I ran this command, and you should see something similar.
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-dev",
+  "description": "Python developer",
+  "prompt": "You are a Python developer assistant. Help with Python programming tasks including code writing, debugging, testing, optimization, and best practices. Focus on clean, efficient, and maintainable Python code following PEP 8 standards.",
+  "mcpServers": {},
+  "tools": [
+    "*"
+  ],
+  "toolAliases": {},
+  "allowedTools": [
+    "fs_read"
+  ],
+  "resources": [
+    "file://AmazonQ.md",
+    "file://README.md",
+    "file://.amazonq/rules/**/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {},
+  "useLegacyMcpJson": false
+}
+```
+
+You will notice one thing that is different, and that is using the **/agent generate** command, it has populated the **"prompt"**. We did not add this when we manually created this, but when running the agent generate command, this will automatically create one for you. Sometimes these can be detailed, depending on what you have entered for the agent description. This is an important configuration item that will influence the behaviour of your custom agent so make sure you are happy with what is defined before proceeding.
+
+Save and exit using <esc>!wq and you should see the following confirm that the new custom agent has been created.
+
+```
+> /agent generate
+
+✔ Enter agent name:  · python-dev
+✔ Enter agent description:  · Python developer
+✔ Agent scope · Local (current workspace)
+
+✓ Agent 'python-dev' has been created and saved successfully!
+
+```
+
+The end result is the same however, a custom agent json configuration file is created.
+
+---
+
 **Configuring custom agents Tools and Trust**
 
 **Task-03**
@@ -348,6 +427,7 @@ Lets update our configuration file to allow all the built in commands for now.
 {
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
+  "prompt": null,
   "mcpServers": {},
   "tools": ["@builtin"],
   "toolAliases": {},
@@ -390,6 +470,7 @@ Edit the custom agent JSON file again, and this time make edits as follows:
 {
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
+  "prompt": null,
   "mcpServers": {},
   "tools": ["@builtin"],
   "toolAliases": {},
@@ -520,6 +601,7 @@ Edit the custom agent JSON configuration file we worked on as part of the previo
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
   "description": "",
+  "prompt": null,
   "mcpServers": {},
   "tools": ["*"],
   "toolAliases": {},
@@ -538,7 +620,7 @@ Edit the custom agent JSON configuration file we worked on as part of the previo
 }
 ```
 
-You can see we have modified the **"hooks"** configuration section. We have defined **"userPromptSubmit"** which configures a hook per prompt. We could also setup hooks using **"agentSpawn"** which would run when we start our Amazon Q CLI chat session.
+You can see we have modified the **"hooks"** configuration section. We have defined **"userPromptSubmit"** which configures a hook per prompt. We could also setup hooks using **"agentSpawn"** which would run when we start our custom agent.
 
 > Check out the reference configuration [here](https://github.com/aws/amazon-q-developer-cli/blob/main/docs/agent-format.md#hooks-field)
 
@@ -567,6 +649,37 @@ Lets test this out now. Enter the following prompt:
 Review the output. What happens? 
 
 You can edit and remove the context hook after this task if you want, or enjoy that Amazon Q CLI is talking to you in pirate.
+
+
+*Use Cases*
+
+This particular example showed you how to configure hooks that operated when you a prompt. You can also configure hooks that operate when you first start your custom agent. This is done using **"agentSpawn"** and can be very useful if you want to prepare your session before you start - for example you might want to install some binaries, or perhaps copy down some context files from a central repository. Another example that I see a lot is that as LLMs are not very good at knowing the current time/date (or other such information), using context hooks to run a command that prints out the current date/time, allows Amazon Q CLI to add this to its context.
+
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "prompt": null,
+  "mcpServers": {},
+  "tools": ["*"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read","fs_write","use_aws"],
+  "resources": [
+    "file://.amazonq/rules/**/*.md"
+  ],
+  "hooks": {"agentSpawn": [
+      {
+        "command": "echo 'current date and time is:' && date",
+        "timeout_ms": 10000,
+        "max_output_size": 10240,
+        "cache_ttl_seconds": 1
+      }
+    ]},
+  "toolsSettings": {}
+}
+```
 
 ---
 
@@ -610,6 +723,7 @@ Edit the custom agent JSON configuration file we worked on as part of the previo
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
   "description": "",
+  "prompt": null,
   "mcpServers": {
 	"awslabs.aws-documentation-mcp-server": {
         	"command": "uvx",
@@ -707,6 +821,7 @@ Exit the Amazon Q CLI session, and edit your custom agent JSON configuration so 
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
   "description": "",
+  "prompt": null,
   "mcpServers": {
 	"awslabs.aws-documentation-mcp-server": {
         	"command": "uvx",
@@ -917,6 +1032,7 @@ Which gives me the path I need for the MCP Server. I then edit this JSON configu
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
   "description": "",
+  "prompt": null,
   "mcpServers": {
 	"awslabs.aws-documentation-mcp-server": {
         	"command": "uvx",
@@ -1021,6 +1137,7 @@ Edit the custom agent JSON configuration as follows:
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
   "description": "",
+  "prompt": null,
   "mcpServers": {
 	"awslabs.aws-documentation-mcp-server": {
         	"command": "uvx",
@@ -1116,6 +1233,7 @@ Following on from previous examples, we will modify the custom agent as follows:
   "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "python-developer",
   "description": "",
+  "prompt": null,
   "mcpServers": {},
   "tools": [
     "fs_read",
@@ -1209,6 +1327,217 @@ WARNING: Agent conflict for my-agent. Using workspace version.
 
 ---
 
+**Amazon Q CLI workflow**
+
+As you start to use Amazon Q CLI on a daily basis, you will start to pick up habbits and learn new ways of working. One of the emerging patterns that we have seen provide developers with a lot of success in using AI coding assistants, is to use them to create task lists and the iterate on those tasks sequentially. This helps both the developer know where they are, but also provides the AI coding assistant a useful checkpoint too.
+
+A new experimental feature (from v1.15 of Amazon Q CLI) simplifies how you can do this in Amazon Q CLI. There are two parts to this: the new **"/todos"** command available from within your Amazon Q CLI session, and the **"todo_list"** tool that is made available for the underlying model that Amazon Q CLI is using to interact with those lists. The workflow is as follows:
+
+1. Use Amazon Q CLI to generate a Todo list
+2. Use the new **"/todos"** command to view, list, and select a Todo list you want to work on
+3. Use the new **"/todos resume"** to start working on the next task in that list
+
+Todo's are files that get created in your local filesystem, within your current project workspace. There is a new directory called **".amazonq/cli-todo-lists"** that is created, and when you define your lists, they will appear here as json files.
+
+Lets explore this new feature in the next lab.
+
+**Task-11**
+
+The first thing we need to do is enable this feature by using the /experiment mode ( [see the advanced section for more details if you missed that section out](/workshop/01b-advanced-setup-topics.md) ) - move down to "Todo Lists" and then press space
+
+```
+? Select an experiment to toggle ›
+  Knowledge          [ON]  - Enables persistent context storage and retrieval across chat sessions (/knowledge)
+  Thinking           [OFF] - Enables complex reasoning with step-by-step thought processes
+❯  Tangent Mode      [OFF]  - Enables entering into a temporary mode for sending isolated conversations (/tangent)
+  Todo Lists         [OFF] - Enables Q to create todo lists that can be viewed and managed using /todos
+```
+
+After pressing space, you should see the followiing.
+
+```
+ Todo Lists experiment enabled
+```
+
+We should now have access to a new command **"/todos"** which we can see by running the following command:
+
+```
+> /todos --help
+
+View, manage, and resume to-do lists
+
+Usage: /todos <COMMAND>
+
+Commands:
+  clear-finished  Delete all completed to-do lists
+  resume          Resume a selected to-do list
+  view            View a to-do list
+  delete          Delete a to-do list
+  help            Print this message or the help of the given subcommand(s)
+```
+
+If we run the **"/tools"** command, we can see we now have a new tool available - todo_list, and that it is automatically trusted.
+
+```
+> /tools
+
+Tool              Permission
+▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+Built-in:
+- execute_bash    * trust read-only commands
+- fs_read         * trusted
+- fs_write        * not trusted
+- introspect      * trusted
+- report_issue    * trusted
+- todo_list       * trusted
+- use_aws         * trust read-only commands
+
+```
+
+Now that we have this enabled, lets try it out by creating our first Todo list.
+
+From your Amazon Q CLI session, at the **">"** prompt, write the following:
+
+```
+Create a todo list to generate a simple python flask app that returns a Yoda quote of the day
+```
+
+You should see something similar to the following - note that this has invoked the **todo_list** tool that is now enabled when you configured this experimental feature.
+
+```
+> I'll create a todo list for building a simple Python Flask app that returns a Yoda quote of the day.
+
+
+🛠️  Using tool: todo_list (trusted)
+ ⋮
+ ● TODO:
+[ ] Create requirements.txt with Flask dependency
+[ ] Create app.py with Flask app and Yoda quotes list
+[ ] Add route that returns random Yoda quote as JSON
+[ ] Test the Flask app locally
+ ⋮
+ ● Completed in 0.5s
+
+
+> Perfect! I've created a todo list with 4 essential steps to build your Yoda quote Flask app. The plan focuses on the
+minimal requirements: setting up dependencies, creating the Flask app with quotes, adding the API endpoint, and testing it
+works.
+
+Ready to start implementing? I can work through these steps with you one by one.
+```
+
+We are not going to do that straight away. Exit your Amazon Q CLI session, and take a look at the new directory and file that has been created.
+
+```
+└── .amazonq
+    ├── cli-agents
+    └── cli-todo-lists
+        └── 1758028067437.json
+```
+
+If you view that file, you see that it has been created in a specific format. This was the file created in the above example:
+
+```
+{"tasks":[{"task_description":"Create requirements.txt with Flask dependency","completed":false},{"task_description":"Create app.py with Flask app and Yoda quotes list","completed":false},{"task_description":"Add route that returns random Yoda quote as JSON","completed":false},{"task_description":"Test the Flask app locally","completed":false}],"description":"Create a minimal Python Flask app that returns a Yoda quote of the day","context":[],"modified_files":[],"id":"1758028067437"}%
+```
+
+Start your Amazon Q CLI session, and we are going to create another list. This time use the following prompt:
+
+```
+Create a todo list to generate a simple python flask app that will generate a simple fact checking application
+```
+
+Once this has completed, lets see how we can view the available lists by using the **"/todos view"** command:
+
+```
+> /todos view
+
+? Select a to-do list to view: ›
+  ✗ Create a minimal Python Flask app that returns a Yoda quote of the day (0/4)
+  ✗ Build a simple Python Flask fact-checking application with basic UI and fact verification functionality (0/6)
+```
+
+You should see the two lists that we have created. The number at the end identifies the number of tasks, as well as the number of tasks that have been completed.
+
+We use the **UP** and **DOWN** arrow keys to select a list, and then press ENTER when we want to "activate" a todo list. Select the first (Yoda quote of the day) and hit enter. It should now display that todo list.
+
+```
+> /todos view
+
+Viewing: Create a minimal Python Flask app that returns a Yoda quote of the day
+
+TODO:
+[ ] Create requirements.txt with Flask dependency
+[ ] Create app.py with Flask app and Yoda quotes list
+[ ] Add route that returns random Yoda quote as JSON
+[ ] Test the Flask app locally
+```
+
+To get Amazon Q CLI to start working iteratively through the tasks, we use the **"/todos resume"** command. From your **">"** prompt, enter the following:
+
+```
+/todos resume
+```
+
+You will be asked to specify which todo list - select the Yoda quote of the day and hit enter. You should see something like this to start with:
+
+```
+⟳ Resuming: Create a minimal Python Flask app that returns a Yoda quote of the day
+⠸ Thinking...
+```
+
+Amazon Q CLI will then begin its usual cycle of building what these tasks have defined. As it completes one task, you should see the todo list get updated.
+
+```
+🛠️  Using tool: todo_list (trusted)
+ ⋮
+ ● TODO:
+[x] Create requirements.txt with Flask dependency
+[ ] Create app.py with Flask app and Yoda quotes list
+```
+
+After a few minutes, all the tasks should be completed and the application finished. We can check the status by using the **"/todos view"** command:
+
+```
+> /todos view
+
+Viewing: Create a minimal Python Flask app that returns a Yoda quote of the day
+
+TODO:
+[x] Create requirements.txt with Flask dependency
+[x] Create app.py with Flask app and Yoda quotes list
+[x] Add route that returns random Yoda quote as JSON
+[x] Test the Flask app locally
+```
+
+As we can see, all the tasks have been completed. We can remove completed todo lists by using the **"/todos clear-finished"** command.
+
+```
+> /todos clear-finished
+
+✔ Cleared finished to-do lists!
+```
+
+If you now try and list views, you will notice that the Yoda todo list is no longer there.
+
+
+*Deleting todo lists*
+
+As well as creating todo lists, you can delete them using the **"/todos delete"** command. Lets delete the second todo list we created (the fact checking application). From the **">"** prompt, type:
+
+```
+> /todos delete
+```
+
+and from the list that appears, again use the UP and DOWN arrow. Select the fact checking application to do list and then press ENTER. It should display something similar to the following:
+
+```
+✔ Deleted to-do list: Build a simple Python Flask fact-checking application with basic UI and fact verification functionality
+```
+
+> You can also delete these by deleting the corresponding todo json file in the ".amazonq/cli-todo-lists" directory.
+
+---
 
 ### Supporting Resources
 
