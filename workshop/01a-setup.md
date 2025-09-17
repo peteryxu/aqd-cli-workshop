@@ -202,6 +202,11 @@ or if you want to dive into a specific release
 q version --changelog 1.13.1
 ```
 
+---
+
+**Finding your Amazon Q CLI chat history**
+
+Introduced in v1.16, when you use Amazon Q CLI, each command you enter will be stored in a history file that is located in **"~.aws/amazonq"** directory. This file is called **".cli_bash_history"** and you can view this to see all the previous prompts and commands you issued.
 
 ---
 

@@ -205,6 +205,7 @@ As Amazon Q CLI is an open source project, I was able to use it to review the so
 * mcp.loadedBefore (boolean) - Track if Model Context Protocol has been loaded before
 * mcp.initTimeout (integer, millesends) - 5000 (5 seconds) is the default timeout to wait for MCP Servers in interactive mode
 * mcp.noInteractiveTimeout (integer, millesends) - 30000 (30 seconds) is the default timeout to wait for MCP Servers in interactive mode
+* chat.enableHistoryHints - enables you to disable the prompt/command suggestions when you are using Amazon Q CLI (defailts to true) 
 
 ---
 
