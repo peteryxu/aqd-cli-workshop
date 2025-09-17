@@ -8,6 +8,7 @@
 - update to include AGENTS.md now default resource in context
 - update to remove stdio references as MCP support is now stdio and http
 - add details of the Amazon Q CLI chat history
+- add updated to custom agent that allows you to define models to use with that custom agent
 
 
 16th September 2025

@@ -160,6 +160,7 @@ Before we proceed and start creating our first custom agents, let me walk you th
 * **hooks** - (optional) lets you define commands to run either once for your session or every prompt - we will explore these later in this lab
 * **toolsSettings** - (optional) provides the ability to pass in configuration details for tools that need them
 * **useLegacyMcpJson** - (optional) is a legacy switch that is enabled if this parameter is not set, and loads up MCP Server configuration from the deprecated mcp.json file
+* **model** - (optional) allows you to define which model you want this custom agent to use. If you do not set this it will default to Amazon Q CLI's default model as defined in your settings.json
 
 As you can see, you can create a very sparse JSON configuration for your custom agent, just defining a name. I am not sure it would do a lot of use though :O
 
@@ -207,7 +208,8 @@ This will bring up an editor (it will use the default if you are using Linux/Mac
   ],
   "hooks": {},
   "toolsSettings": {},
-  "useLegacyMcpJson": true
+  "useLegacyMcpJson": true,
+  "model": null
 }
 ```
 
@@ -355,7 +357,8 @@ And you will then return back to the text editor where you can continue configur
   ],
   "hooks": {},
   "toolsSettings": {},
-  "useLegacyMcpJson": false
+  "useLegacyMcpJson": false,
+  "model": null
 }
 ```
 
@@ -375,6 +378,45 @@ Save and exit using <esc>!wq and you should see the following confirm that the n
 ```
 
 The end result is the same however, a custom agent json configuration file is created.
+
+---
+
+**Associating a specific model with your custom agent**
+
+You can define a specific model that you want to use in a custom agent by setting the **"model"** configuration setting within your custom agent configuration. Using the previous example, we could set our custom agent to use claude-3.5-sonnet by editing and saving the configuration as follows.
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-dev",
+  "description": "Python developer",
+  "prompt": "You are a Python developer assistant. Help with Python programming tasks including code writing, debugging, testing, optimization, and best practices. Focus on clean, efficient, and maintainable Python code following PEP 8 standards.",
+  "mcpServers": {},
+  "tools": [
+    "*"
+  ],
+  "toolAliases": {},
+  "allowedTools": [
+    "fs_read"
+  ],
+  "resources": [
+    "file://AmazonQ.md",
+    "file://README.md",
+    "file://.amazonq/rules/**/*.md"
+  ],
+  "hooks": {},
+  "toolsSettings": {},
+  "useLegacyMcpJson": false,
+  "model": "claude-3.5-sonnet"
+}
+```
+
+Currently this can be set to either null, where it will just use the default model that you have configured your Amazon Q CLI session to use, or you can specify it to use:
+
+* "claude-3.5-sonnet" - for Claude Sonnet 3.5
+* "claude-sonnet-4" - for Claude Sonnet 4
+
+If you make changes, these will be reflected the next time you restart your Amazon Q CLI session.
 
 ---
 
