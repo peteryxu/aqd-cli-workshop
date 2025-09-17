@@ -1,5 +1,14 @@
 ## Tracking changes with this workshop
 
+17th September 2025
+
+- update workshop for changes included in Q CLI v1.16.0
+- update tangent to include new tail parameter
+- updated custom agent to include the new edit command
+- update to include AGENTS.md now default resource in context
+- update to remove stdio references as MCP support is now stdio and http
+
+
 16th September 2025
 
 - update workshop to include Q CLI v1.15.0

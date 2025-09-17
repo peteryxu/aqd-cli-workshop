@@ -344,6 +344,7 @@ From the Amazon Q CLI chat session, we can look at what **Resources** you have c
 
 👤 Agent (q_cli_default):
     AmazonQ.md
+    AGENTS.md
     README.md
     .amazonq/rules/**/*.md
 
@@ -395,7 +396,8 @@ You should see something like the following:
 > /context show
 
 👤 Agent (q_cli_default):
-    AmazonQ.md 
+    AmazonQ.md
+    AGENTS.md 
     README.md
     project-standards.md (1 match)
     .amazonq/rules/**/*.md
@@ -639,6 +641,13 @@ You will notice that the **">"** prompt changes to **"↯ >"**, to let you know 
 
 You can check out some [additional examples use cases here](https://github.com/aws/amazon-q-developer-cli/blob/main/docs/tangent-mode.md#usage-examples)
 
+> If you see the following when you run the command (**"/tangent"**) command, you have not enabled Tangent in the experimental model
+> 
+> ```
+> > /tangent
+> Tangent mode is disabled. Enable it with: q settings chat.enableTangentMode true
+> ```
+
 ```
 > /tangent
 
@@ -658,12 +667,60 @@ Restored conversation from checkpoint (↯). - Returned to main conversation.
 
 You will notice that your prompt changes back, and you are now ready to carry on with your session.
 
-> If you see the following when you run the command (**"/tangent"**) command, you have not enabled Tangent in the experimental model
-> 
-> ```
-> > /tangent
-> Tangent mode is disabled. Enable it with: q settings chat.enableTangentMode true
-> ```
+You might be thinking that what if you wanted to include your tangent conversation back into the main chat conversation? A new feature added in v1.16 of Amazon Q CLI allows you to do this by using a new argument that will preserve the last conversation back in your main context. It works as follows - after initiating a new tangent session, after you have prompted and got a response, you can use the following command, **"/tangent tail"** which will then generate the following output.
+
+```
+↯ > /tangent tail
+
+Restored conversation from checkpoint (↯) with last conversation entry preserved.
+```
+
+**Task-15**
+
+Close and then start a new Amazon Q CLI session. From this new session, create a new tangent by running the following:
+
+```
+> /tangent
+↯ >
+```
+
+Enter the following prompt:
+
+```
+Tell me about Python's Fast API
+```
+
+Watch the output. After it has finished, exit the tangent using **"/tangent"**
+
+```
+↯ > /tangent
+
+Restored conversation from checkpoint (↯). - Returned to main conversation.
+```
+
+And now ask the following prompt:
+
+```
+What were we talking about?
+```
+
+It should return something similar to the following:
+
+```
+I don't have any record of previous conversations with you. Each chat session with Amazon Q starts fresh without memory of past interactions.
+```
+
+As we can see, tangent has done its job and has not brought back any of that back into your main chat session. Now repeat the above, but this time, after you have asked it about Python's FastAPI, instead of using **"/tangent"** use **"/tangent tail"** and then repeat the prompt. You should see something different this time.
+
+```
+↯ > /tangent tail
+
+Restored conversation from checkpoint (↯) with last conversation entry preserved.
+
+> what were we talking about
+
+> We were discussing Python's FastAPI framework. I explained its key features like high performance, automatic documentation, type safety, and async support, along with a basic code example and installation instructions.
+```
 
 ---
 
@@ -673,7 +730,7 @@ There might be times when you want to reset your current context. For example, d
 
 You can clear the current context by using the **"/clear"** command, which will first ask you to confirm that you want to do this.
 
-**Task-15**
+**Task-16**
 
 Following on from the previous session, from the **">"** run the following command:
 
@@ -700,6 +757,7 @@ You define rules in Markdown files, stored in your project’s workspace. Amazon
 
 👤 Agent (q_cli_default):
     AmazonQ.md
+    AGENTS.md
     README.md
     .amazonq/rules/**/*.md
 
@@ -729,7 +787,7 @@ So far we have been using Amazon Q CLI in chat mode to write prompts and then ge
 
 There are two things you need to bear in mind When running commands. **First**, each invocation is stateless. If I use "! cd {directory}" and then run "! ls" I will not get the directory listing for the {directory} but for the current Amazon Q CLI directory where you launched it. If you need to do that you should concatanate your commands, so using this as an example "!cd {directory} && ls". **Second** The output of the commands you run is added to the context window. If you run command that generate a lot of output, you will potentially use up your context window more quickly.
 
-**Task-16**
+**Task-17**
 
 Open up Amazon Q CLI and run the following commands:
 
@@ -782,7 +840,7 @@ You can now do this, using the **"/save {name}"** command, providing a name of t
 
 You can also load up a conversation from an Amazon Q CLI session using the **"/load {name}"** and it will then load up the conversation, leaving you ready to carry on where you left off.
 
-**Task-17**
+**Task-18**
 
 From a new Amazon Q CLI session, at the **">"** prompt lets generate some history by asking the following (feel free to use your own if you prefer)
 

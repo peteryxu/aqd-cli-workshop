@@ -125,6 +125,7 @@ Usage: /agent <COMMAND>
 Commands:
   list         List all available agents
   create       Create a new agent with the specified name
+  edit         Edit an existing agent configuration
   generate     Generate an agent configuration using AI
   schema       Show agent config schema
   set-default  Define a default agent to use when q chat launches
@@ -245,6 +246,15 @@ Which should produce output similar to the following:
 * q_cli_default
   python-developer
 ```
+
+If you want to make any changes, you can use the **"/agent edit"** command to bring back up the editor. You need to supply the name of the custom agent you want to edit, and then it will bring back the editor.
+
+```
+> /agent edit --name python-developer
+```
+
+You should see the same configuration you previous had. We are not going to make any changes, so exit this (:q!)
+
 
 Exit your Amazon Q CLI session. In the current project workspace directory, create a sub-directory in your ".amazonq" directory called "rules" and then a file called "python-dev.md". You can [copy the contents of the file in the resources directory](/resources/python-dev.md) into this file and then save it. This should be what it looks like:
 
@@ -711,8 +721,6 @@ We are going to build upon the previous custom agent we setup, "python-developme
 ```
 
 > For a list of AWS MCP Servers, check out the [AWS MCP Server directory](https://awslabs.github.io/mcp/). You can explore a number of different MCP Servers, and the docs proivide an overview of the features that each MCP Server offers, together with the available Tools. If I scroll a bit further I get the installation details.
-
-**Note!** Currently Amazon Q CLI **only** supports STDIO MCP Servers, which run locally on your machine. Bear this in mind as you go looking for MCP Servers you want to use.
 
 **Task-06**
 
