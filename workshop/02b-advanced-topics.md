@@ -615,12 +615,14 @@ When you do this, it will load any MCP Servers you have configured, configure to
 
 **Configuring context hooks in your custom agent**
 
-Context hooks are a feature in Amazon Q CLI that you can use to automatically inject context into your conversations with Q Developer. Context hooks run commands and include their output as context. In previous versions of Amazon Q CLI, you configured context hooks using a command ("/hooks"), but these are now deprecated and we configure context hooks within custom agents.
+Context hooks are a feature in Amazon Q CLI that you can use to automatically inject context into your conversations with Q Developer. Context hooks run commands and include their output as context. We configure context hooks within custom agents.
 
-Amazon Q CLI supports two types of context hooks:
+Amazon Q CLI supports four types of context hooks:
 
-* **Conversation start hooks** - Run once at the beginning of a conversation. Their output is added to the conversation context and persists throughout the session.
-* **Per-prompt hooks** - Run with each user message. Their output is added only to the current prompt.
+* **Conversation start hooks ("AgentSpawn")** - Run once at the beginning of a conversation. Their output is added to the conversation context and persists throughout the session.
+* **Per-prompt hooks ("UserPromptSubmit")** - Run with each user message. Their output is added only to the current prompt.
+* **Hooks that run before tools executionn ("PreToolUse")** - This hook will runs before tool execution, which might be useful to validate and block tool usage.
+* **Hooks that run post tool exection ("PostToolUse")** - Runs after tool use, and will be provided the output of the tool.
 
 > Check out [Behavior and limitations](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-context-hooks.html?trk=fd6bb27a-13b0-4286-8269-c7b1cfaa29f0&sc_channel=el#command-line-context-hooks-behavior) to understand some of the constraints when creating hooks
 
@@ -663,9 +665,7 @@ Edit the custom agent JSON configuration file we worked on as part of the previo
   ],
   "hooks": {"userPromptSubmit": [
       {
-        "command": "cat pirate.md",
-        "timeout_ms": 10000,
-        "cache_ttl_seconds": 300
+        "command": "cat pirate.md"
       }
     ]},
   "toolsSettings": {}
@@ -703,10 +703,11 @@ Review the output. What happens?
 You can edit and remove the context hook after this task if you want, or enjoy that Amazon Q CLI is talking to you in pirate.
 
 
-*Use Cases*
+**Running hooks when you start Amazon Q CLI session**
 
-This particular example showed you how to configure hooks that operated when you a prompt. You can also configure hooks that operate when you first start your custom agent. This is done using **"agentSpawn"** and can be very useful if you want to prepare your session before you start - for example you might want to install some binaries, or perhaps copy down some context files from a central repository. Another example that I see a lot is that as LLMs are not very good at knowing the current time/date (or other such information), using context hooks to run a command that prints out the current date/time, allows Amazon Q CLI to add this to its context.
+The previous example showed you how to configure hooks that operated when you a submit prompts. You can also configure hooks that operate when you first start your Amazon Q CLI session (again when starting with a custom agent). This is done using the **"agentSpawn"** configuration argument, and can be very useful if you want to prepare your session before you start - for example you might want to install some binaries, or perhaps copy down some context files from a central repository.
 
+This is how I would configure this in the custom agent configuration file, in this example I am running a command to set some context per session.
 
 ```
 {
@@ -723,15 +724,52 @@ This particular example showed you how to configure hooks that operated when you
   ],
   "hooks": {"agentSpawn": [
       {
-        "command": "echo 'current date and time is:' && date",
-        "timeout_ms": 10000,
-        "max_output_size": 10240,
-        "cache_ttl_seconds": 1
+        "command": "echo 'current date and time is:' && date"
       }
     ]},
   "toolsSettings": {}
 }
 ```
+
+**Tool-related hooks**
+
+Whilst the previous two agent hooks have focused on starting your session and prompts, you can also configure hooks to work with tools that you are using within your Amazon Q CLI and that you have configured within your custom agent. When you want to use the tool related hooks, there are additional configuration parameters you need to define.
+
+**"PreToolUse"** and "PostToolUse"** are used to configur hooks that run either before or after tools are run. You define these slightly different to the previous hooks. You will need to use **"matcher"** to tag the tool you want to assign the custom hook to. 
+
+In the following examples you can see that we are using this to tag on when the **execute_bash** and **fs_Write** tools are used. One audits what is being run, and the other runs the rustftm to ensure all files are formatted consistently.
+
+```
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "python-developer",
+  "description": "",
+  "prompt": null,
+  "mcpServers": {},
+  "tools": ["*"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read","fs_write","use_aws"],
+  "resources": [
+    "file://.amazonq/rules/**/*.md"
+  ],
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "execute_bash",
+        "command": "{ echo \"$(date) - Bash command:\"; cat; echo; } >> /tmp/bash_audit_log"
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "fs_write",
+        "command": "cargo fmt --all"
+      }
+    ] 
+  },
+  "toolsSettings": {}
+}
+```
+
 
 ---
 

@@ -1,5 +1,10 @@
 ## Tracking changes with this workshop
 
+22nd September 2025
+
+- update custom hooks to include new hooks available in v1.16.2 and revise/cleanup section
+
+
 17th September 2025
 
 - update workshop for changes included in Q CLI v1.16.0
